@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - {{ fullname }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+</head>
+<body>
+    <div class="exam-container">
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <a href="{{ url_for('launcher') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </a>
+                <a href="{{ url_for('perfil') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </a>
+            </div>
+            
+            <div class="action-buttons">
+                <!-- BOTÓN DE PANEL DE ADMINISTRACIÓN SOLO PARA ADMIN -->
+                {% if is_admin %}
+                <a href="{{ url_for('admin') }}" class="btn-action" style="background-color: #27ae60; cursor: pointer; text-decoration: none;">
+                    <i class="fas fa-cog"></i> Panel de Administración
+                </a>
+                {% endif %}
+                <button class="btn-action" style="background-color: #3498db; cursor: pointer;">
+                    <i class="fas fa-question-circle"></i> Ayuda
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-section">
+                <h1>BIENVENIDO, {{ fullname | upper }}</h1>
+                
+                <div class="two-column-layout"> 
+                    
+                    <div class="content-column documents-column">
+                        <div class="column-header">MATERIAL DE TRABAJO</div>
+                        
+                        <div class="info-card">
+                            <p class="section-description">Recursos de tu curso.</p>
+                            
+                            <div style="margin-bottom: 15px; padding: 0 10px;">
+                                <label for="materiaSelect" style="display: block; font-size: 0.9rem; margin-bottom: 5px; color: #555;">Selecciona Materia:</label>
+                                
+                                <select id="materiaSelect" onchange="filtrarDocumentos()" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background-color: white; cursor: pointer;">
+                                    <option value="" selected disabled hidden>-- Selecciona Materia --</option>
+                                    
+                                    {% for nombre_display, key in materias_lista.items() %}
+                                        <option value="{{ key }}">{{ nombre_display }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="separator-doc" style="margin-bottom: 15px;"></div>
+
+                            <ul class="document-list" id="listaDocumentos" style="padding: 0 10px; max-height: 400px; overflow-y: auto; min-height: 100px;">
+                                
+                                <li id="mensaje-inicial" style="color: #95a5a6; text-align: center; padding: 30px 10px;">
+                                    <i class="fas fa-hand-pointer" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i>
+                                    Por favor, selecciona una materia arriba para ver los archivos disponibles.
+                                </li>
+
+                                {% if materiales %}
+                                    {% for doc in materiales %}
+                                        <li class="doc-item" data-materia="{{ doc.materia_key }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                            <div style="font-size: 0.8rem; color: #3498db; margin-bottom: 2px; font-weight: bold;">{{ doc.materia_name }}</div>
+                                            <a href="#" onclick="openPreview('{{ doc.url }}', '{{ doc.nombre }}', '{{ doc.path }}'); return false;" class="document-link">
+                                                <i class="far fa-file-pdf"></i> {{ doc.nombre }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                <li id="filtro-vacio-msg" style="display: none; color: #e74c3c; text-align: center; padding-top: 20px;">
+                                    <i class="fas fa-folder-open"></i> No se encontraron documentos en esta materia.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="content-column profile-column">
+                        <div class="column-header">DATOS DEL USUARIO</div>
+                        <div class="profile-card info-card">
+                            <p class="section-description">Datos de registro y credenciales de acceso.</p>
+
+                            <section class="info-section">
+                                
+                                <div class="profile-main-grid">
+                                    
+                                    <div style="flex-basis: 50%; display: flex; justify-content: center; align-items: center; min-height: 180px;">
+                                        <img src="{{ foto_url }}" 
+                                            alt="Foto de Perfil" 
+                                            style="width: 245px; height: 245px; object-fit: cover; border-radius: 8px; display: block;" 
+                                            class="profile-photo-responsive">
+                                    </div>
+                                    
+                                    <div class="profile-data-wrapper">
+                                        <div class="info-grid profile-grid">
+                                            <div class="info-item"><strong>Curso Inscrito:</strong> <span>{{ user_data.curso }}</span></div>
+                                            <div class="info-item"><strong>Nombre:</strong> <span>{{ fullname }}</span></div>
+                                            <div class="info-item"><strong>Fecha de nacimiento:</strong> <span>{{ user_data.fecha_nacimiento }}</span></div>
+                                            <div class="info-item"><strong>Folio:</strong> <span>{{ user_data.folio }}</span></div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="separator-col"></div>
+
+                                <div class="credentials-group" style="flex-direction: row;">
+                                    <div class="credentials-item"> 
+                                        <div class="info-item password-group"> 
+                                            <div class="password-row-align">
+                                                <strong>Usuario:</strong>
+                                                <span id="username-display" style="-webkit-text-security: disc; text-security: disc; padding-left: 5px; flex-grow: 1;">{{ user_data.username }}</span>
+                                                <button class="toggle-password btn-action" id="toggleUsernameBtn" title="Mostrar Usuario">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-copy btn-action" id="copyUsernameBtn" title="Copiar Usuario">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="credentials-item">
+                                        <div class="info-item password-group"> 
+                                            <div class="password-row-align">
+                                                <strong>Contraseña:</strong>
+                                                <span id="password-display" style="-webkit-text-security: disc; text-security: disc; padding-left: 5px; flex-grow: 1;">{{ user_data.password }}</span>
+                                                <button class="toggle-password btn-action" id="togglePasswordBtn" title="Mostrar Contraseña">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-copy btn-action" id="copyPasswordBtn" title="Copiar Contraseña">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="content-column documents-column">
+                        <div class="column-header">DOCUMENTACIÓN</div>
+                        
+                        <div class="info-card documents-split-container">
+                            
+                            <div class="split-section documents-section">
+                                <h3><i class="fas fa-file-pdf"></i> Formatos Descargables</h3>
+                                <p class="section-description">Archivos importantes del curso inscrito.</p>
+                                
+                                <ul class="document-list">
+                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Registro</a></li>
+                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Comprobante_registro</a></li>
+                                    <li class="separator-doc"></li>
+                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Documento A</a></li>
+                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Documento B</a></li>
+                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Documento C</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="split-section school-section">
+                                <div class="separator-sec"></div>
+                                <h3><i class="fas fa-graduation-cap"></i> Escuela de Preferencia</h3>
+                                <p class="section-description">Elige escuelas y planteles de estudio.</p>
+                                
+                                <a href="{{ url_for('escuelas') }}" class="btn-action fill-school-btn">
+                                    <i class="fas fa-edit"></i> Llenar lista de escuelas
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-button">
+            <button class="btn-chat">
+                <i class="fas fa-comment"></i>
+                Asistencia
+            </button>
+        </div>
+    </div>
+
+    <div id="previewModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle" style="margin:0; font-size: 1.2rem;">Documento</h3>
+            <button onclick="closePreview()" class="btn-close" title="Cerrar">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <iframe id="previewFrame" src=""></iframe>
+        </div>
+        
+        <div class="modal-footer">
+            <a id="downloadBtn" href="#" class="btn-action" style="background-color: #27ae60; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-download"></i> Descargar Archivo
+            </a>
+            <button onclick="closePreview()" class="btn-action" style="background-color: #e74c3c;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fondo oscuro fijo */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;           /* Centrado Flex */
+        justify-content: center;
+        align-items: center;
+        padding: 20px;           /* Espacio para que no toque los bordes */
+    }
+
+    /* Contenedor del Modal */
+    .modal-content {
+        background: white;
+        width: 100%;
+        max-width: 1000px;       /* Ancho máximo amplio */
+        height: 90vh;            /* Ocupa el 90% de la altura de la pantalla */
+        display: flex;           /* Flex columna para header/body/footer */
+        flex-direction: column;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        overflow: hidden;        /* Evita que el contenido se salga de los bordes redondeados */
+    }
+
+    /* Header y Footer fijos */
+    .modal-header {
+        padding: 15px 20px;
+        background-color: #2c3e50;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;          /* No se encoge */
+    }
+
+    .modal-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #ddd;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-shrink: 0;          /* No se encoge */
+    }
+
+    /* Cuerpo flexible (ocupa el espacio restante) */
+    .modal-body {
+        flex: 1;                 /* Crece para llenar el hueco */
+        position: relative;      /* Para posicionar el iframe */
+        background-color: #525659; /* Color de fondo típico de visualizadores PDF */
+        overflow: hidden;
+    }
+
+    /* Iframe al 100% absoluto */
+    #previewFrame {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        line-height: 1;
+    }
+    .btn-close:hover { color: #ccc; }
+</style>
+
+<script>
+    function openPreview(url, nombre, rutaRelativa) {
+        var modal = document.getElementById('previewModal');
+        var iframe = document.getElementById('previewFrame');
+        var btnDownload = document.getElementById('downloadBtn');
+        var title = document.getElementById('modalTitle');
+
+        // 1. Visualización
+        iframe.src = url + "#view=FitH";
+
+        // 2. Descarga SEGURA
+        // IMPORTANTE: encodeURIComponent asegura que los espacios y diagonales
+        // no rompan la URL al enviarla a Python.
+        btnDownload.href = "/api/descargar_material?archivo=" + encodeURIComponent(rutaRelativa);
+        
+        // 3. LIMPIEZA: Eliminamos el atributo 'download' del HTML.
+        // Dejamos que el backend (Python) decida que es una descarga.
+        // Esto evita el conflicto "Network Error" en Chrome Mobile.
+        btnDownload.removeAttribute('download'); 
+        
+        // 4. Título y Mostrar
+        title.innerText = nombre;
+        modal.style.display = 'flex';
+    }
+
+    function closePreview() {
+        var modal = document.getElementById('previewModal');
+        var iframe = document.getElementById('previewFrame');
+        
+        modal.style.display = 'none';
+        iframe.src = ''; // Limpiar src para detener la carga/memoria
+    }
+
+    // Cerrar al dar click fuera del modal
+    window.onclick = function(event) {
+        var modal = document.getElementById('previewModal');
+        if (event.target == modal) {
+            closePreview();
+        }
+    }
+
+    function filtrarDocumentos() {
+        // 1. Obtener el valor seleccionado
+        var seleccion = document.getElementById('materiaSelect').value;
+        
+        // Elementos de la interfaz
+        var items = document.getElementsByClassName('doc-item');
+        var mensajeInicial = document.getElementById('mensaje-inicial');
+        var msgVacio = document.getElementById('filtro-vacio-msg');
+        
+        // 2. Ocultar el mensaje de bienvenida ("Por favor selecciona...")
+        if (mensajeInicial) {
+            mensajeInicial.style.display = 'none';
+        }
+
+        var visibles = 0;
+        
+        // 3. Recorrer y filtrar
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var materiaItem = item.getAttribute('data-materia');
+            
+            // Solo mostramos si coincide exactamente con la selección
+            if (materiaItem === seleccion) {
+                item.style.display = 'block'; // Mostrar
+                visibles++;
+            } else {
+                item.style.display = 'none'; // Ocultar
+            }
+        }
+        
+        // 4. Mostrar mensaje si la carpeta seleccionada está vacía
+        if (visibles === 0 && seleccion !== "") {
+            msgVacio.style.display = 'block';
+        } else {
+            msgVacio.style.display = 'none';
+        }
+    }
+</script>
+
+    <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
+    <script>
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = "{{ url_for('logout') }}";
+            }
+        }
+    </script>
+</body>
+</html>

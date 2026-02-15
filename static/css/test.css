@@ -1,0 +1,805 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background-color: #2c3e50;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+    max-width: 100%;
+    position: relative;
+}
+
+/* Barra superior con botones */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    min-height: 70px;
+    flex-wrap: wrap;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: #e9e9e9;
+}
+
+.nav-btn.active {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-action:hover {
+    background-color: #3a7bc8;
+}
+
+.btn-action.logout {
+    background-color: #e74c3c;
+}
+
+.btn-action.logout:hover {
+    background-color: #c0392b;
+}
+
+/* Área de contenido principal */
+.content-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.content-section {
+    max-width: 1200px;
+    width: 100%;
+}
+
+.content-section h1 {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 0;
+}
+
+/* Diseño de dos columnas */
+.two-column-layout {
+    display: flex;
+    gap: 10px;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+}
+
+.instructions-column {
+    flex: 1;
+    display: flex; 
+    flex-direction: column;
+}
+
+.devices-column {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- SECCIÓN INSTRUCCIONES COMPACTAS --- */
+.instructions-section {
+    background-color: white;
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    flex: 1;
+    height: 100%;
+}
+
+.instructions-section h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.instructions-section p {
+    margin-bottom: 10px;
+    line-height: 1.3;
+    color: #555;
+    font-size: 12.5px;
+}
+
+.status-indicators h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.green-text {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.red-text {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* Lista de solución de problemas compacta */
+.troubleshooting-list {
+    margin-top: 8px;
+}
+
+.troubleshooting-item {
+    display: flex;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #e74c3c;
+}
+
+.device-status-icon {
+    margin-right: 10px;
+    margin-top: 1px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.device-status-icon i {
+    font-size: 16px;
+}
+
+.device-status-icon i.red {
+    color: #e74c3c;
+}
+
+.device-status-icon i.green {
+    color: #27ae60;
+}
+
+.troubleshooting-content h4 {
+    font-size: 12.5px;
+    margin-bottom: 3px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.troubleshooting-content ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.troubleshooting-content li {
+    padding: 1px 0;
+    position: relative;
+    padding-left: 10px;
+    color: #555;
+    line-height: 1.2;
+    font-size: 11px;
+}
+
+.troubleshooting-content li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    color: #4a90e2;
+    line-height: 1.2;
+    font-size: 14px;
+}
+/* --- FIN SECCIÓN INSTRUCCIONES --- */
+
+/* Panel de indicadores de estado (COMPACTO) */
+.status-indicators-panel {
+    background-color: white;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 12px;
+}
+
+.status-indicators-panel h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-icons-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.status-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background-color: #f8f9fa;
+    padding: 8px 5px;
+    border-radius: 6px;
+    font-size: 11px;
+    transition: all 0.3s;
+    width: 80px;
+}
+
+.status-icon.active {
+    background-color: #27ae60;
+    color: white;
+}
+
+.status-icon:not(.active) {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.status-icon i {
+    font-size: 18px;
+}
+
+/* Vista previa de cámara */
+.camera-preview {
+    background-color: white;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-top: 10px;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.camera-preview h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* --- ESTILOS DE CÁMARA (4:3) --- */
+.camera-feed-container {
+    position: relative;
+    width: 100%;
+    /* Max-width para limitar el tamaño, un poco más ancho que alto */
+    max-width: 275px; 
+    margin: 0 auto; /* Centrado */
+    background-color: #2c3e50;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 0;
+    border: 2px solid #e74c3c; /* Borde rojo idéntico al examen */
+}
+
+.camera-feed {
+    width: 100%;
+    /* HEIGHT AUTO + ASPECT-RATIO 4:3 = RECTANGULAR ESTÁNDAR */
+    height: auto;
+    aspect-ratio: 4 / 3; 
+    position: relative;
+    background-color: #2c3e50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.camera-placeholder {
+    text-align: center;
+    color: white;
+}
+
+.camera-placeholder i {
+    font-size: 48px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Medidor de volumen integrado */
+.camera-preview .volume-meter {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    z-index: 10;
+}
+
+.volume-bar {
+    flex: 1;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.volume-level {
+    height: 100%;
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+    width: 0%;
+    transition: width 0.1s ease;
+    border-radius: 4px;
+}
+
+.volume-percentage {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Estados de la barra de volumen */
+.volume-level.low {
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+}
+
+.volume-level.medium {
+    background: linear-gradient(90deg, #f39c12, #f1c40f);
+}
+
+.volume-level.high {
+    background: linear-gradient(90deg, #e74c3c, #e67e22);
+}
+/* --- FIN ESTILOS CÁMARA --- */
+
+/* Sección de dispositivos COMPACTA */
+.devices-section {
+    background-color: white;
+    padding: 10px; /* Reducido de 20px */
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding-bottom: 5px; /* Reducido para ahorrar espacio */
+}
+
+.devices-section h3 {
+    font-size: 14px; /* Reducido de 18px */
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: center;
+}
+
+.device-category {
+    margin-bottom: 8px; /* Reducido drásticamente de 20px */
+}
+
+.device-category h4 {
+    font-size: 11px; /* Reducido de 16px (letra pequeña) */
+    margin-bottom: 4px; /* Reducido de 12px */
+    color: #555;
+    font-weight: 600;
+    text-transform: uppercase; /* Ayuda a la legibilidad en tamaño pequeño */
+    letter-spacing: 0.5px;
+}
+
+.device-list {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+/* Selects mucho más delgados y pequeños */
+.device-select {
+    width: 100%;
+    padding: 4px 8px; /* Reducido de 10px 15px */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 11px; /* Reducido de 14px */
+    color: #555;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    height: 38px; /* Altura forzada pequeña */
+}
+
+.device-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+/* Ajuste para móviles: mantenerlo pequeño pero tocable */
+@media (max-width: 768px) {
+    .device-select {
+        padding: 6px 8px;
+        font-size: 12px;
+        height: 32px;
+    }
+}
+
+/* Botones de prueba */
+.test-buttons {
+    padding: 25px;
+    background-color: white;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-test {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.btn-test:hover {
+    background-color: #3a7bc8;
+}
+
+.btn-test.secondary {
+    background-color: #27ae60;
+}
+
+.btn-test.secondary:hover {
+    background-color: #219653;
+}
+
+/* Botón de chat */
+.chat-button {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 100;
+}
+
+.btn-chat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: auto;
+    height: 60px;
+    border-radius: 30px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+}
+
+.btn-chat:hover {
+    background-color: #1a252f;
+    transform: scale(1.05);
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 15px;
+        min-height: auto;
+    }
+    
+    .nav-buttons, .action-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .action-buttons {
+        gap: 8px;
+    }
+    
+    .btn-action, .nav-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .content-area {
+        padding: 15px;
+    }
+    
+    .content-section h1 {
+        padding: 15px;
+        font-size: 24px;
+    }
+    
+    .two-column-layout {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .instructions-section, .devices-section, .status-indicators-panel, .camera-preview {
+        padding: 15px;
+    }
+    
+    .troubleshooting-item {
+        flex-direction: column;
+    }
+    
+    .device-status-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .status-icons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .status-icon {
+        width: 100%;
+        max-width: 200px;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .test-buttons {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+    
+    .btn-test {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .chat-button {
+        bottom: 20px;
+        left: 20px;
+    }
+    
+    .btn-chat {
+        height: 50px;
+        font-size: 14px;
+        padding: 0 15px;
+    }
+    
+    .camera-preview .volume-meter {
+        height: 18px;
+    }
+    
+    .volume-bar {
+        height: 7px;
+    }
+    
+    .volume-percentage {
+        font-size: 11px;
+        min-width: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar {
+        padding: 8px 10px;
+    }
+    
+    .nav-buttons, .action-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .btn-action, .nav-btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+    
+    .content-area {
+        padding: 10px;
+    }
+    
+    .content-section h1 {
+        padding: 12px;
+        font-size: 20px;
+    }
+    
+    .two-column-layout {
+        padding: 15px;
+    }
+    
+    .instructions-section, .devices-section, .status-indicators-panel, .camera-preview {
+        padding: 12px;
+    }
+    
+    .test-buttons {
+        padding: 12px;
+    }
+    
+    .chat-button {
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .btn-chat {
+        height: 45px;
+        font-size: 13px;
+        padding: 0 12px;
+    }
+    
+    .camera-preview .volume-meter {
+        height: 16px;
+        padding: 0 8px;
+    }
+    
+    .volume-bar {
+        height: 6px;
+    }
+    
+    .volume-percentage {
+        font-size: 10px;
+        min-width: 25px;
+    }
+}
+
+/* Estilos adicionales para manejo de errores y estados */
+.camera-placeholder button {
+    margin-top: 10px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.camera-placeholder button:hover {
+    background-color: #3a7bc8;
+}
+
+.test-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 1000;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Indicadores de estado más claros */
+.status-icon.active {
+    background-color: #27ae60;
+    color: white;
+}
+
+.status-icon:not(.active) {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.status-icon.pending {
+    background-color: #f39c12;
+    color: white;
+}
+
+/* Estilos para selects de dispositivos */
+.device-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.device-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+.device-select:hover {
+    border-color: #bbb;
+}
+
+.device-select:invalid {
+    border-color: #e74c3c;
+}
+
+.required-star {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Estilos responsivos para selects */
+@media (max-width: 768px) {
+    .device-select {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}

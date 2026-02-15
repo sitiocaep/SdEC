@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Escuelas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/escuelas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        const IS_LICENCIATURA = {{ 'true' if is_licenciatura else 'false' }};
+        const IS_ECOEMS = {{ 'true' if is_ecoems else 'false' }};
+        const NUM_PREFERIDO = {{ num_opciones_pref }}; 
+    </script>
+</head>
+<body>
+    <div class="exam-container">
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <a href="{{ url_for('perfil') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </a>
+                <a href="{{ url_for('escuelas') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="{{ url_for('perfil') }}" class="btn-action user-display-btn">
+                    <i class="fas fa-user"></i> {{ fullname }}
+                </a>
+                <button id="help-btn-escuelas" class="btn-action">
+                    <i class="fas fa-question-circle"></i> Ayuda
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-section">
+                <h1>SELECCIÓN DE ESCUELAS - {{ curso | default('SIMULADOR') }}</h1>
+                
+                <div class="selection-container">
+                    {% if mensaje %}
+                        <div class="alert-box"><i class="fas fa-info-circle"></i> {{ mensaje }}</div>
+                    {% endif %}
+                    
+                    <form id="school-form" method="POST" class="form-container">
+                        <input type="hidden" name="num_opciones_hidden" id="num_opciones_hidden" value="1">
+                        
+                        <div class="options-grid" id="options-grid-container">
+                            {% for i in range(1, 11) %}
+                            <div class="option-card" id="row-{{ i }}" style="display: none;">
+                                
+                                <div class="card-header-row">
+                                    <div class="header-group left">
+                                        <span class="header-label">OPCIÓN</span>
+                                        <div class="option-number">{{ i }}</div>
+                                    </div>
+                                    
+                                    <div class="header-group right">
+                                        <span class="header-label">PUNTAJE</span>
+                                        <div id="score-box-{{ i }}" class="score-badge">
+                                            {{ opciones_existentes[i-1].puntaje if opciones_existentes[i-1] and opciones_existentes[i-1].puntaje else '--' }}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="option-inputs-stack">
+                                    <div class="input-group" id="group-school-{{ i }}">
+                                        <label>Institución:</label>
+                                        <select class="form-control school-select" name="escuela_{{ i }}" data-opcion="{{ i }}">
+                                            <option value="">Selecciona una Institución...</option>
+                                            {% for inst in instituciones_unicas %}
+                                                <option value="{{ inst }}" {% if opciones_existentes[i-1] and opciones_existentes[i-1].escuela == inst %}selected{% endif %}>{{ inst }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    {% if is_licenciatura %}
+                                        <div class="input-group" id="group-area-{{ i }}" style="display: none;">
+                                            <label>Área:</label>
+                                            <select class="form-control area-select" name="area_{{ i }}" data-opcion="{{ i }}"
+                                                    data-preselected="{{ opciones_existentes[i-1].area if opciones_existentes[i-1] else '' }}">
+                                                <option value="">Selecciona el Área...</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="input-group" id="group-carrera-{{ i }}" style="display: none;">
+                                            <label>Carrera:</label>
+                                            <select class="form-control carrera-select" name="carrera_{{ i }}" data-opcion="{{ i }}"
+                                                    data-preselected="{{ opciones_existentes[i-1].carrera if opciones_existentes[i-1] else '' }}">
+                                                <option value="">Selecciona la Carrera...</option>
+                                            </select>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="input-group" id="group-plantel-{{ i }}" style="display: none;">
+                                        <label>Plantel:</label>
+                                        <select class="form-control plantel-select plantel-target" name="plantel_{{ i }}" data-opcion="{{ i }}"
+                                                data-preselected="{{ opciones_existentes[i-1].plantel if opciones_existentes[i-1] else '' }}">
+                                            <option value="">Selecciona el Plantel...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <div id="add-option-card" class="add-button-card" style="display: none;">
+                                <div class="add-icon-wrapper">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <span>Agregar Opción</span>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="button" id="pre-save-btn" class="btn-action btn-success fill-school-btn">
+                                <i class="fas fa-save"></i> Guardar Selección
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-button">
+            <button class="btn-chat"><i class="fas fa-comment"></i> Asistencia</button>
+        </div>
+
+        <div id="help-modal-escuelas" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <button class="modal-close modal-close-btn-escuelas">&times;</button>
+                <h2><i class="fas fa-info-circle"></i> Guía y Estrategia</h2>
+                
+                <div class="help-text-scroll">
+                    <h3 style="color: #2c3e50; border-bottom: 2px solid #4a90e2; padding-bottom: 5px; margin-top: 0;">1. Sobre los Puntajes (Aciertos)</h3>
+                    <p style="font-size: 14px; line-height: 1.5; color: #555; margin-bottom: 10px;">
+                        Los números mostrados son <strong>referencias históricas</strong> basadas en los "cortes" (aciertos mínimos) de años anteriores publicados por instituciones oficiales (UNAM, IPN, etc.).
+                    </p>
+                    <div style="background-color: #f8f9fa; border-left: 4px solid #f39c12; padding: 10px; margin-bottom: 15px; font-size: 13px;">
+                        <strong>⚠️ Importante:</strong> Los puntajes <u>no son fijos</u> y pueden variar en el examen real. Dependen exclusivamente de la <strong>Oferta y Demanda</strong> de este año:
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li><strong>Oferta:</strong> Cuantos lugares tiene disponibles la escuela.</li>
+                            <li><strong>Demanda:</strong> Cuantos alumnos solicitan esa misma escuela.</li>
+                        </ul>
+                        <em>Si una escuela se vuelve muy popular, su puntaje subirá respecto al año anterior.</em>
+                    </div>
+
+                    <h3 style="color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 5px;">2. Semáforo de Estrategia</h3>
+                    <p style="font-size: 14px; color: #555;">
+                        El sistema evalúa el orden de tus opciones para asegurar una estrategia lógica (de mayor a menor dificultad).
+                    </p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 15px;">
+                        <li style="margin-bottom: 10px; display: flex; align-items: start; gap: 10px;">
+                            <span class="score-badge has-score" style="min-width: 60px;">Verde</span>
+                            <div style="font-size: 13px;">
+                                <strong>Estrategia Correcta.</strong> El puntaje es menor o igual a tu opción anterior. Si no te quedas en la opción 1, es lógico que tu opción 2 pida menos aciertos.
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: start; gap: 10px;">
+                            <span class="score-badge score-warning" style="min-width: 60px;">Amarillo</span>
+                            <div style="font-size: 13px;">
+                                <strong>Precaución.</strong> El puntaje es idéntico al anterior. Estás "gastando" una opción con la misma dificultad.
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: start; gap: 10px;">
+                            <span class="score-badge score-danger" style="min-width: 60px;">Rojo</span>
+                            <div style="font-size: 13px;">
+                                <strong>Error de Estrategia (Incoherencia).</strong> Esta escuela pide <em>más aciertos</em> que la anterior.
+                                <br><em style="color: #c0392b;">¿Por qué está mal?</em> Si no alcanzas los aciertos para tu opción anterior (que pedía menos), matemáticamente es imposible que alcances los de esta opción (que pide más), desperdiciando así una oportunidad.
+                            </div>
+                        </li>
+                    </ul>
+
+                    <h3 style="color: #2c3e50; border-bottom: 2px solid #9b59b6; padding-bottom: 5px;">3. Llenado Inteligente</h3>
+                    <p style="font-size: 14px; color: #555;">
+                        Si al guardar tu selección el sistema detecta <strong>semáforos rojos</strong>, te ofrecerá usar el "Llenado Inteligente".
+                    </p>
+                    <div style="display: flex; gap: 10px; align-items: center; background-color: #f3e5f5; padding: 10px; border-radius: 6px;">
+                        <i class="fas fa-magic" style="font-size: 20px; color: #9b59b6;"></i>
+                        <p style="font-size: 13px; margin: 0; color: #4a148c;">
+                            Esta herramienta toma todas las escuelas que elegiste y las <strong>reordena automáticamente</strong> de mayor a menor puntaje, corrigiendo tu estrategia para maximizar tus probabilidades de asignación.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="save-confirm-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <button class="modal-close close-save-modal">&times;</button>
+                <h2>Confirmar Selección</h2>
+                
+                <div id="save-modal-body">
+                    <p>¿Estás seguro de que deseas guardar tus opciones actuales?</p>
+                    <div id="smart-fill-warning" style="display: none; margin-top: 15px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                        <p style="margin: 0; font-size: 14px; color: #856404;">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Orden no ideal detectado (puntajes rojos).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="modal-buttons-row" style="margin-top: 25px;">
+                    <button class="btn-action btn-cancel close-save-modal">Cancelar</button>
+                    
+                    <button id="modal-smart-fill-btn" class="btn-action btn-purple" style="display: none; margin-right: auto; margin-left: 10px;">
+                        <i class="fas fa-magic"></i> Llenado Inteligente
+                    </button>
+                    
+                    <button id="final-save-btn" class="btn-action btn-success">
+                        <i class="fas fa-check"></i> Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirm-ai-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <button class="modal-close confirm-modal-close">&times;</button>
+                <h2>Llenado Inteligente</h2>
+                <p>Se ordenarán tus opciones por puntaje de mayor a menor.</p>
+                <div class="modal-buttons-row">
+                    <button class="btn-action btn-cancel confirm-modal-close">Cancelar</button>
+                    <button id="confirm-ai-action" class="btn-action btn-purple">Ordenar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="quantity-modal" style="display: none;"><select id="quantity-select"></select><button id="confirm-quantity-btn"></button></div>
+    </div>
+    {% if pdf_b64 %}
+    <div id="download-modal-escuelas" class="modal-overlay" style="display: flex;">
+        <div class="modal-content">
+            <div style="font-size: 50px; color: #27ae60; margin-bottom: 15px;">
+                <i class="fas fa-file-circle-check"></i>
+            </div>
+            <h2>¡Selección Guardada!</h2>
+            <p>Tus opciones han sido registradas. Descarga tu comprobante (Documento A):</p>
+            
+            <div style="margin: 20px 0;">
+                <button onclick="downloadSeleccionPDF('{{ pdf_b64 }}', '{{ pdf_name }}')" class="btn-action btn-success" style="padding: 12px 25px; font-size: 16px;">
+                    <i class="fas fa-download"></i> Descargar Documento
+                </button>
+            </div>
+            
+            <button onclick="document.getElementById('download-modal-escuelas').style.display='none'" class="btn-action btn-secondary">
+                Cerrar
+            </button>
+        </div>
+    </div>
+    {% endif %}
+    <script src="{{ url_for('static', filename='js/escuelas.js') }}"></script>
+</body>
+</html>

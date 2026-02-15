@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados | Simulador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/resultados.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="results-container">
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <a href="{{ url_for('launcher') }}" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Inicio
+                </a>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-action" style="background-color: #2c3e50; cursor: default;">
+                    <i class="fas fa-user"></i>
+                    {{ fullname }}
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-wrapper">
+                
+                <h1 class="page-title">Resultados: <span id="materia-title">{{ materia }}</span></h1>
+
+                <div class="summary-card">
+                    <div class="chart-container">
+                        <canvas id="resultsChart"></canvas>
+                    </div>
+                    <div class="stats-container">
+                        <div class="score-circle">
+                            <span id="score-number">0.0</span>
+                            <span class="score-label">Calificación</span>
+                        </div>
+                        <div class="stats-list">
+                            <div class="stat-item correct">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Correctas: <strong id="count-correct">0</strong></span>
+                            </div>
+                            <div class="stat-item incorrect">
+                                <i class="fas fa-times-circle"></i>
+                                <span>Incorrectas: <strong id="count-incorrect">0</strong></span>
+                            </div>
+                            <div class="stat-item unanswered">
+                                <i class="fas fa-minus-circle"></i>
+                                <span>Sin responder: <strong id="count-unanswered">0</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="toggle-container">
+                    <button id="toggle-details-btn" class="btn-toggle">
+                        Ver Detalles por Pregunta <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+
+                <div id="details-container" class="details-list" style="display: none;">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando detalles...
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.resultsConfig = {
+            materia: "{{ materia }}"
+        };
+    </script>
+    <script src="{{ url_for('static', filename='js/resultados.js') }}"></script>
+</body>
+</html>

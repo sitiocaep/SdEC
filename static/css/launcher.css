@@ -1,0 +1,638 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background-color: #2c3e50;
+    height: 100vh;
+    overflow: auto; /* Importante para scroll en móvil */
+}
+
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: white;
+    max-width: 100%;
+    position: relative;
+}
+
+/* --- BARRA SUPERIOR --- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    min-height: 70px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.nav-btn:hover {
+    background-color: #e9e9e9;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-action:hover {
+    background-color: #3a7bc8;
+}
+
+.btn-action.logout {
+    background-color: #e74c3c;
+}
+
+.btn-action.logout:hover {
+    background-color: #c0392b;
+}
+
+/* --- ÁREA DE CONTENIDO PRINCIPAL --- */
+.content-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 20px;
+    min-height: calc(100vh - 140px);
+}
+
+.content-section {
+    max-width: 900px;
+    width: 100%;
+}
+
+.content-section h1 {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    word-wrap: break-word;
+}
+
+/* Sección de actualización */
+.update-section {
+    padding: 22px;
+    background-color: #f5f5f5;
+    color: #333;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 20px;
+}
+
+.important-text {
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.prohibited-image-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.prohibited-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.separator {
+    height: 1px;
+    background-color: #ddd;
+    margin: 25px 0;
+}
+
+/* --- SELECTORES --- */
+.course-selector, .exam-selector {
+    margin-bottom: 22px;
+    text-align: center;
+}
+
+.course-selector label, .exam-selector label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 15px;
+}
+
+.course-dropdown, .exam-dropdown {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+    margin: 0 auto;
+    display: block;
+}
+
+.course-dropdown:focus, .exam-dropdown:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* --- TARJETA DE EXAMEN (DISEÑO CAPTURA MODERNIZADO) --- */
+
+.exam-details {
+    padding: 0 20px 25px;
+    background-color: white;
+}
+
+.exam-info-container {
+    animation: fadeIn 0.3s ease-in;
+    margin-top: 20px;
+}
+
+.exam-card-new {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    max-width: 650px;
+    margin: 0 auto 25px auto;
+}
+
+/* Cabecera Gris */
+.exam-card-header-new {
+    background-color: #e9ecef;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam-card-header-new h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Botón Cambiar Examen */
+.btn-change-exam {
+    background-color: transparent;
+    color: #2c3e50;
+    border: 1px solid #2c3e50;
+    text-decoration: none;
+    padding: 6px 14px;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-change-exam:hover {
+    background-color: #2c3e50;
+    color: white;
+}
+
+/* Cuerpo de la tarjeta */
+.exam-card-body-new {
+    padding: 25px;
+    display: flex;
+    
+    align-items: center;
+}
+
+/* --- ESTILO PARA LA IMAGEN DEL LOGO --- */
+.exam-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la imagen cubra todo el cuadro sin deformarse */
+    display: block;
+    border-radius: 6px; /* Mantiene el radio de borde del contenedor padre */
+}
+
+/* Ajuste opcional: Si el logo es transparente y quieres quitar el fondo azul oscuro del contenedor padre cuando hay imagen */
+.exam-logo-box:has(.exam-logo-img) {
+    background-color: transparent; /* O white, dependiendo de tu imagen */
+    box-shadow: none; /* Opcional: quita la sombra si la imagen ya tiene */
+}
+
+/* Lista de detalles (Derecha) */
+.exam-details-list {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.detail-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+    flex-shrink: 0;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* Pastillas de estado (Pills) */
+.detail-pill {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+    padding: 8px 15px;
+    width: 220px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+}
+
+.detail-pill.pill-green, 
+.detail-pill.status-available {
+    background-color: #27ae60;
+    color: white;
+    box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+}
+
+.detail-pill.status-not-started {
+    background-color: #f39c12;
+    color: white;
+}
+
+.detail-pill.status-finished {
+    background-color: #95a5a6;
+    color: white;
+}
+
+/* Footer de Acciones */
+.exam-actions-footer {
+    max-width: 650px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.btn-large-action {
+    flex: 1;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-large-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn-start {
+    background-color: #2c3e50;
+}
+
+.btn-start:hover {
+    background-color: #1a252f;
+}
+
+.btn-results {
+    background-color: #2980b9;
+}
+
+.btn-results:hover {
+    background-color: #2471a3;
+}
+
+.btn-large-action.disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- ELEMENTOS FLOTANTES --- */
+.chat-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.btn-chat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: auto;
+    height: 56px;
+    border-radius: 28px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0 18px;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-chat:hover {
+    background-color: #1a252f;
+    transform: scale(1.05);
+}
+
+/* Animaciones y Alertas */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    word-wrap: break-word;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* ---------------------------------------------------- */
+/* --- MEDIA QUERIES (RESPONSIVIDAD DETALLADA) --- */
+/* ---------------------------------------------------- */
+
+/* 1. Tablets y Móviles Grandes (max 768px) */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+    }
+    
+    .exam-container {
+        min-height: 100vh;
+    }
+
+    /* Barra superior en columna */
+    .top-bar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 10px 15px;
+        min-height: auto;
+    }
+    
+    .nav-buttons, .action-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .content-area {
+        padding: 15px;
+        min-height: calc(100vh - 120px);
+    }
+    
+    .content-section h1 {
+        padding: 16px;
+        font-size: 20px;
+    }
+
+    /* Tarjeta: Cuerpo en columna */
+    .exam-card-body-new {
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    /* Filas de detalle en columna */
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .detail-label {
+        font-size: 14px;
+    }
+
+    .detail-pill {
+        width: 100%; /* Ocupa todo el ancho */
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    /* Botones de acción en columna */
+    .exam-actions-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-large-action {
+        width: 100%;
+    }
+
+    .chat-button {
+        bottom: 15px;
+        left: 15px;
+    }
+}
+
+/* 2. Móviles Estándar (max 480px) */
+@media (max-width: 480px) {
+    .top-bar {
+        padding: 8px 10px;
+    }
+    
+    /* Botones de navegación se ajustan al 50% */
+    .nav-buttons, .action-buttons {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .btn-action, .nav-btn {
+        flex: 1 1 calc(50% - 5px); /* Ocupan la mitad cada uno */
+        min-width: 120px;
+        font-size: 12px;
+        padding: 7px 8px;
+        justify-content: center;
+    }
+    
+    .content-area {
+        padding: 10px;
+        min-height: calc(100vh - 100px);
+    }
+    
+    .content-section h1 {
+        padding: 14px 10px;
+        font-size: 18px;
+    }
+    
+    .update-section {
+        padding: 15px;
+    }
+    
+    .exam-details {
+        padding: 0 10px 20px;
+    }
+    
+    /* Cabecera de tarjeta compacta */
+    .exam-card-header-new {
+        padding: 12px 15px;
+    }
+    
+    .exam-card-header-new h3 {
+        font-size: 16px;
+    }
+    
+    .exam-card-body-new {
+        padding: 15px;
+    }
+    
+    .exam-logo-box {
+        height: 80px; /* Aún más compacto */
+        font-size: 14px;
+    }
+    
+    .btn-large-action {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .btn-chat {
+        height: 46px;
+        font-size: 13px;
+        padding: 0 14px;
+    }
+    
+    .message-alert {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        text-align: center;
+        font-size: 14px;
+    }
+}
+
+/* 3. Dispositivos Muy Pequeños (max 360px) */
+@media (max-width: 360px) {
+    /* Botones ocupan todo el ancho */
+    .btn-action, .nav-btn {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+    
+    .content-section h1 {
+        font-size: 16px;
+        padding: 12px 8px;
+    }
+    
+    .update-section {
+        padding: 12px;
+    }
+    
+    /* Ajuste fino de tarjeta */
+    .exam-card-header-new {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .btn-change-exam {
+        align-self: flex-start;
+    }
+
+    .exam-logo-box {
+        height: 70px;
+    }
+    
+    .btn-chat {
+        height: 42px;
+        font-size: 12px;
+        padding: 0 12px;
+    }
+}

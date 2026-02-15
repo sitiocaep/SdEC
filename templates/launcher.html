@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/launcher.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="exam-container">
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="location.reload();">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                </button>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{{ url_for('test') }}" class="btn-action" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-camera"></i>
+                    <i class="fas fa-microphone"></i>
+                    Comprobar dispositivos
+                </a>
+                
+                <a href="{{ url_for('perfil') }}" class="btn-action" style="background-color: #2c3e50; cursor: pointer; text-decoration: none;">
+                    <i class="fas fa-user"></i>
+                    {{ fullname }}
+                </a>
+                
+                <button class="btn-action logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Salir
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-section">
+                <h1>C.A.E.P. EXAMEN {{ curso | default('SIMULADOR') }}</h1>
+                
+                <div class="update-section">
+                    <p class="important-text"><strong>IMPORTANTE, recuerda que está prohibido el uso de:</strong></p>
+                    
+                    <div class="prohibited-image-container">
+                        <img src="{{ url_for('static', filename='img/articulos_prohibidos.png') }}" 
+                             alt="Artículos prohibidos" class="prohibited-image">
+                    </div>
+                </div>
+                
+                <div class="separator"></div>
+                
+                <div class="exam-details">
+                    <div class="course-selector" id="course-selector" style="display: none;">
+                        <label for="course-select">Selecciona un curso:</label>
+                        <select id="course-select" class="course-dropdown">
+                            <option value="">-- Selecciona un curso --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="exam-selector" id="exam-selector" style="display: none;">
+                        <label for="exam-select">Selecciona un examen:</label>
+                        <select id="exam-select" class="exam-dropdown">
+                            <option value="">-- Cargando exámenes... --</option>
+                        </select>
+                    </div>
+                    
+                    <div id="exam-info-container" class="exam-info-container" style="display: none;">
+                        <div class="exam-card-new">
+                            <div class="exam-card-header-new">
+                                <h3 id="exam-name-title">Nombre de Examen</h3>
+                                <a href="#" id="change-exam" class="btn-change-exam">Cambiar Examen</a>
+                            </div>
+                            
+                            <div class="exam-card-body-new">
+                                <div class="exam-logo-box">
+                                    {% if 'ECOEMS' in curso %}
+                                        <img src="{{ url_for('static', filename='img/logo_ecoems.png') }}" alt="Logo ECOEMS" class="exam-logo-img">
+                                    {% elif 'LICENCIATURA' in curso %}
+                                        <img src="{{ url_for('static', filename='img/logo_licenciatura.png') }}" alt="Logo Licenciatura" class="exam-logo-img">
+                                    {% else %}
+                                        <span>LOGO<br>EXAMEN</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="exam-details-list">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Estatus:</span>
+                                        <span id="exam-status-pill" class="detail-pill pill-green">Disponible</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Fecha:</span>
+                                        <span id="exam-date-pill" class="detail-pill pill-green">---</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Horario:</span>
+                                        <span id="exam-time-pill" class="detail-pill pill-green">---</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="exam-actions-footer">
+                            <button id="start-exam-btn" class="btn-large-action btn-start">
+                                Comenzar Examen
+                            </button>
+                            <button id="view-results-btn" class="btn-large-action btn-results" style="display: none;">
+                                Ver resultados
+                            </button>
+                            <button id="not-presented-btn" class="btn-large-action disabled" style="display: none; background-color: #7f8c8d; cursor: not-allowed;">
+                                Sin Presentar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-button">
+            <button class="btn-chat">
+                <i class="fas fa-comment"></i>
+                Asistencia
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/launcher.js') }}"></script>
+    <script>
+        // Función para logout
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = "{{ url_for('logout') }}";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen | Simulador de Examen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/examen.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="blackout-curtain"></div>
+
+    <div id="security-overlay">
+        <i class="fas fa-shield-alt" style="font-size: 5rem; margin-bottom: 20px; color: #f1c40f;"></i>
+        <h2>MODO EXAMEN SEGURO</h2>
+        <p>
+            Para realizar este examen, el sistema debe entrar en pantalla completa.
+            <br><br>
+            <strong>Reglas de Seguridad:</strong><br>
+            <ul style="text-align: left; display: inline-block; margin-bottom: 20px;">
+                <li>El teclado se bloqueará (excepto ESC).</li>
+                <li>Si sales de la pantalla completa, el examen se pausará y bloqueará.</li>
+                <li>Si cambias de pestaña o intentas tomar captura, la pantalla se oscurecerá.</li>
+            </ul>
+        </p>
+        <button class="btn-secure-start" id="btn-start-secure">COMENZAR EXAMEN</button>
+    </div>
+
+    <div class="exam-container" id="main-container">
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <div class="zoom-controls">
+                    <button class="nav-btn" id="zoom-out" title="Disminuir Zoom">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="nav-btn" id="zoom-in" title="Aumentar Zoom">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-action" style="background-color: #2c3e50; cursor: default;">
+                    <i class="fas fa-user"></i>
+                    {{ fullname }}
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-section">
+                
+                <div class="exam-header">
+                    <div class="camera-time-container">
+                        <div class="camera-preview-large">
+                            <div class="camera-feed-large" id="camera-feed-large">
+                                <div class="camera-feed" id="camera-feed">
+                                    <div class="camera-placeholder-large">
+                                        <i class="fas fa-camera"></i>
+                                        <p>Vista previa</p>
+                                    </div>
+                                </div>
+                                <div class="volume-meter">
+                                    <div class="volume-bar">
+                                        <div class="volume-level" id="volume-level"></div>
+                                    </div>
+                                    <div class="volume-percentage" id="volume-text">0%</div>
+                                </div>
+                            </div>
+                            <div class="camera-status">
+                                <i class="fas fa-circle" id="camera-status-icon"></i>
+                                <span id="camera-status-text">Cámara activa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-links">
+                        <h3 class="exam-title-right">{{ exam_details.name | default('Examen') }}</h3>
+
+                        <div class="time-info-large">
+                            <p><strong>Hora de inicio:</strong> <span id="start-time">{{ exam_details.start_time | default('N/A') }}</span></p>
+                            <p><strong>Hora de término:</strong> <span id="end-time">{{ exam_details.end_time | default('N/A') }}</span></p>
+                            <p><strong>Tiempo restante:</strong> <span id="countdown">Cargando...</span></p>
+                            <p id="bathroom-countdown"></p>
+                        </div>
+                        
+                        <a href="#" class="exam-link" id="bathroom-link">Da click aquí para solicitar permiso para ir al baño</a>
+                        <a href="#" class="exam-link" id="camera-problem-link">¿Problemas con tu cámara web?</a>
+                        <a href="#" class="exam-link" id="restart-camera-link">Da click aquí para reiniciar la cámara web</a>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="questions-nav-bar">
+                    <div class="nav-item active" data-question="0" title="Instrucciones">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    {% for q in questions %}
+                    <div class="nav-item" data-question="{{ loop.index }}">
+                        <span class="nav-number">{{ loop.index }}</span>
+                    </div>
+                    {% endfor %}
+                    <div class="nav-item finish-nav-item" id="finish-nav-btn">
+                        Finalizar
+                    </div>
+                </div>
+
+                <div class="questions-container">
+                    
+                    <div class="question-container active" data-question="0">
+                        <div class="question-header">
+                            <span class="question-title">Instrucciones del Examen</span>
+                        </div>
+
+                        <div class="question-content">
+                            <div class="instructions-content">
+                                <h3>Antes de comenzar, lee atentamente:</h3>
+                                <ol>
+                                    <li>Este examen consta de <strong>{{ questions | length }}</strong> preguntas.</li>
+                                    <li>Tienes un tiempo límite para completarlo (mira el contador).</li>
+                                    <li>Lee cuidadosamente cada pregunta antes de responder.</li>
+                                    <li>Selecciona solo UNA respuesta por cada pregunta.</li>
+                                    <li>Puedes cambiar tu respuesta en cualquier momento antes de finalizar.</li>
+                                    <li>El botón "REVISAR" marca la pregunta en naranja para revisión posterior.</li>
+                                    <li>Si finalizas el examen, no podrás volver a entrar.</li>
+                                    <li><strong>Advertencia:</strong> Si sales de pantalla completa o cambias de pestaña, se registrará una incidencia y la pantalla se bloqueará.</li>
+                                </ol>
+                                <div class="exam-tips">
+                                    <p><strong>Consejos:</strong></p>
+                                    <ul>
+                                        <li>Si se va el internet, tus respuestas se guardan automáticamente. No cierres la ventana.</li>
+                                        <li>Usa el permiso de baño solo si es estrictamente necesario (una sola vez).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if not questions %}
+                    <div class="question-container active" data-question="1">
+                         <div class="question-header">
+                            <span class="question-title">Error de Carga</span>
+                        </div>
+                        <div class="question-content">
+                            <p class="question-text">Error: No se pudieron cargar las preguntas para este examen ({{ request.args.get('materia') }}). Por favor, contacta a soporte.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% for q in questions %}
+                    <div class="question-container" data-question="{{ loop.index }}">
+                        <div class="question-header">
+                            <span class="question-status" id="question-status-{{ loop.index }}"></span>
+                        </div>
+
+                        <div class="question-content">
+                            <p class="question-text">{{ q.Pregunta_número | default(loop.index) }}. {{ q.Pregunta }}</p>
+
+                            <div class="answers-container">
+                                <div class="answer-option">
+                                    <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A">
+                                    <label for="q{{ loop.index }}-a">{{ q.Respuesta_a }}</label>
+                                </div>
+                                <div class="answer-option">
+                                    <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B">
+                                    <label for="q{{ loop.index }}-b">{{ q.Respuesta_b }}</label>
+                                </div>
+                                <div class="answer-option">
+                                    <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C">
+                                    <label for="q{{ loop.index }}-c">{{ q.Respuesta_c }}</label>
+                                </div>
+                                <div class="answer-option">
+                                    <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D">
+                                    <label for="q{{ loop.index }}-d">{{ q.Respuesta_d }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="question-navigation">
+                        <button class="nav-btn" id="prev-btn">
+                            ANTERIOR
+                        </button>
+                        <button class="nav-btn" id="review-btn">
+                            REVISAR
+                        </button>
+                        <button class="nav-btn" id="next-btn">
+                            SIGUIENTE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-button">
+            <button class="btn-chat">
+                <i class="fas fa-comment"></i>
+                Asistencia
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.examConfig = {
+            // Tiempo restante calculado por el servidor
+            totalSeconds: {{ exam_details.total_seconds | default(10800) }},
+            // Total de preguntas para validaciones
+            totalQuestions: {{ questions | length | default(0) }},
+            // ID Único compuesto por Fecha + Hora Inicio + Hora Fin
+            // Esto evita que se carguen respuestas de un examen en otra fecha u horario
+            examId: "{{ exam_details.date }}_{{ exam_details.start_time }}_{{ exam_details.end_time }}",
+            // Datos del usuario y examen para guardar resultados
+            folio: "{{ session['folio'] | default('') }}",
+            curso: "{{ session['curso'] | default('') }}",
+            materia: "{{ request.args.get('materia') | default('') }}"
+        };
+    </script>
+    <script src="{{ url_for('static', filename='js/examen.js') }}"></script>
+</body>
+</html>

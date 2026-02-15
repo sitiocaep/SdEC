@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma C.A.E.P.</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="exam-container">
+        <div class="top-bar">
+             <div class="top-bar-left-group"> <div class="nav-buttons"> <button id="about-btn" class="nav-btn"><i class="fas fa-info-circle"></i> Acerca de</button> </div> <img src="{{ url_for('static', filename='img/logo_caep.png') }}" alt="Logo C.A.E.P." class="top-bar-logo"> <div class="top-bar-title">PLATAFORMA C.A.E.P.</div> </div> <div class="action-buttons"> {% if session.logged_in %} <button class="btn-action logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button> {% else %} <form id="navbar-login-form" class="navbar-login"> <input type="text" id="nav-username" name="username" class="nav-form-control" placeholder="Usuario"> <input type="password" id="nav-password" name="password" class="nav-form-control" placeholder="Contraseña"> <button type="submit" class="btn-action btn-login-nav"> <i class="fas fa-sign-in-alt"></i> Entrar </button> </form> <div class="nav-button-group"> <button type="button" id="nav-show-register" class="btn-action btn-register-nav"> <i class="fas fa-user-plus"></i> Inscribirse </button> <button type="button" id="nav-show-reset" class="btn-action btn-recover-nav"> <i class="fas fa-key"></i> Recuperar </button> </div> {% endif %} <div class="nav-button-group"> <button id="help-btn" class="btn-action"><i class="fas fa-question-circle"></i> Ayuda</button> </div> </div>
+        </div>
+
+        <div class="content-area">
+            {% if not session.logged_in %}
+
+            <div id="recover-screen" class="setup-screen" style="display: none;">
+                 <button id="recover-close-btn" class="modal-close">&times;</button>
+                 <div class="setup-panel setup-panel-left">
+                     <div class="logo-container">
+                         <img class="setup-logo" src="{{ url_for('static', filename='img/logo_caep.png') }}" alt="Logo C.A.E.P.">
+                     </div>
+                     <h2 class="setup-title">Recuperar Credenciales</h2>
+                 </div>
+                 <div class="setup-panel setup-panel-right">
+                     <div id="login-prompt-recover" class="register-info top-prompt">¿Ya tienes una cuenta? <a href="#" class="register-link" id="show-login-from-reset">Inicia sesión aquí</a></div>
+                    <form id="reset-form">
+                        <div class="form-group"><label for="reset-email">Correo electrónico</label><input type="email" id="reset-email" name="email" class="form-control" placeholder="usuario@ejemplo.com"></div>
+                        <div class="form-group"><label for="reset-confirm-email">Confirmar Correo electrónico</label><input type="email" id="reset-confirm-email" name="confirm_email" class="form-control" placeholder="Confirma tu correo electrónico"></div>
+                        <div class="form-group"><label for="reset-fecha-nacimiento">Fecha de Nacimiento</label><input type="text" id="reset-fecha-nacimiento" name="fecha_nacimiento" class="form-control" placeholder="Selecciona tu fecha de nacimiento"></div>
+                        <div class="form-info"><p>Ingresa tus datos para recuperar tu usuario y generar una nueva contraseña.</p></div>
+                        <div class="recovery-actions">
+                            <button type="button" class="btn-login" id="recover-credentials-btn">Recuperar Credenciales</button>
+                        </div>
+                        <div id="recovery-result" style="display: none;"></div>
+                    </form>
+                 </div>
+            </div>
+
+            <div id="register-screen" class="setup-screen" style="display: none;">
+                <button id="register-close-btn" class="modal-close">&times;</button>
+                <div class="setup-panel setup-panel-left">
+                    <div class="logo-container">
+                        <img id="dynamic-logo" class="setup-logo" src="{{ url_for('static', filename='img/logo_caep.png') }}" alt="Logo C.A.E.P.">
+                    </div>
+                    <h2 class="setup-title">Inscripción C.A.E.P.</h2>
+                    <div class="form-stepper">
+                        <div class="step active" data-step="1"> <div class="step-icon">1</div> <div class="step-title">Datos</div> </div>
+                        <div class="step step-conditional" data-step="2"> <div class="step-icon">2</div> <div class="step-title">Tutor</div> </div>
+                        <div class="step step-conditional" data-step="3"> <div class="step-icon">3</div> <div class="step-title">Antecedentes</div> </div>
+                        <div class="step step-conditional" data-step="4"> <div class="step-icon">4</div> <div class="step-title">Seguimiento</div> </div>
+                        <div class="step step-conditional" data-step="5"> <div class="step-icon">5</div> <div class="step-title">Salud</div> </div>
+                        <div class="step" data-step="6"> <div class="step-icon"><i class="fas fa-check"></i></div> <div class="step-title">Revisar</div> </div>
+                    </div>
+                </div>
+                <div class="setup-panel setup-panel-right">
+                     <div id="login-prompt-register" class="register-info top-prompt">¿Ya tienes una cuenta? <a href="#" class="register-link" id="show-login">Inicia sesión aquí</a></div>
+                    <form id="register-form">
+                        <div class="form-step active" data-step-content="1">
+                             <div class="form-group"> <label for="curso">Curso</label> <select id="curso" name="curso" class="form-control"> <option value="" disabled selected>Cargando cursos...</option> </select> </div>
+                             <div class="form-group"><label for="nombre">Nombre(s)</label><input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa tu(s) nombre(s)"></div>
+                             <div class="form-group"><label for="apellido_paterno">Apellido Paterno</label><input type="text" id="apellido_paterno" name="apellido_paterno" class="form-control" placeholder="Ingresa tu apellido paterno"></div>
+                             <div class="form-group"><label for="apellido_materno">Apellido Materno</label><input type="text" id="apellido_materno" name="apellido_materno" class="form-control" placeholder="Ingresa tu apellido materno"></div>
+                             <div class="form-group"><label for="reg-email">Correo electrónico</label><input type="email" id="reg-email" name="email" class="form-control" placeholder="usuario@ejemplo.com"></div>
+                             <div class="form-group"><label for="confirm-email">Confirmar Correo electrónico</label><input type="email" id="confirm-email" name="confirm_email" class="form-control" placeholder="Confirma tu correo electrónico"></div>
+                             <div class="form-group"><label for="fecha_nacimiento">Fecha de Nacimiento</label><input type="text" id="fecha_nacimiento" name="fecha_nacimiento" class="form-control" placeholder="Selecciona tu fecha de nacimiento"></div>
+                        </div>
+
+                        <div id="ecoems-fields" style="display: none;">
+                            <div class="form-step" data-step-content="2">
+                                <div class="form-info"><p id="pdf-form-intro">Completa los siguientes datos para tu ficha de inscripción...</p></div>
+                                <div class="form-group"><label for="edad">Edad</label><input type="number" id="edad" name="edad" class="form-control" placeholder="Ingresa tu edad"></div>
+                                <div class="form-group"><label for="nombre_tutor">Nombre Completo del Tutor(a)</label><input type="text" id="nombre_tutor" name="nombre_tutor" class="form-control" placeholder="Ingresa el nombre de tu tutor(a)"></div>
+                                <div class="form-group"><label for="domicilio">Domicilio Particular</label><input type="text" id="domicilio" name="domicilio" class="form-control" placeholder="Calle, Número, Colonia, Municipio"></div>
+                                <div class="form-group"><label for="ocupacion_tutor">Ocupación del Tutor(a)</label><input type="text" id="ocupacion_tutor" name="ocupacion_tutor" class="form-control" placeholder="Ocupación de tu tutor(a)"></div>
+                                <div class="form-group"><label for="tel_particular">Teléfono Particular</label><input type="tel" id="tel_particular" name="tel_particular" class="form-control" placeholder="Ej: 55 5555 5555"></div>
+                                <div class="form-group"><label for="tel_celular">Teléfono Celular</label><input type="tel" id="tel_celular" name="tel_celular" class="form-control" placeholder="Ej: 55 5555 5555"></div>
+                            </div>
+                            
+                            <div class="form-step" data-step-content="3">
+                                <div class="form-info"><p>Antecedentes</p></div>
+                                
+                                <div class="form-group">
+                                    <label for="si_no_trabajar">¿El alumno trabaja?</label>
+                                    <select id="si_no_trabajar" name="si_no_trabajar" class="form-control conditional-select" data-target-group="trabajar_donde_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="trabajar_donde_group">
+                                    <div class="form-group"><label for="trabajar_donde">¿En dónde?</label><input type="text" id="trabajar_donde" name="trabajar_donde" class="form-control"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="si_no_estudiar">¿Actualmente estudias?</label>
+                                    <select id="si_no_estudiar" name="si_no_estudiar" class="form-control conditional-select" data-target-group="estudiar_donde_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="estudiar_donde_group">
+                                    <div class="form-group"><label for="estudiar_donde">¿Dónde?</label><input type="text" id="estudiar_donde" name="estudiar_donde" class="form-control"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="si_no_dejar">¿Has dejado de estudiar?</label>
+                                    <select id="si_no_dejar" name="si_no_dejar" class="form-control conditional-select" data-target-group="dejar_donde_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="dejar_donde_group">
+                                    <div class="form-group"><label for="dejar_donde">¿Por qué?</label><input type="text" id="dejar_donde" name="dejar_donde" class="form-control"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="si_no_leer">¿Te gusta leer?</label>
+                                    <select id="si_no_leer" name="si_no_leer" class="form-control conditional-select" data-target-group="leer_que_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="leer_que_group">
+                                    <div class="form-group"><label for="leer_que">¿Qué tipo de lecturas?</label><input type="text" id="leer_que" name="leer_que" class="form-control"></div>
+                                </div>
+                                
+                                <div class="form-group"><label for="materias_agrado">¿Qué materias son más de tu agrado?</label><input type="text" id="materias_agrado" name="materias_agrado" class="form-control"></div>
+                                <div class="form-group"><label for="materias_complejas">¿Qué materias se te complican?</label><input type="text" id="materias_complejas" name="materias_complejas" class="form-control"></div>
+                                <div class="form-group"><label for="materias_desagrado">¿Qué materias no te gustan?</label><input type="text" id="materias_desagrado" name="materias_desagrado" class="form-control"></div>
+                                <div class="form-group"><label for="materias_por_que">¿Por qué no te gustan?</label><input type="text" id="materias_por_que" name="materias_por_que" class="form-control"></div>
+                                <div class="form-group"><label for="motivar_estudiar">¿Alguien te motiva a estudiar?</label><input type="text" id="motivar_estudiar" name="motivar_estudiar" class="form-control"></div>
+                                <div class="form-group"><label for="horas_tareas">¿Cuántas horas dedicas a hacer tareas?</label><input type="text" id="horas_tareas" name="horas_tareas" class="form-control"></div>
+                                <div class="form-group"><label for="horas_estudiar">¿Cuántas horas dedicas a estudiar?</label><input type="text" id="horas_estudiar" name="horas_estudiar" class="form-control"></div>
+                            </div>
+                            <div class="form-step" data-step-content="4">
+                                <div class="form-info"><p>Seguimiento</p></div>
+                                <div class="form-group">
+                                    <label for="si_no_estudiar_solo">¿Te gusta estudiar por ti mismo?</label>
+                                    <select id="si_no_estudiar_solo" name="si_no_estudiar_solo" class="form-control">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="si_no_papas_tarea">¿Tus papás te indican para hacer la tarea?</label>
+                                    <select id="si_no_papas_tarea" name="si_no_papas_tarea" class="form-control conditional-select" data-target-group="papas_tarea_cuando_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="papas_tarea_cuando_group">
+                                    <div class="form-group"><label for="papas_tarea_cuando">¿Cuándo?</label><input type="text" id="papas_tarea_cuando" name="papas_tarea_cuando" class="form-control" placeholder="Ej: Siempre, A veces, Nunca..."></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="promedio_primero_entero" id="label_promedio_primero">Promedio 1er grado secundaria</label>
+                                    <div class="promedio-group">
+                                        <select id="promedio_primero_entero" name="promedio_primero_entero" class="form-control promedio-select-entero" data-target-hidden="promedio_primero">
+                                            <option value="" disabled selected>Entero</option>
+                                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                                        </select>
+                                        <span class="promedio-dot">.</span>
+                                        <select id="promedio_primero_decimal" name="promedio_primero_decimal" class="form-control promedio-select-decimal" data-target-hidden="promedio_primero">
+                                            <option value="" disabled selected>Dec</option>
+                                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="promedio_primero" name="promedio_primero">
+                                </div>
+                                <div class="form-group">
+                                    <label for="promedio_segundo_entero" id="label_promedio_segundo">Promedio 2do grado secundaria</label>
+                                    <div class="promedio-group">
+                                        <select id="promedio_segundo_entero" name="promedio_segundo_entero" class="form-control promedio-select-entero" data-target-hidden="promedio_segundo">
+                                            <option value="" disabled selected>Entero</option>
+                                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                                        </select>
+                                        <span class="promedio-dot">.</span>
+                                        <select id="promedio_segundo_decimal" name="promedio_segundo_decimal" class="form-control promedio-select-decimal" data-target-hidden="promedio_segundo">
+                                            <option value="" disabled selected>Dec</option>
+                                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="promedio_segundo" name="promedio_segundo">
+                                </div>
+                                <div class="form-group">
+                                    <label for="promedio_actual_entero">Promedio actual</label>
+                                    <div class="promedio-group">
+                                        <select id="promedio_actual_entero" name="promedio_actual_entero" class="form-control promedio-select-entero" data-target-hidden="promedio_actual">
+                                            <option value="" disabled selected>Entero</option>
+                                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                                        </select>
+                                        <span class="promedio-dot">.</span>
+                                        <select id="promedio_actual_decimal" name="promedio_actual_decimal" class="form-control promedio-select-decimal" data-target-hidden="promedio_actual">
+                                            <option value="" disabled selected>Dec</option>
+                                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="promedio_actual" name="promedio_actual">
+                                </div>
+                                <div class="form-group">
+                                    <label for="si_no_deporte">¿Practicas algún deporte?</label>
+                                    <select id="si_no_deporte" name="si_no_deporte" class="form-control conditional-select" data-target-group="deporte_cual_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="deporte_cual_group">
+                                    <div class="form-group"><label for="deporte_cual">¿Cuál?</label><input type="text" id="deporte_cual" name="deporte_cual" class="form-control"></div>
+                                </div>
+                                
+                                <div class="form-group"><label for="escuela_objetivo">¿Qué escuela tienes como objetivo?</label><input type="text" id="escuela_objetivo" name="escuela_objetivo" class="form-control"></div>
+                                <div class="form-group"><label for="estudiar_objetivo">¿Tienes idea de qué quieres estudiar?</label><input type="text" id="estudiar_objetivo" name="estudiar_objetivo" class="form-control"></div>
+                                <div class="form-group"><label for="curso_objetivo">¿Qué esperas de este curso?</label><input type="text" id="curso_objetivo" name="curso_objetivo" class="form-control"></div>
+                                <div class="form-group"><label for="comprometer_estudiar">¿A qué te comprometes en este curso?</label><input type="text" id="comprometer_estudiar" name="comprometer_estudiar" class="form-control"></div>
+                                <div class="form-group"><label for="corto_plazo">Aspiraciones a corto plazo</label><input type="text" id="corto_plazo" name="corto_plazo" class="form-control"></div>
+                                <div class="form-group"><label for="mediano_plazo">Aspiraciones a mediano plazo</label><input type="text" id="mediano_plazo" name="mediano_plazo" class="form-control"></div>
+                                <div class="form-group"><label for="largo_plazo">Aspiraciones a largo plazo</label><input type="text" id="largo_plazo" name="largo_plazo" class="form-control"></div>
+                            </div>
+                            <div class="form-step" data-step-content="5">
+                                <div class="form-info"><p>Datos Importantes</p></div>
+                                
+                                <div class="form-group">
+                                    <label for="si_no_enfermedad">¿Presentas alguna enfermedad?</label>
+                                    <select id="si_no_enfermedad" name="si_no_enfermedad" class="form-control conditional-select" data-target-group="enfermedad_cual_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="enfermedad_cual_group">
+                                    <div class="form-group"><label for="enfermedad_cual">¿Cuál?</label><input type="text" id="enfermedad_cual" name="enfermedad_cual" class="form-control"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="si_no_medicamento">¿Tomas algún medicamento?</label>
+                                    <select id="si_no_medicamento" name="si_no_medicamento" class="form-control conditional-select" data-target-group="medicamento_cual_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="medicamento_cual_group">
+                                    <div class="form-group"><label for="medicamento_cual">¿Cuál?</label><input type="text" id="medicamento_cual" name="medicamento_cual" class="form-control"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="si_no_seguro">¿Cuentas con seguro social?</label>
+                                    <select id="si_no_seguro" name="si_no_seguro" class="form-control conditional-select" data-target-group="seguro_cual_group">
+                                        <option value="" disabled selected>Selecciona una opción...</option>
+                                        <option value="No">No</option>
+                                        <option value="Sí">Sí</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-conditional" id="seguro_cual_group">
+                                    <div class="form-group"><label for="seguro_cual">¿Cuál(es)?</label><input type="text" id="seguro_cual" name="seguro_cual" class="form-control"></div>
+                                </div>
+                            </div>
+                            </div> <div class="form-step" data-step-content="6">
+                            <div class="form-info"><p>Revisa que todos tus datos sean correctos antes de finalizar.</p></div>
+                            <div id="step-review-content"></div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn-action btn-secondary btn-step-prev" style="display: none;"><i class="fas fa-arrow-left"></i> Atrás</button>
+                            <button type="button" class="btn-action btn-step-next" style="display: none;">Continuar <i class="fas fa-arrow-right"></i></button>
+                            <button type="submit" class="btn-login btn-submit-form" style="display: none;">Finalizar Inscripción</button>
+                        </div>
+
+                        <div id="password-result" style="display: none; margin-top: 20px;">
+                            <div class="credential-container"><p>Tu usuario: <strong id="generated-username"></strong></p><button type="button" class="btn-copy" data-copy-target="generated-username" title="Copiar usuario"><i class="far fa-copy"></i></button></div>
+                            <div class="credential-container"><p>Tu contraseña: <strong id="generated-password"></strong></p><button type="button" class="btn-copy" data-copy-target="generated-password" title="Copiar contraseña"><i class="far fa-copy"></i></button></div>
+                            <p class="info-text">Guarda estas credenciales para poder iniciar sesión.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% else %}
+            <script>window.location.href = "{{ url_for('launcher') }}";</script>
+            {% endif %}
+        </div>
+        
+        <div id="about-modal" class="modal-overlay" style="display: none;"> <div class="modal-content"> <button id="modal-close-btn" class="modal-close">&times;</button> <img src="{{ url_for('static', filename='img/logo_caep.png') }}" alt="Logo C.A.E.P." class="modal-logo"> <h2>C.A.E.P.</h2> <h2>Centro de Asesoría Educativa Profesional</h2> <p class="modal-description"> Bienvenido a la Plataforma C.A.E.P. Una plataforma diseñada para ayudarte a prepararte, practicar y alcanzar tus objetivos académicos. </p> <p  class="modal-version">Versión Beta 0.9.5</p> <p class="modal-version">®2026.</p> </div> </div>
+        <div id="help-modal" class="modal-overlay" style="display: none;"> <div class="modal-content"> <button id="help-modal-close-btn" class="modal-close">&times;</button> <h2><i class="fas fa-question-circle"></i> Centro de Ayuda</h2> <div class="help-content-scroll"> <h3><i class="fas fa-sign-in-alt" style="color: #27ae60;"></i> Cómo Iniciar Sesión</h3> <p> Para acceder a la plataforma, utiliza el formulario en la barra superior. <br><strong>1. Usuario:</strong> Ingresa el nombre de usuario (ej. S20773E1) que se te generó al inscribirte. <br><strong>2. Contraseña:</strong> Ingresa la contraseña que se te proporcionó. <br><strong>3. Entrar:</strong> Haz clic en el botón verde "Entrar". </p> <h3><i class="fas fa-user-plus" style="color: #f39c12;"></i> Cómo Inscribirse</h3> <p> Si eres un usuario nuevo: <br><strong>1. Haz clic</strong> en el botón amarillo "Inscribirse" en la barra superior. <br><strong>2. Completa el formulario</strong> con tus datos personales (nombre, correo, fecha de nacimiento) y selecciona tu curso. <br><strong>3. Campos Adicionales:</strong> Si tu curso lo requiere (como ECOEMS), se mostrarán campos adicionales para tu ficha de inscripción. Asegúrate de llenarlos todos. <br><strong>4. Crear Cuenta:</strong> Al finalizar, haz clic en "Crear Cuenta". <br><strong>5. ¡IMPORTANTE!:</strong> El sistema te mostrará tu nuevo <strong>Usuario</strong> y <strong>Contraseña</strong>. Anótalos en un lugar seguro, los necesitarás para entrar. </p> <h3><i class="fas fa-key" style="color: #e74c3c;"></i> Cómo Recuperar tus Credenciales</h3> <p> Si olvidaste tu usuario o contraseña: <br><strong>1. Haz clic</strong> en el botón rojo "Recuperar" en la barra superior. <br><strong>2. Ingresa los datos</strong> con los que te registraste: tu correo electrónico (dos veces para confirmar) y tu fecha de nacimiento. <br><strong>3. Haz clic</strong> en "Recuperar Credenciales". <br><strong>4. Resultado:</strong> Si los datos son correctos, el sistema te mostrará tu <strong>Usuario</strong> y generará una <strong>nueva Contraseña</strong> para que puedas acceder. </p> </div> </div> </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

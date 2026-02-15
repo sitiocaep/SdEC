@@ -1,0 +1,954 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+html {
+    /* Esto previene el desbordamiento horizontal al escalar */
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #2c3e50;
+    font-size: 16px;
+    /* La propiedad overflow se elimina para que el scroll se maneje naturalmente */
+}
+
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh; /* Asegura que al menos ocupe toda la pantalla */
+    background-color: white;
+    position: relative;
+    transform-origin: top left;
+    transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+/* El resto del CSS sigue igual... */
+/* Barra superior con botones */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    min-height: 70px;
+    flex-wrap: wrap;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.zoom-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: #e9e9e9;
+}
+
+.nav-btn.active {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-action:hover {
+    background-color: #3a7bc8;
+}
+
+.btn-action.logout {
+    background-color: #e74c3c;
+}
+
+.btn-action.logout:hover {
+    background-color: #c0392b;
+}
+
+/* Área de contenido principal */
+.content-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Se elimina overflow-y: auto para que el body controle el scroll */
+    padding: 20px;
+}
+
+.content-section {
+    /* max-width: 1000px; */ 
+    width: 100%;
+}
+
+/* Encabezado del examen */
+.exam-header {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    gap: 20px;
+}
+
+.camera-time-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.camera-preview-large {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.camera-feed-large {
+    width: 200px;
+    background-color: #2c3e50;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border: 2px solid #e74c3c;
+}
+
+.camera-feed-large .camera-feed {
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.camera-placeholder-large {
+    text-align: center;
+    color: white;
+}
+
+.camera-placeholder-large i {
+    font-size: 48px;
+}
+
+.camera-status {
+    font-size: 14px;
+    color: #e74c3c;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.camera-status .green {
+    color: #27ae60;
+}
+
+.camera-status .red {
+    color: #e74c3c;
+}
+
+.exam-title-right {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.time-info-large {
+    text-align: left; 
+    margin-bottom: 15px; 
+}
+
+.time-info-large p {
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* === ESTILO PARA CONTADOR DE BAÑO (AÑADIDO) === */
+#bathroom-countdown {
+    display: none; /* Oculto por defecto */
+    font-size: 15px;
+    font-weight: bold;
+    color: #f39c12; /* Naranja */
+    margin-top: 5px;
+}
+
+.exam-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: none;
+}
+
+.exam-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.exam-link:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    height: 1px;
+    background-color: #ddd;
+    margin: 0;
+}
+
+/* Barra de navegación de preguntas */
+.questions-nav-bar {
+    display: flex;
+    justify-content: center;
+    gap: 5px; 
+    padding: 10px 13px; 
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.nav-item {
+    min-width: 26px; 
+    height: 26px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    padding: 0 7px; 
+    font-size: 11px; 
+}
+
+.nav-item:hover {
+    background-color: #e9ecef;
+}
+
+.nav-item.active {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.nav-item.answered {
+    background-color: #27ae60;
+    color: white;
+    border-color: #27ae60;
+}
+
+.nav-item.review {
+    background-color: #f39c12;
+    color: white;
+    border-color: #f39c12;
+}
+
+.finish-nav-item {
+    background-color: #27ae60;
+    color: white;
+    border-color: #27ae60;
+    margin-left: 7px; 
+}
+
+.finish-nav-item:hover {
+    background-color: #219653;
+}
+
+/* Contenedor de preguntas */
+.questions-container {
+    padding: 25px;
+    background-color: white;
+    min-height: 400px;
+}
+
+.question-container {
+    display: none;
+}
+
+.question-container.active {
+    display: block;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Ocultamos el número de pregunta en el contenido */
+.question-number {
+    display: none;
+}
+
+.question-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.question-status {
+    font-size: 14px;
+    color: #f39c12;
+    font-weight: 500;
+}
+
+.question-content {
+    margin-bottom: 25px;
+}
+
+.question-text {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.question-sequence {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.answers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.answer-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.answer-option:hover {
+    background-color: #e9ecef;
+}
+
+.answer-option input[type="radio"] {
+    margin-right: 12px;
+    transform: scale(1.2);
+}
+
+.answer-option label {
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* Instrucciones */
+.instructions-content {
+    line-height: 1.6;
+}
+
+.instructions-content h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.instructions-content ol, .instructions-content ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.instructions-content li {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.exam-tips {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #4a90e2;
+    margin-top: 20px;
+}
+
+/* Navegación de preguntas */
+.question-navigation {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Estados de preguntas */
+.question-status.review {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.question-status.answered {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+/* Botón de chat */
+.chat-button {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 100;
+}
+
+.btn-chat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: auto;
+    height: 60px;
+    border-radius: 30px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+}
+
+.btn-chat:hover {
+    background-color: #1a252f;
+    transform: scale(1.05);
+}
+
+/* Estilos para la cámara y medidor de volumen en examen */
+.camera-feed-large .volume-meter {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+    border-top: none;
+    height: 20px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+}
+
+.volume-bar {
+    flex: 1;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.volume-level {
+    height: 100%;
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+    width: 0%;
+    transition: width 0.1s ease;
+    border-radius: 4px;
+}
+
+.volume-percentage {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Estados de la barra de volumen */
+.volume-level.low {
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+}
+
+.volume-level.medium {
+    background: linear-gradient(90deg, #f39c12, #f1c40f);
+}
+
+.volume-level.high {
+    background: linear-gradient(90deg, #e74c3c, #e67e22);
+}
+
+.camera-feed-large .camera-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.camera-feed-large video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* === INICIO: ESTILOS DE NOTIFICACIÓN (AÑADIDOS) === */
+
+/* Estilos para mensajes de alerta */
+.message-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+/* Clases de color para alertas */
+.alert-info {
+    background-color: #3498db; /* Azul */
+}
+
+.alert-warning {
+    background-color: #f39c12; /* Naranja/Amarillo */
+}
+
+.alert-success {
+    background-color: #27ae60; /* Verde */
+}
+
+.alert-danger {
+    background-color: #e74c3c; /* Rojo */
+}
+
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* === FIN: ESTILOS DE NOTIFICACIÓN === */
+
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 15px;
+        min-height: auto;
+    }
+    
+    .nav-buttons, .action-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+        
+    .action-buttons {
+        gap: 8px;
+    }
+    
+    .btn-action, .nav-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .content-area {
+        padding: 15px;
+    }
+    
+    .exam-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center; 
+    }
+    
+    .camera-time-container {
+        width: 100%;
+    }
+    
+    .exam-links {
+        max-width: 100%;
+    }
+
+    .exam-title-right {
+        text-align: center;
+    }
+    .time-info-large {
+        text-align: center;
+    }
+    
+    .questions-nav-bar {
+        padding: 7px 10px; 
+        gap: 3px; 
+    }
+    
+    .nav-item {
+        /* width: 23px; */ 
+        min-width: 23px; 
+        height: 23px; 
+        font-size: 9px; 
+        padding: 0 5px; 
+    }
+    
+    .finish-nav-item {
+        margin-left: 0;
+        width: auto;
+        padding: 0 10px; 
+    }
+    
+    .questions-container {
+        padding: 20px;
+    }
+    
+    .question-navigation {
+        flex-direction: column;
+        align-items: center; 
+    }
+    
+    .question-navigation .nav-btn {
+        /* width: 100%; */ 
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    
+    .chat-button {
+        bottom: 20px;
+        left: 20px;
+    }
+    
+    .btn-chat {
+        height: 50px;
+        font-size: 14px;
+        padding: 0 15px;
+    }
+
+    .camera-feed-large {
+        width: 180px;
+    }
+    
+    .camera-feed-large .camera-feed {
+        height: 135px;
+    }
+    
+    .camera-feed-large .volume-meter {
+        height: 18px;
+    }
+    
+    .volume-bar {
+        height: 7px;
+    }
+    
+    .volume-percentage {
+        font-size: 11px;
+        min-width: 28px;
+    }
+
+    /* Media Queries para alertas en móviles (AÑADIDO) */
+    .message-alert {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        max-width: none;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar {
+        padding: 8px 10px;
+    }
+    
+    .nav-buttons, .action-buttons {
+        flex-wrap: wrap;
+    }
+        
+    .btn-action, .nav-btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+    
+    .content-area {
+        padding: 10px;
+    }
+    
+    .exam-header, .questions-container {
+        padding: 15px;
+    }
+    
+    .question-text {
+        font-size: 16px;
+    }
+    
+    .question-sequence {
+        font-size: 18px;
+        padding: 12px;
+    }
+    
+    .answer-option label {
+        font-size: 14px;
+    }
+    
+    .questions-nav-bar {
+        padding: 5px 7px; 
+    }
+    
+    .nav-item {
+        /* width: 20px; */ 
+        min-width: 20px; 
+        height: 20px; 
+        font-size: 8px; 
+        padding: 0 4px; 
+    }
+    
+    .finish-nav-item {
+        font-size: 8px; 
+        padding: 0 5px; 
+    }
+    
+    .chat-button {
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .btn-chat {
+        height: 45px;
+        font-size: 13px;
+        padding: 0 12px;
+    }
+
+    .camera-feed-large {
+        width: 160px;
+    }
+    
+    .camera-feed-large .camera-feed {
+        height: 120px;
+    }
+    
+    .camera-feed-large .volume-meter {
+        height: 16px;
+        padding: 0 8px;
+    }
+    
+    .volume-bar {
+        height: 6px;
+    }
+    
+    .volume-percentage {
+        font-size: 10px;
+        min-width: 25px;
+    }
+
+    /* Media Queries para alertas en móviles (AÑADIDO) */
+    .message-alert {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+}
+
+/* ==========================================================================
+   NUEVOS ESTILOS DE SEGURIDAD (PANTALLA COMPLETA Y BLOQUEO)
+   ========================================================================== */
+
+/* 1. Cortina negra absoluta (Anti-Trampas / Anti-Captura) */
+/* Se activa cuando el usuario cambia de pestaña o pierde el foco */
+#blackout-curtain {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 10000; /* Z-index máximo para tapar todo */
+}
+
+/* 2. Overlay de Modo Seguro (Pausa / Inicio) */
+/* Obliga a usar pantalla completa */
+#security-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95); /* Fondo oscuro casi opaco */
+    z-index: 9999; /* Debajo de la cortina negra, pero encima del examen */
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+#security-overlay h2 {
+    color: #e74c3c;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#security-overlay p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    max-width: 700px;
+    line-height: 1.6;
+    color: #ecf0f1;
+}
+
+/* Botón grande para iniciar/reanudar el examen */
+.btn-secure-start {
+    padding: 20px 50px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    transition: transform 0.2s, background-color 0.2s;
+    animation: pulse-secure 2s infinite;
+}
+
+.btn-secure-start:hover {
+    background-color: #2ecc71;
+    transform: scale(1.05);
+}
+
+@keyframes pulse-secure {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+    70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(39, 174, 96, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+}
+
+/* 3. Efecto borroso para el contenido del examen */
+/* Se aplica al contenedor principal cuando hay una alerta de seguridad */
+.content-blur {
+    filter: blur(15px) grayscale(100%);
+    pointer-events: none; /* Evita clics */
+    user-select: none;    /* Evita selección de texto */
+}
+
+/* ==========================================================================
+   FIX: CORRECCIÓN PANTALLA COMPLETA EN MÓVILES
+   ========================================================================== */
+
+/* 1. Forzar fondo blanco y scroll cuando el elemento está en fullscreen */
+:fullscreen {
+    background-color: #ffffff !important;
+    overflow-y: auto !important; /* Habilita el scroll */
+    overflow-x: hidden !important;
+}
+
+/* Soporte para Safari/iOS y Chrome antiguos */
+:-webkit-full-screen {
+    background-color: #ffffff !important;
+    overflow-y: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* El fondo detrás del elemento fullscreen (a veces se ve negro al hacer rebote de scroll) */
+::backdrop {
+    background-color: #ffffff !important;
+}
+
+/* 2. Ajustar el contenedor principal dentro del modo fullscreen */
+:fullscreen .exam-container, 
+:-webkit-full-screen .exam-container {
+    width: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
+    /* Desactivar transformaciones (zoom) en fullscreen móvil para evitar que el contenido se salga */
+    transform: none !important; 
+    margin: 0 !important;
+}
+
+/* 3. Asegurar que la cortina negra no se quede pegada por error de z-index */
+:fullscreen #blackout-curtain {
+    /* Nos aseguramos que siga siendo visible si se activa, 
+       pero el JS controlará su display */
+    z-index: 2147483647 !important; 
+}

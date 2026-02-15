@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprobar Dispositivos | Simulador de Examen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="exam-container">
+        <!-- Barra superior con botones -->
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <a href="{{ url_for('launcher') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-arrow-left"></i>
+                    Regresar
+                </a>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-action" style="background-color: #2c3e50; cursor: default;">
+                    <i class="fas fa-user"></i>
+                    {{ fullname }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content-area">
+            <div class="content-section">
+                <div class="two-column-layout">
+                    <!-- Columna izquierda - Instrucciones -->
+                    <div class="instructions-column">
+                        <div class="instructions-section">
+                            <h2>Instrucciones</h2>
+                            <p>Antes de empezar tu examen, necesitamos asegurarnos de que todo funciona perfecto. Así evitamos contratiempos y puedes concentrarte solo en tus respuestas.</p>
+                            
+                            <div class="status-indicators">
+                                <h3>Verifica el estado de tus dispositivos</h3>
+                                <p>Cuando los íconos estén en <strong class="green-text">verde</strong>, ¡todo está listo! Si alguno aparece en <strong class="red-text">rojo</strong>, sigue estas indicaciones:</p>
+                                
+                                <div class="troubleshooting-list">
+                                    <div class="troubleshooting-item">
+                                        <div class="device-status-icon">
+                                            <i class="fas fa-wifi red"></i>
+                                        </div>
+                                        <div class="troubleshooting-content">
+                                            <h4>Si el ícono de Internet está en rojo</h4>
+                                            <ul>
+                                                <li>Verifica que el Wi-Fi esté encendido.</li>
+                                                <li>Si está encendido, acércate a menos de un metro del módem.</li>
+                                                <li>Si la conexión sigue fallando, usa un cable de red (Ethernet).</li>
+                                                <li>Cuando logres una conexión estable, asegúrate de que el ícono se ponga <span class="green-text">verde</span>.</li>
+                                                <li>Reinicia el navegador si el problema persiste.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="troubleshooting-item">
+                                        <div class="device-status-icon">
+                                            <i class="fas fa-camera red"></i>
+                                        </div>
+                                        <div class="troubleshooting-content">
+                                            <h4>Si el ícono de la cámara está en rojo</h4>
+                                            <ul>
+                                                <li>Verifica que la cámara esté conectada y no esté siendo usada por otra aplicación.</li>
+                                                <li>Asegúrate de haber dado permisos de cámara a esta página.</li>
+                                                <li>Si usas una cámara externa, prueba conectarla directamente al puerto USB.</li>
+                                                <li>Cuando logres visualizarte, asegúrate de que el ícono se ponga <span class="green-text">verde</span>.</li>
+                                                <li>Reinicia el navegador si el problema persiste.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="troubleshooting-item">
+                                        <div class="device-status-icon">
+                                            <i class="fas fa-microphone red"></i>
+                                        </div>
+                                        <div class="troubleshooting-content">
+                                            <h4>Si el ícono del micrófono está en rojo</h4>
+                                            <ul>
+                                                <li>Verifica que el micrófono esté conectado correctamente.</li>
+                                                <li>Asegúrate de haber dado permisos de micrófono a esta página.</li>
+                                                <li>Prueba con un micrófono externo si el interno no funciona.</li>
+                                                <li>Comprueba la configuración de sonido de tu sistema.</li>
+                                                <li>Cuando logres ver un porcentaje de ruido, asegúrate de que el ícono se ponga <span class="green-text">verde</span>.</li>
+                                                <li>Reinicia el navegador si el problema persiste.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha - Dispositivos y vista previa -->
+                    <div class="devices-column">
+                        <!-- Indicadores de estado -->
+                        <div class="status-indicators-panel">
+                            <h3>Estado de dispositivos</h3>
+                            <div class="status-icons-container">
+                                <div class="status-icon internet" id="internet-status">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>Internet</span>
+                                </div>
+                                <div class="status-icon camera" id="camera-status">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Cámara</span>
+                                </div>
+                                <div class="status-icon microphone" id="mic-status">
+                                    <i class="fas fa-microphone"></i>
+                                    <span>Micrófono</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lista de dispositivos -->
+                        <div class="devices-section">
+                            <div class="device-category">
+                                <h4>Entrada de audio <span class="required-star">*</span></h4>
+                                <div class="device-list">
+                                    <select id="microphone-select" class="device-select" required>
+                                        <option value="">Seleccionar micrófono...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="device-category">
+                                <h4>Fuente de video <span class="required-star">*</span></h4>
+                                <div class="device-list">
+                                    <select id="camera-select" class="device-select" required>
+                                        <option value="">Seleccionar cámara...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vista previa de la cámara con monitor de micrófono integrado -->
+                        <div class="camera-preview">
+                            <div class="camera-feed-container">
+                                <div class="camera-feed" id="camera-feed">
+                                    <div class="camera-placeholder">
+                                        <i class="fas fa-camera"></i>
+                                        <p>Vista previa de la cámara</p>
+                                    </div>
+                                </div>
+                                <!-- Monitor de micrófono - AHORA DEL MISMO ANCHO QUE LA CÁMARA -->
+                                <div class="volume-meter">
+                                    <div class="volume-bar">
+                                        <div class="volume-level" id="volume-level"></div>
+                                    </div>
+                                    <div class="volume-percentage" id="volume-text">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="test-buttons">
+                    <button class="btn-test" id="test-all-btn">
+                        <i class="fas fa-vial"></i>
+                        Probar todos los dispositivos
+                    </button>
+                    <button class="btn-test secondary" id="continue-btn">
+                        <i class="fas fa-check-circle"></i>
+                        Dispositivos listos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de chat en la esquina inferior izquierda -->
+        <div class="chat-button">
+            <button class="btn-chat">
+                <i class="fas fa-comment"></i>
+                Asistencia
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/test.js') }}"></script>
+</body>
+</html>

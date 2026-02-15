@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - {{ fullname }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="exam-container">
+        <div class="top-bar">
+            <div class="nav-buttons">
+                <a href="{{ url_for('perfil') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </a>
+                <a href="{{ url_for('admin') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </a>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{{ url_for('perfil') }}" class="btn-action" style="background-color: #9b59b6; cursor: pointer; text-decoration: none;">
+                    <i class="fas fa-user"></i> Vista Usuario
+                </a>
+                <button class="btn-action" style="background-color: #3498db; cursor: pointer;">
+                    <i class="fas fa-question-circle"></i> Ayuda
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-section">
+                <h1>ADMINISTRACIÓN DE LA PLATAFORMA C.A.E.P.</h1>
+                
+                <div class="admin-container">
+                    <div class="admin-card">
+                        <div class="admin-header">
+                            <h2><i class="fas fa-users"></i> Gestión de Usuarios</h2>
+                            <div class="admin-actions">
+                                <button class="btn-action" id="importUsersBtn">
+                                    <i class="fas fa-file-import"></i> Importar CSV
+                                </button>
+                                <button class="btn-action" id="exportUsersBtn">
+                                    <i class="fas fa-file-export"></i> Exportar CSV
+                                </button>
+                                <div class="search-container">
+                                    <input type="text" id="searchInput" placeholder="Buscar por nombre, folio...">
+                                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            <p>Administra los usuarios registrados en un CSV del sistema (nombre, folio, contraseña).</p>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table id="usersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Folio</th>
+                                        <th>Curso</th>
+                                        <th>Usuario</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr data-folio="{{ user.folio }}">
+                                        <td>{{ user.folio }}</td>
+                                        <td>{{ user.curso }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.nombre_completo }}</td>
+                                        <td class="actions-cell">
+                                            <button class="btn-action small-btn view-btn" data-user-id="{{ user.folio }}" title="Ver/Editar Detalles">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-action small-btn delete-btn" data-user-id="{{ user.folio }}" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="pagination">
+                            <button id="prevBtn" class="page-btn">
+                                <i class="fas fa-chevron-left"></i> Anterior
+                            </button>
+                            <span id="pageInfo" class="page-info">Página 1 de 1</span>
+                            <button id="nextBtn" class="page-btn">
+                                Siguiente <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="admin-card" style="margin-top: 30px;">
+                        <div class="admin-header">
+                            <h2><i class="fas fa-file-alt"></i> Gestión de Archivos</h2>
+                            <div class="admin-actions">
+                                <button class="btn-action" id="importFilesBtn">
+                                    <i class="fas fa-file-import"></i> Importar CSV
+                                </button>
+                                <button class="btn-action" id="exportFilesBtn">
+                                    <i class="fas fa-file-export"></i> Exportar CSV
+                                </button>
+                                <div class="search-container">
+                                    <input type="text" id="searchInput" placeholder="Buscar por nombre, formato...">
+                                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Administra los archivos CSV del sistema (cursos, preguntas, puntajes).</p>
+                    </div>
+
+                    <div class="admin-card" style="margin-top: 30px;">
+                        <div class="admin-header">
+                            <h2><i class="fas fa-folder"></i> Gestión de Documentos</h2>
+                            <div class="admin-actions">
+                                <button class="btn-action" id="importDocsBtn">
+                                    <i class="fas fa-file-import"></i> Importar CSV
+                                </button>
+                                <button class="btn-action" id="exportDocsBtn">
+                                    <i class="fas fa-file-export"></i> Exportar CSV
+                                </button>
+                                <div class="search-container">
+                                    <input type="text" id="searchInput" placeholder="Buscar por nombre, formato...">
+                                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Administra documentos y plantillas del sistema (registros, comprobantes).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-button">
+            <button class="btn-chat">
+                <i class="fas fa-comment"></i>
+                Asistencia
+            </button>
+        </div>
+    </div>
+
+    <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Usuario</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div id="cameraInterface" class="camera-interface" style="display: none;">
+                <div class="camera-header">
+                    <h4><i class="fas fa-camera"></i> Tomar Fotografía</h4>
+                    <button class="close-camera-btn">&times;</button>
+                </div>
+                <div class="camera-body">
+                    <div class="video-container">
+                        <video id="cameraVideo" autoplay playsinline></video>
+                        <canvas id="cameraCanvas" style="display: none;"></canvas>
+                        <div class="grid-overlay">
+                            <div class="grid-line horizontal h1"></div>
+                            <div class="grid-line horizontal h2"></div>
+                            <div class="grid-line vertical v1"></div>
+                            <div class="grid-line vertical v2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button type="button" class="btn-action" id="takePhotoBtn">
+                        <i class="fas fa-camera"></i> Capturar
+                    </button>
+                </div>
+            </div>
+
+            <form id="userForm">
+                <div class="modal-body" id="modalBody">
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-action" id="openCameraBtn" style="background-color: #e67e22;">
+                        <i class="fas fa-camera"></i> Toma de Fotografía
+                    </button>
+                    <button type="button" class="btn-action modal-close-btn">Cancelar</button>
+                    <button type="submit" class="btn-action" style="background-color: #27ae60;">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script>
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = "{{ url_for('logout') }}";
+            }
+        }
+    </script>
+</body>
+</html>
