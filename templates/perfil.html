@@ -157,12 +157,30 @@
                                 <p class="section-description">Archivos importantes del curso inscrito.</p>
                                 
                                 <ul class="document-list">
-                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Registro</a></li>
-                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Comprobante_registro</a></li>
-                                    <li class="separator-doc"></li>
-                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Documento A</a></li>
-                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Documento B</a></li>
-                                    <li><a href="#" class="document-link"><i class="far fa-file-pdf"></i> Documento C</a></li>
+                                    {% for doc in documentos_personales %}
+                                        <li>
+                                            {% if doc.found %}
+                                                <a href="#" 
+                                                onclick="openPreview('{{ doc.url_preview }}', '{{ doc.label }}', '{{ doc.path_download }}'); return false;" 
+                                                class="document-link">
+                                                    <i class="far fa-file-pdf"></i> {{ doc.label }}
+                                                </a>
+                                            {% else %}
+                                                <div style="display: flex; flex-direction: column; padding: 5px 0;">
+                                                    <span style="color: #7f8c8d; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+                                                        <i class="far fa-file" style="color: #bdc3c7;"></i> {{ doc.label }}
+                                                    </span>
+                                                    <small style="color: #e67e22; font-style: italic; margin-left: 28px; font-size: 0.8rem; margin-top: 2px;">
+                                                        <i class="fas fa-clock"></i> Aún no se cuenta con este documento, favor de esperar instrucciones.
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                        </li>
+                                        
+                                        {% if loop.index == 2 %}
+                                            <li class="separator-doc"></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </div>
                             

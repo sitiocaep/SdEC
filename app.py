@@ -4,6 +4,7 @@ import os
 import hashlib
 import secrets
 import string
+import glob
 from datetime import datetime, time
 import ssl
 import sys
@@ -25,7 +26,7 @@ USERS_CSV = 'users.csv'
 COURSES_CSV = 'cursos.csv'
 QUESTIONS_CSV = 'preguntas.csv'
 PUNTAJES_CSV = 'puntajes.csv'
-RESULTADOS_CSV = 'resultados.csv' 
+RESULTADOS_CSV = 'resultados.csv'
 
 # --- CARPETAS ---
 PLANTILLAS_DIR = 'plantillas'
@@ -252,12 +253,8 @@ def check_exam_taken(folio, curso, materia):
     if not os.path.exists(RESULTADOS_CSV):
         return False
     try:
-        # Optimización: Leer solo si es necesario, o usar chunks si el archivo es grande.
-        # Para este caso usaremos pandas para filtrar rápido.
         df_res = pd.read_csv(RESULTADOS_CSV, encoding='utf-8')
         
-        # Filtrar por folio, curso y materia
-        # Convertir a string para asegurar coincidencia
         taken = df_res[
             (df_res['folio'].astype(str) == str(folio)) & 
             (df_res['curso'] == curso) & 
@@ -266,7 +263,6 @@ def check_exam_taken(folio, curso, materia):
         return taken
     except Exception as e:
         print(f"Error checking exam taken: {e}")
-        # Intento fallback con csv standard si pandas falla
         try:
             with open(RESULTADOS_CSV, 'r', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
@@ -382,22 +378,17 @@ def update_user_in_csv(user_data):
 
 def save_exam_results(folio, curso, materia, respuestas):
     try:
-        # Cargar las preguntas del CSV
         df_preguntas = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
         
-        # Filtrar preguntas para este curso y materia
         preguntas_examen = df_preguntas[(df_preguntas['Curso'] == curso) & (df_preguntas['Materia'] == materia)]
         
         resultados = []
         
-        # Iterar sobre cada pregunta del examen
         for _, row in preguntas_examen.iterrows():
             pregunta_num = row['Pregunta_número']
             
-            # Obtener la letra seleccionada (ej: "A", "B")
             letra_seleccionada = respuestas.get(str(pregunta_num), '').strip()
             
-            # --- LÓGICA: Mapear Letra A -> Cadena "Respuesta_a" ---
             valor_a_guardar = ""
             letra_lower = letra_seleccionada.lower()
             
@@ -410,9 +401,7 @@ def save_exam_results(folio, curso, materia, respuestas):
             elif letra_lower == 'd':
                 valor_a_guardar = "Respuesta_d"
             else:
-                # Si no se seleccionó nada, se deja vacío
                 valor_a_guardar = "" 
-            # ------------------------------------------------------
 
             resultado = {
                 'folio': folio,
@@ -424,12 +413,11 @@ def save_exam_results(folio, curso, materia, respuestas):
                 'Respuesta_b': row['Respuesta_b'],
                 'Respuesta_c': row['Respuesta_c'],
                 'Respuesta_d': row['Respuesta_d'],
-                'Respuesta_seleccionada': valor_a_guardar, # Aquí se guarda "Respuesta_a", etc.
+                'Respuesta_seleccionada': valor_a_guardar,
                 'Respuesta_correcta': row['Respuesta_correcta']
             }
             resultados.append(resultado)
         
-        # Guardar en CSV
         file_exists = os.path.exists(RESULTADOS_CSV)
         with open(RESULTADOS_CSV, 'a', newline='', encoding='utf-8') as f:
             fieldnames = ['folio', 'curso', 'materia', 'Pregunta_número', 'Pregunta',
@@ -770,7 +758,7 @@ def get_courses():
 def api_courses():
     if not session.get('logged_in'): return jsonify({'success': False}), 401
     user_course = session.get('curso')
-    user_folio = session.get('folio') # Obtenemos el folio de la sesión
+    user_folio = session.get('folio')
     if not user_course: return jsonify({})
 
     try:
@@ -779,7 +767,6 @@ def api_courses():
         except:
             df = pd.read_csv(COURSES_CSV, encoding='latin-1', engine='python')
             
-        # Normalizar columnas
         df.columns = df.columns.str.strip().str.lower()
         
         col_curso = next((c for c in df.columns if c == 'curso'), None)
@@ -797,13 +784,11 @@ def api_courses():
                 fecha = row.get('fecha_disponible')
                 inicio = row.get('horario_inicio')
                 fin = row.get('horario_final')
-                # Nuevas columnas de resultados
                 fecha_res = row.get('fecha_resultado', '')
                 hora_res = row.get('horario_resultado', '')
                 
                 st, av = get_exam_status(fecha, inicio, fin)
                 
-                # Verificar si el usuario ya contestó este examen
                 is_taken = check_exam_taken(user_folio, user_course, materia_name)
                 
                 data[materia_name] = {
@@ -815,9 +800,9 @@ def api_courses():
                     'raw_date': str(fecha),
                     'raw_start': str(inicio),
                     'raw_end': str(fin),
-                    'taken': is_taken, # Flag Importante
-                    'results_date': str(fecha_res).strip(), # Nueva info
-                    'results_time': str(hora_res).strip()   # Nueva info
+                    'taken': is_taken,
+                    'results_date': str(fecha_res).strip(),
+                    'results_time': str(hora_res).strip()
                 }
             return jsonify(data)
         else:
@@ -840,6 +825,7 @@ def perfil():
     admin_user = get_admin_user()
     is_admin = user_data.get('folio') == admin_user.get('folio') if admin_user else False
     
+    # Foto de perfil
     curso_clean = user_data['curso'].strip().replace(' ', '_')
     filename = f"{user_data['folio']}_{curso_clean}.png"
     full_path_img = os.path.join(IMG_PERFIL_DIR, filename)
@@ -850,18 +836,12 @@ def perfil():
     else:
         foto_url = url_for('static', filename='img/foto_perfil.png')
 
+    # --- MATERIAL DE TRABAJO ---
     materiales = []
-    
     mapa_materias = {
-        'Español': 'espanol',
-        'Matemáticas': 'matematicas',
-        'Física': 'fisica',
-        'Química': 'quimica',
-        'Biología': 'biologia',
-        'Historia': 'historia',
-        'Geografía': 'geografia'
+        'Español': 'espanol', 'Matemáticas': 'matematicas', 'Física': 'fisica',
+        'Química': 'quimica', 'Biología': 'biologia', 'Historia': 'historia', 'Geografía': 'geografia'
     }
-
     curso_str = user_data['curso'].upper()
     carpeta_curso = ''
     if 'ECOEMS' in curso_str: carpeta_curso = 'ecoems'
@@ -869,25 +849,80 @@ def perfil():
     
     if carpeta_curso:
         base_src = os.path.join(app.static_folder, 'src', carpeta_curso)
-        
         for nombre_display, nombre_carpeta in mapa_materias.items():
             ruta_materia = os.path.join(base_src, nombre_carpeta)
-            
             if os.path.exists(ruta_materia):
                 for archivo in os.listdir(ruta_materia):
                     ruta_completa_archivo = os.path.join(ruta_materia, archivo)
-                    
                     if os.path.isfile(ruta_completa_archivo) and not archivo.startswith('.'):
                         rel_path = os.path.relpath(ruta_completa_archivo, app.static_folder)
-                        rel_path_url = rel_path.replace('\\', '/')
-                        
+                        url_preview = url_for('descargar_material', archivo=rel_path.replace('\\', '/'), modo='ver')
                         materiales.append({
                             'nombre': archivo,
-                            'url': url_for('static', filename=rel_path_url),
-                            'path': rel_path_url,
-                            'materia_key': nombre_carpeta,
-                            'materia_name': nombre_display
+                            'url': url_preview, 
+                            'path': rel_path.replace('\\', '/'),
+                            'materia_key': nombre_carpeta, 'materia_name': nombre_display
                         })
+
+    # --- DOCUMENTACIÓN DINÁMICA ---
+    tipo_curso = 'ecoems' if 'ECOEMS' in curso_str else 'licenciatura'
+    
+    username = user_data.get('username', '')
+    folio = user_data.get('folio', '')
+
+    docs_to_search = [
+        {
+            'label': 'Registro',
+            'folder': f'registros_{tipo_curso}', 
+            'pattern': f'registro_*_{username}.pdf' 
+        },
+        {
+            'label': 'Comprobante de Registro',
+            'folder': f'comprobantes_{tipo_curso}',
+            'pattern': f'comprobante_*_{username}.pdf'
+        },
+        {
+            'label': 'Documento A',
+            'folder': f'{tipo_curso}_documento_a',
+            'pattern': f'{folio}_*_documento_a.pdf'
+        },
+        {
+            'label': 'Documento B',
+            'folder': f'{tipo_curso}_documento_b',
+            'pattern': f'{folio}_*_documento_b.pdf'
+        },
+        {
+            'label': 'Documento C',
+            'folder': f'{tipo_curso}_documento_c',
+            'pattern': f'{folio}_*_documento_c.pdf'
+        }
+    ]
+
+    documentos_personales = []
+
+    for doc in docs_to_search:
+        search_path = os.path.join(REGISTROS_DIR, doc['folder'], doc['pattern'])
+        found_files = glob.glob(search_path)
+        
+        doc_info = {
+            'label': doc['label'],
+            'found': False,
+            'url_preview': '#',
+            'path_download': ''
+        }
+
+        if found_files:
+            full_path_found = found_files[0]
+            filename_only = os.path.basename(full_path_found)
+            
+            # Construir ruta relativa y normalizar separadores
+            rel_path = os.path.join(REGISTROS_DIR, doc['folder'], filename_only).replace('\\', '/')
+            
+            doc_info['found'] = True
+            doc_info['path_download'] = rel_path
+            doc_info['url_preview'] = url_for('descargar_material', archivo=rel_path, modo='ver')
+
+        documentos_personales.append(doc_info)
 
     return render_template('perfil.html', 
                          fullname=session.get('fullname'), 
@@ -895,19 +930,30 @@ def perfil():
                          is_admin=is_admin,
                          foto_url=foto_url,
                          materiales=materiales,
-                         materias_lista=mapa_materias)
+                         materias_lista=mapa_materias,
+                         documentos_personales=documentos_personales)
 
 @app.route('/api/descargar_material')
 def descargar_material():
     if not session.get('logged_in'): return redirect(url_for('index'))
     
     ruta_relativa = request.args.get('archivo')
+    modo = request.args.get('modo', 'descargar') 
     
     if not ruta_relativa:
         return "Falta el parámetro archivo", 400
 
     try:
-        ruta_completa = os.path.join(app.static_folder, ruta_relativa.replace('\\', '/'))
+        # Limpiar ruta: eliminar posibles barras iniciales y normalizar
+        ruta_relativa = ruta_relativa.lstrip('/').replace('\\', '/')
+        
+        # Determinar directorio base
+        if ruta_relativa.startswith(REGISTROS_DIR) or ruta_relativa.startswith('registros'):
+            directorio_base = app.root_path  # Raíz del proyecto
+        else:
+            directorio_base = app.static_folder
+
+        ruta_completa = os.path.join(directorio_base, ruta_relativa)
         
         if not os.path.exists(ruta_completa):
             print(f"ERROR: Archivo no encontrado en: {ruta_completa}")
@@ -916,11 +962,13 @@ def descargar_material():
         directorio = os.path.dirname(ruta_completa)
         nombre_archivo = os.path.basename(ruta_completa)
 
+        es_adjunto = (modo != 'ver')
+
         return send_from_directory(
             directorio, 
             nombre_archivo, 
-            as_attachment=True, 
-            mimetype='application/octet-stream',
+            as_attachment=es_adjunto, 
+            mimetype='application/pdf',
             download_name=nombre_archivo
         )
         
@@ -1238,7 +1286,7 @@ def escuelas():
                     folder_out = SELECCION_DIR_MAP[curso]
                     target_dir = os.path.join(REGISTROS_DIR, folder_out)
                     
-                    base_name = f"{folio}_{session.get('user').split('@')[0]}_documento_a"
+                    base_name = f"{folio}_{curso}_documento_a"
                     docx_path = os.path.join(target_dir, f"{base_name}.docx")
                     pdf_filename = f"{base_name}.pdf"
                     pdf_path = os.path.join(target_dir, pdf_filename)
@@ -1390,7 +1438,6 @@ def get_exam_results_api():
     if not session.get('logged_in'):
         return jsonify({'success': False, 'message': 'No autorizado'}), 401
     
-    # 1. Obtener datos de la sesión y request
     folio_usuario = str(session.get('folio'))
     curso_usuario = session.get('curso')
     materia_solicitada = request.args.get('materia')
@@ -1402,12 +1449,8 @@ def get_exam_results_api():
         if not os.path.exists(RESULTADOS_CSV):
             return jsonify({'success': False, 'message': 'Aún no hay resultados registrados en el sistema.'}), 404
 
-        # 2. Leer resultados.csv
-        # Usamos dtype=str para evitar que el folio se lea como número y pierda ceros o cause error
         df = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
         
-        # 3. Filtrar explícitamente por FOLIO, CURSO y MATERIA
-        # Normalizamos a string y quitamos espacios para asegurar coincidencia
         df['folio'] = df['folio'].astype(str).str.strip()
         df['curso'] = df['curso'].astype(str).str.strip()
         df['materia'] = df['materia'].astype(str).str.strip()
@@ -1422,24 +1465,19 @@ def get_exam_results_api():
         if df_res.empty:
             return jsonify({'success': False, 'message': 'No se encontraron resultados para este examen y usuario.'}), 404
         
-        # 4. Procesar los datos encontrados
         details = []
         correctas = 0
         incorrectas = 0
         sin_responder = 0
         
         for _, row in df_res.iterrows():
-            # Limpieza de datos
             pregunta_num = row.get('Pregunta_número')
             pregunta_txt = row.get('Pregunta', 'Pregunta sin texto')
             
-            # Obtener lo que el usuario seleccionó (ej: "Respuesta_a")
             seleccion_raw = str(row.get('Respuesta_seleccionada', '')).strip()
             
-            # Obtener la correcta (ej: "A" o "Respuesta_a")
             correcta_raw = str(row.get('Respuesta_correcta', '')).strip()
             
-            # --- Lógica de Normalización (Convertir todo a A, B, C, D) ---
             def normalizar_opcion(texto):
                 texto = texto.lower()
                 if 'respuesta_a' in texto or texto == 'a': return 'A'
@@ -1451,7 +1489,6 @@ def get_exam_results_api():
             sel_letra = normalizar_opcion(seleccion_raw)
             corr_letra = normalizar_opcion(correcta_raw)
             
-            # Determinar estatus
             status = 'incorrecta'
             if not sel_letra:
                 status = 'sin_responder'
@@ -1472,16 +1509,15 @@ def get_exam_results_api():
                     'C': row.get('Respuesta_c', ''),
                     'D': row.get('Respuesta_d', '')
                 },
-                'seleccionada': sel_letra, # Ej: "A"
-                'correcta': corr_letra,     # Ej: "B"
+                'seleccionada': sel_letra,
+                'correcta': corr_letra,
                 'status': status
             })
             
-        # Ordenar por número de pregunta
         try:
             details.sort(key=lambda x: int(x['numero']))
         except:
-            pass # Si no son números, dejar como están
+            pass
 
         total_preguntas = len(details)
         calificacion = (correctas / total_preguntas * 10) if total_preguntas > 0 else 0
