@@ -20,10 +20,20 @@ import io
 from gunicorn.app.base import BaseApplication
 import subprocess
 import signal
-import sys
+import pytz
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_caep_simulador'
+
+# --- ZONA HORARIA ---
+MEXICO_TZ = pytz.timezone('America/Mexico_City')
+
+def get_now_mexico():
+    """
+    Obtiene la hora actual exacta de México y le quita el tzinfo.
+    Esto evita el error: "can't compare offset-naive and offset-aware datetimes"
+    """
+    return datetime.now(MEXICO_TZ).replace(tzinfo=None)
 
 # --- CONSTANTES Y ARCHIVOS ---
 USERS_CSV = 'users.csv'
@@ -148,7 +158,7 @@ def generate_random_username():
 
 def generate_folio(curso_str):
     match = re.search(r'(\d{4})', curso_str)
-    year_prefix = match.group(1)[-2:] if match else datetime.now().strftime('%y')
+    year_prefix = match.group(1)[-2:] if match else get_now_mexico().strftime('%y')
     while True:
         folio = f"{year_prefix}" + ''.join(random.choice(string.digits) for _ in range(7))
         if not folio_exists(folio): return folio
@@ -202,7 +212,7 @@ def get_user_by_username(username):
     return None
 
 def is_user_logged_in(email): return email in active_sessions
-def add_active_session(email, session_id): active_sessions[email] = {'session_id': session_id, 'login_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+def add_active_session(email, session_id): active_sessions[email] = {'session_id': session_id, 'login_time': get_now_mexico().strftime("%Y-%m-%d %H:%M:%S")}
 def remove_active_session(email): 
     if email in active_sessions: del active_sessions[email]
 
@@ -227,7 +237,7 @@ def parse_duration_to_seconds(duration_str):
 
 def get_exam_status(fecha_str, inicio_str, final_str):
     try:
-        now = datetime.now()
+        now = get_now_mexico()
         if pd.isna(fecha_str) or pd.isna(inicio_str) or pd.isna(final_str): return "No disponible", False
         
         fecha_clean = str(fecha_str).strip()
@@ -660,7 +670,7 @@ def register():
             fecha_nac_fmt = dt.strftime('%d de %B de %Y')
         except: pass
         
-        fecha_reg_fmt = datetime.now().strftime('%d de %B de %Y')
+        fecha_reg_fmt = get_now_mexico().strftime('%d de %B de %Y')
 
         pdf_registro_b64 = None
         pdf_registro_name = None
@@ -1100,7 +1110,7 @@ def export_users():
             USERS_CSV,
             mimetype='text/csv',
             as_attachment=True,
-            download_name=f'usuarios_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+            download_name=f'usuarios_export_{get_now_mexico().strftime("%Y%m%d_%H%M%S")}.csv'
         )
     except Exception as e:
         print(f"Error al exportar usuarios: {e}")
@@ -1155,7 +1165,7 @@ def import_users():
             
             users.append(row)
         
-        backup_path = f"{USERS_CSV}.backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        backup_path = f"{USERS_CSV}.backup_{get_now_mexico().strftime('%Y%m%d_%H%M%S')}"
         if os.path.exists(USERS_CSV):
             import shutil
             shutil.copy2(USERS_CSV, backup_path)
@@ -1370,12 +1380,12 @@ def examen():
             try:
                 exam_date = datetime.strptime(fecha_str, '%d/%m/%Y').date()
             except:
-                exam_date = datetime.now().date()
+                exam_date = get_now_mexico().date()
 
         end_time_obj = datetime.strptime(final_str, '%H:%M:%S').time()
         exam_end_datetime = datetime.combine(exam_date, end_time_obj)
         
-        now = datetime.now()
+        now = get_now_mexico()
         remaining_seconds = (exam_end_datetime - now).total_seconds()
         
         if remaining_seconds < 0:
