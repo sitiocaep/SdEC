@@ -17,6 +17,10 @@ import base64
 import locale
 import re
 import io
+from gunicorn.app.base import BaseApplication
+import subprocess
+import signal
+import sys
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_caep_simulador'
@@ -1542,7 +1546,56 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+# --- CONFIGURACIÓN DE GUNICORN INTEGRADA ---
+class StandaloneApplication(BaseApplication):
+    def __init__(self, app, options=None):
+        self.options = options or {}
+        self.application = app
+        super().__init__()
+
+    def load_config(self):
+        config = {key: value for key, value in self.options.items()
+                  if key in self.cfg.settings and value is not None}
+        for key, value in config.items():
+            self.cfg.set(key.lower(), value)
+
+    def load(self):
+        return self.application
+
 if __name__ == '__main__':
+    import sys
+    import os
+    
+    # 1. Generamos los certificados
     ssl_config = generate_self_signed_cert()
     ctx = (ssl_config[0], ssl_config[1]) if ssl_config != 'adhoc' else 'adhoc'
-    app.run(host='0.0.0.0', port=8000, debug=True, ssl_context=ctx)
+    
+    # ==========================================
+    # MODO DESARROLLO (Para programar)
+    # Ejecutar con: python3 app.py --dev
+    # ==========================================
+    if '--dev' in sys.argv:
+        print("--- MODO DEVELOPER (FLASK) ---")
+        print("Recarga en tiempo real ACTIVADA. Solo para programar.")
+        app.run(host='0.0.0.0', port=8000, debug=True, ssl_context=ctx)
+        
+    # ==========================================
+    # MODO EXAMEN (Para los usuarios)
+    # Ejecutar con: python3 app.py
+    # ==========================================
+    else:
+        print("--- MODO DEPLOY (GUNICORN) ---")
+        print("Workers ACTIVADOS. Recarga desactivada para máximo rendimiento.")
+        cmd = [
+            sys.executable, '-m', 'gunicorn',
+            '-w', '20',                
+            '-b', '0.0.0.0:8000',     
+            '--timeout', '120',       
+            'app:app'                 
+        ]
+        
+        if ssl_config != 'adhoc':
+            cmd.extend(['--certfile', ssl_config[0]])
+            cmd.extend(['--keyfile', ssl_config[1]])
+            
+        os.execv(sys.executable, cmd)
