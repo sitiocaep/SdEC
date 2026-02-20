@@ -11,7 +11,7 @@ import sys
 import random
 import pandas as pd
 from docxtpl import DocxTemplate
-from docx2pdf import convert
+# Eliminada la importación de docx2pdf
 import tempfile
 import base64
 import locale
@@ -143,6 +143,37 @@ def init_csv():
             if not os.path.exists(full_path): os.makedirs(full_path)
 
 # --- FUNCIONES DE UTILIDAD ---
+
+def convert_docx_to_pdf(docx_path, pdf_path):
+    """
+    Convierte un archivo DOCX a PDF usando LibreOffice en modo headless.
+    Requiere que LibreOffice esté instalado y accesible en el PATH.
+    """
+    try:
+        # Asegurar que las rutas sean absolutas
+        docx_abs = os.path.abspath(docx_path)
+        pdf_abs = os.path.abspath(pdf_path)
+        out_dir = os.path.dirname(pdf_abs)
+
+        # Comando para LibreOffice
+        cmd = [
+            'libreoffice',
+            '--headless',
+            '--convert-to', 'pdf',
+            '--outdir', out_dir,
+            docx_abs
+        ]
+
+        # Ejecutar el comando
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print(f"Conversión exitosa: {docx_path} -> {pdf_path}")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error en la conversión con LibreOffice: {e.stderr}")
+        return False
+    except FileNotFoundError:
+        print("LibreOffice no está instalado o no está en el PATH.")
+        return False
 
 def generate_random_password(length=10):
     alphabet = string.ascii_uppercase + string.digits
@@ -699,7 +730,8 @@ def register():
                     pdf_path = os.path.join(target_dir, pdf_registro_name)
                     
                     doc.save(doc_path)
-                    convert(doc_path, pdf_path)
+                    # Conversión con LibreOffice
+                    convert_docx_to_pdf(doc_path, pdf_path)
                     
                     with open(pdf_path, "rb") as f:
                         pdf_registro_b64 = base64.b64encode(f.read()).decode('utf-8')
@@ -724,7 +756,8 @@ def register():
                     pdf_path = os.path.join(target_dir, pdf_comprobante_name)
                     
                     doc.save(doc_path)
-                    convert(doc_path, pdf_path)
+                    # Conversión con LibreOffice
+                    convert_docx_to_pdf(doc_path, pdf_path)
                     
                     with open(pdf_path, "rb") as f:
                         pdf_comprobante_b64 = base64.b64encode(f.read()).decode('utf-8')
@@ -1306,7 +1339,8 @@ def escuelas():
                     pdf_path = os.path.join(target_dir, pdf_filename)
                     
                     doc.save(docx_path)
-                    convert(docx_path, pdf_path)
+                    # Conversión con LibreOffice
+                    convert_docx_to_pdf(docx_path, pdf_path)
                     
                     with open(pdf_path, "rb") as f:
                         pdf_b64 = base64.b64encode(f.read()).decode('utf-8')
