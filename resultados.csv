@@ -1663,3 +1663,771 @@ folio,curso,materia,Pregunta_número,Pregunta,Respuesta_a,Respuesta_b,Respuesta_
 263234908,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_c,Respuesta_c
 263234908,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_c,Respuesta_b
 263234908,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,1,¿Cuál es el río más largo de México?,Río Bravo,Río Lerma,Río Balsas,Río Grijalva,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,2,¿Cuál es la ubicación geográfica de México?,América del Sur,América Central,América del Norte,Europa,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,3,¿Cuál es la península más grande de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,4,¿Cuál es la capital de México?,Guadalajara,Monterrey,Puebla,Ciudad de México,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,5,¿Cuál es el lago más grande de México?,Lago de Chapala,Lago de Pátzcuaro,Lago de Cuitzeo,Lago de Zirahuén,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,6,¿Cuál es el estado más grande de México?,Chihuahua,Sonora,Coahuila,Durango,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,7,¿Qué océanos bañan las costas de México?,Atlántico e Índico,Pacífico y Ártico,Atlántico y Pacífico,Índico y Ártico,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,8,¿Con qué países limita México al norte?,Guatemala y Belice,Estados Unidos,Canadá,Brasil,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,9,¿Cuál es el desierto más grande de México?,Desierto de Sonora,Desierto de Chihuahua,Desierto de Altar,Desierto de Mapimí,Respuesta_d,Respuesta_a
+263051655,ECOEMS 2026,Geografía,10,¿Cuál es la montaña más alta de México?,Iztaccíhuatl,Popocatépetl,Pico de Orizaba,Nevado de Toluca,Respuesta_d,Respuesta_c
+263051655,ECOEMS 2026,Geografía,11,¿Cuál es el estado más pequeño de México?,Aguascalientes,Colima,Tlaxcala,Morelos,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,12,¿Cuál es el estado más poblado de México (Excepto Ciudad de México)?,Ciudad de México,Estado de México,Veracruz,Jalisco,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,13,¿Cuál es el volcán más activo de México?,Paricutín,Iztaccíhuatl,Pico de Orizaba,Popocatépetl,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,14,¿Cuál es la ciudad más poblada de México?,Puebla,Guadalajara,Monterrey,Ciudad de México,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,15,¿Cuál es el río más caudaloso de México?,Río Balsas,Río Lerma,Río Bravo,Río Grijalva,Respuesta_d,Respuesta_c
+263051655,ECOEMS 2026,Geografía,16,¿Cuál es la isla más grande de México?,Isla Mujeres,Isla Ángel de la Guarda,Isla Cozumel,Isla Tiburón,Respuesta_b,Respuesta_d
+263051655,ECOEMS 2026,Geografía,17,¿Cuál es el estado más al norte de México?,Baja California,Sonora,Chihuahua,Coahuila,Respuesta_d,Respuesta_a
+263051655,ECOEMS 2026,Geografía,18,¿Cuál es el estado más al sur de México?,Campeche,Tabasco,Chiapas,Yucatán,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,19,¿Cuál es el estado más al oeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,20,¿Cuál es la península más al sur de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,21,¿Cuál es el estado más al centro de México?,Hidalgo,Estado de México,Aguascalientes,Tlaxcala,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,22,¿Cuál es el estado más al sureste de México?,Yucatán,Tabasco,Campeche,Chiapas,Respuesta_c,Respuesta_d
+263051655,ECOEMS 2026,Geografía,23,¿Cuál es el estado más al noroeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,24,¿Cuál es el estado más al noreste de México?,Nuevo León,Estado de México,Tamaulipas,Chihuahua,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,25,¿Cuál es el estado más al suroeste de México?,Colima,Oaxaca,Guerrero,Michoacán,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,26,¿Cuál es el estado más al centro-norte de México?,Zacatecas,San Luis Potosí,Aguascalientes,Durango,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,27,¿Cuáles son los continentes del mundo?,"América, Europa, Asia, África y Oceania","América, Europa, Asia y África","América del Norte, América del Sur, Europa","América del Norte, América Central, Asia",Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,28,¿Cuál es el continente más extenso?,Antártida,América,África,Asia,Respuesta_b,Respuesta_d
+263051655,ECOEMS 2026,Geografía,29,¿Cuál es el continente más poblado?,América,Asia,Europa,África,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,30,¿Cuál es el océano más grande del mundo?,Atlántico,Índico,Pacífico,Antártico,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,31,¿Cuál es el país más grande del mundo?,Canadá,China,Estados Unidos,Rusia,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,32,¿Cuál es el país más poblado del mundo?,Pakistan,Japón,India,China,Respuesta_b,Respuesta_d
+263051655,ECOEMS 2026,Geografía,33,¿Cuál es la montaña más alta del mundo?,K2,Monte Everest,Kangchenjunga,Lhotse,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,34,¿Cuál es el río más largo del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,35,¿Cuál es el desierto más grande del mundo?,Desierto de los Leones,Desierto de Gobi,Desierto de Kalahari,Desierto del Sahara,Respuesta_a,Respuesta_d
+263051655,ECOEMS 2026,Geografía,36,¿Cuál es la isla más grande del mundo?,Groenlandia,Nueva Guinea,Borneo,Madagascar,Respuesta_d,Respuesta_a
+263051655,ECOEMS 2026,Geografía,37,¿Cuál es el volcán más activo del mundo?,Monte Vesubio,Monte Etna,Kilauea,Monte Santa Helena,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,38,¿Cuál es la ciudad más poblada del mundo?,Londres,Nueva Delhi,Shanghái,São Paulo,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,39,¿Cuál es el parque nacional más grande del mundo?,Parque Nacional Yellowstone,Parque Nacional Banff,Parque Nacional Kruger,Parque Nacional Noreste de Groenlandia,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,40,¿Cuál es el río más caudaloso del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,41,¿Cuál es la península más grande del mundo?,Península Canadiense,Península Ibérica,Península de Kamchatka,Península de Malaca,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,42,¿Cuál es el país más al norte del mundo?,Canadá,Rusia,Noruega,Dinamarca,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,43,¿Cuál es el país más al sur del mundo?,Argentina,Chile,Nueva Zelanda,Australia,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,44,¿Cuál es el país más al este del mundo?,Nueva Zelanda,Australia,Japón,Rusia,Respuesta_b,Respuesta_d
+263051655,ECOEMS 2026,Geografía,45,¿Cuál es el país más al oeste del mundo?,Rusia,Nueva Zelanda,Australia,EE.UU,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,46,¿Cuál es el país más al centro del mundo?,Ecuador,Colombia,Brasil,Perú,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,47,¿Cuál es el país más al noreste del mundo?,Suecia,Rusia,Noruega,Finlandia,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,48,¿Cuál es la capa más alta de la Tierra?,Núcleo,Manto,Corteza,Atmósfera,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,49,¿Qué es un continente?,Una gran masa de tierra rodeada de agua,Una gran masa de agua rodeada de tierra,Una gran masa de tierra y agua,Una gran masa de agua y aire,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,50,¿Cuál es el océano más pequeño del mundo?,Atlántico,Índico,Ártico,Antártico,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,51,¿Qué es un archipiélago?,Un grupo de montañas,Un grupo de ríos,Un grupo de islas,Un grupo de lagos,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,52,¿Qué es una península?,Una extensión de tierra rodeada de agua por tres lados,Una extensión de tierra rodeada de agua por dos lados,Una extensión de tierra rodeada de agua por un lado,Una extensión de tierra rodeada de agua por cuatro lados,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,53,¿Qué es una cordillera?,Un conjunto de volcanes activos,Un conjunto de valles alineados,Un conjunto de ríos alineados,Un conjunto de montañas alineadas,Respuesta_c,Respuesta_d
+263051655,ECOEMS 2026,Geografía,54,¿Qué es un istmo?,Una franja estrecha de tierra que une dos masas continentales mayores,Una franja estrecha de agua que une dos masas continentales mayores,Una franja estrecha de aire que une dos masas continentales mayores,Una franja estrecha de tierra que separa dos masas continentales mayores,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,55,¿Qué es un acantilado?,Una pendiente abrupta y alta junto al mar o a un río,Una pendiente suave y baja junto al mar o a un río,Una pendiente abrupta y baja junto al mar o a un río,Una pendiente suave y alta junto al mar o a un río,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,56,¿Qué es una meseta?,Una extensión de tierra baja y elevada,Una extensión de tierra plana y baja,Una extensión de tierra inclinada y elevada,Una extensión de tierra plana y alta,Respuesta_b,Respuesta_d
+263051655,ECOEMS 2026,Geografía,57,¿Qué es una cuenca hidrográfica?,El área de tierra donde el agua de lluvia drena hacia un río o lago específico,El área de tierra donde el agua de lluvia no drena hacia un río o lago específico,El área de agua donde el agua de lluvia drena hacia un río o lago específico,El área de aire donde el agua de lluvia drena hacia un río o lago específico,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,58,¿Qué es una depresión?,Una zona más baja que las áreas circundantes,Una zona más alta que las áreas circundantes,Una zona igual que las áreas circundantes,Una zona más baja que las áreas lejanas,Respuesta_d,Respuesta_a
+263051655,ECOEMS 2026,Geografía,59,¿Qué es una falla geológica?,Una fractura en la corteza terrestre donde no ha habido movimiento,Una fractura en la corteza terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde no ha habido movimiento,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,60,¿Qué es una fosa oceánica?,Un valle no profundo en el fondo del océano,Un valle profundo en la superficie del océano,Un valle poco profundo en el fondo del océano,Un valle poco profundo en la superficie del océano,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,61,¿Qué es una duna?,Un montículo de arena formado por el agua,Un montículo de arena formado por el fuego,Un montículo de arena formado por el aire,Un montículo de arena formado por la tierra,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,62,¿Qué es una bahía?,Una entrada del mar en la costa que forma una concavidad.,Una entrada del mar en la costa que forma una convexidad.,Una entrada del aire en la costa que forma una concavidad.,Una entrada del aire en la costa que forma una convexidad.,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,63,¿Qué es un volcán?,"Una abertura en la superficie terrestre por donde entra aire, ceniza y gases","Una abertura en la superficie terrestre por donde sale magma, ceniza y gases","Una abertura en la superficie terrestre por donde sale agua, ceniza y gases","Una abertura en la superficie terrestre por donde entra agua, ceniza y gases",Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,64,¿Qué es una laguna costera?,Un cuerpo de agua salada separado del mar por una franja de tierra,Un cuerpo de agua dulce separado del mar por una franja de tierra,Un cuerpo de agua separado del aire por una franja de tierra,Un cuerpo de agua separado del aire por una franja de mar,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,65,¿Qué es un cañón?,"Un valle poco profundo con paredes empinadas, creado por la erosión del agua o del viento","Un valle profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle poco profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle profundo con paredes empinadas, creado por la erosión del agua o del viento",Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,66,¿Qué es un oasis?,Un área infértil en un desierto donde no hay agua ni vegetación,Un área fértil en un desierto donde hay agua y vegetación,Un área fértil en una selva donde hay agua y vegetación,Un área fértil en una selva donde no hay agua ni vegetación,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,67,¿Qué es un valle?,Una elevación alargada entre montañas o colinas,Una depresión alargada entre ríos o lagos,Una depresión alargada entre montañas o colinas,Una elevación alargada entre ríos o lagos,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,68,¿Qué es un golfo?,Una gran entrada del mar en la costa que forma una concavidad.,Una gran entrada del mar en la costa que forma una convexidad.,Una gran entrada de océano en un contiene formando una concavidad.,Una gran entrada del aire en la costa que forma una convexidad.,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,69,¿Qué es un lago?,Un cuerpo de agua salada rodeado de tierra,Un cuerpo de tierra rodeado de agua,Un cuerpo de aire rodeado de tierra,Un cuerpo de agua dulce rodeado de tierra,Respuesta_a,Respuesta_d
+263051655,ECOEMS 2026,Geografía,70,¿Qué es un río?,"Un curso natural de agua que fluye hacia el mar, un lago u otro río",Un curso natural de agua que fluye hacia la montaña o la colina,"Un curso natural de tierra que fluye hacia el mar, un lago u otro río",Un curso natural de tierra que fluye hacia la montaña o la colina,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,71,¿Qué es una isla?,Una extensión de tierra rodeada de agua salada,Una extensión de agua salada rodeada de tierra,Una extensión de aire contaminado rodeada de tierra,Una extensión de tierra rodeada de aire,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,72,¿Qué es un mar?,Un cuerpo de agua dulce conectado con el océano,Un cuerpo de agua salada conectado con el océano,Un cuerpo de agua salada no conectado con el océano,Un cuerpo de agua dulce no conectado con el océano,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,73,¿Qué es una montaña?,Una elevación natural del terreno con una cima definida y una altura considerable,Una depresión natural del terreno con una cima definida y una altura considerable,Una elevación natural del terreno con una base definida y una altura considerable,Una depresión natural del terreno con una base definida y una altura considerable,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,74,¿Qué es un océano?,Un cuerpo enorme de agua salada que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de agua dulce que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de tierra que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de aire que cubre la mayor parte de la superficie terrestre,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,75,¿Qué es un pantano?,Un área húmeda y pantanosa donde crecen plantas acuáticas,Un área seca y arenosa donde crecen plantas acuáticas,Un área húmeda y pantanosa donde no crecen plantas acuáticas,Un área seca y arenosa donde no crecen plantas acuáticas,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,76,¿Qué es una planicie?,Una extensión grande y alta de mar,Una extensión grande y plana de tierra,Una extensión grande e inclinada de tierra,Una extensión grande y plana de tierra,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,77,¿Qué es un estrecho?,Un canal de tierra que conecta dos cuerpos de agua más grandes,Un canal de aire que conecta dos cuerpos de agua más grandes,Un canal de fuego que conecta dos cuerpos de agua más grandes,Un canal de agua que conecta dos cuerpos de agua más grandes,Respuesta_a,Respuesta_d
+263051655,ECOEMS 2026,Geografía,78,¿Qué es una tundra?,Un bioma frío y seco con vegetación alta y permafrost,Un bioma cálido y húmedo con vegetación alta y permafrost,Un bioma frío y húmedo con vegetación baja y permafrost,Un bioma cálido y seco con vegetación alta y permafrost,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,79,¿Qué es un valle glaciar?,Un monte en forma de U creado por la erosión de un glaciar,Un valle en forma de V creado por la erosión de un glaciar,Un valle en forma de U creado por la erosión de un río,Un valle en forma de V creado por la erosión de un río,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,80,¿Qué es una zona climática?,Una región del planeta con características climáticas similares,Una región del planeta con características geográficas similares,Una región del planeta con características políticas similares,Una región del planeta con características económicas similares,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,81,¿Qué es una zona de subducción?,Una región donde una placa tectónica se desliza debajo de otra,Una región donde una placa tectónica se desliza encima de otra,Una región donde una placa tectónica se desliza al lado de otra,Una región donde una placa tectónica se separa de otra,Respuesta_b,Respuesta_a
+263051655,ECOEMS 2026,Geografía,82,¿Qué es un acuífero?,Una capa subterránea de roca o sedimento que no contiene agua,Una capa subterránea de roca o sedimento que contiene agua,Una capa subterránea de aire o gas que contiene agua,Una capa subterránea de aire o gas que no contiene agua,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,83,¿Qué es un arrecife de coral?,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismos marinos,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismo marinos,Una estructura submarina formada por el crecimiento y depósito de peces y otros organismos marinos,Una estructura terrestre formada por el crecimiento y depósito de coral y otros organismos marinos,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,84,¿Qué es un bosque lluvioso?,Un bioma cálido y húmedo con baja precipitación y vegetación densa,Un bioma frío y seco con baja precipitación y vegetación escasa,Un bioma cálido y seco con baja precipitación y vegetación densa,Un bioma frío y húmedo con alta precipitación y vegetación escasa,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,85,¿Qué es un desierto?,Un bioma árido con baja precipitación y vegetación densa,Un bioma húmedo con alta precipitación y vegetación densa,Un bioma árido con alta precipitación y vegetación escasa,Un bioma húmedo con baja precipitación y vegetación densa,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,86,¿Cuál es la capital del estado de México?,Nezahualcóyotl,Ecatepec,Naucalpan,Toluca,Respuesta_a,Respuesta_d
+263051655,ECOEMS 2026,Geografía,87,¿Cuál es la capital del estado de Ciudad de México?,Ciudad de México,Iztapalapa,Gustavo A. Madero,Álvaro Obregón,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,88,¿Cuál es la capital del estado de Tabasco?,Tabasco,Cárdenas,Comalcalco,Villahermosa,Respuesta_a,Respuesta_d
+263051655,ECOEMS 2026,Geografía,89,¿Cuál es la capital del estado de Campeche?,Calkiní,Ciudad del Carmen,Campeche,Champotón,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,90,¿Cuál es la capital del estado de Quintana Roo?,Cancún,Chetumal,Playa del Carmen,Cozumel,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,91,¿Cuál es la capital del estado de Baja California Sur?,Loreto,Cabo San Lucas,San José del Cabo,La Paz,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,92,¿Cuál es la capital del estado de Sonora?,Nogales,Ciudad Obregón,Hermosillo,San Luis Río Colorado,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,93,¿Cuál es la capital del estado de Sinaloa?,Los Mochis,Mazatlán,Culiacán,Guasave,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,94,¿Cuál es la capital del estado de Coahuila?,Piedras Negras,Torreón,Saltillo,Coahuila,Respuesta_a,Respuesta_c
+263051655,ECOEMS 2026,Geografía,95,¿Cuál es la capital del estado de Tamaulipas?,Ciudad Victoria,Reynosa,Matamoros,Nuevo Laredo,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,96,¿Cuál es la capital del estado de Baja California?,Tijuana,Mexicali,Ensenada,Tecate,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,97,¿Cuál es la capital del estado de Zacatecas?,Río Grande,Fresnillo,Guadalupe,Zacatecas,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,98,¿Cuál es la capital del estado de San Luis Potosí?,Matehuala,Ciudad Valles,San Luis Potosí,Rioverde,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,99,¿Cuál es la capital del estado de Durango?,El Salto,Gómez Palacio,Ciudad Lerdo,Durango,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,100,¿Cuál es la capital del estado de Nayarit?,San Blas,Puerto Vallarta,Tepic,Compostela,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,101,¿Cuál es la capital del estado de Colima?,Armería,Manzanillo,Colima,Villa de Álvarez,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,102,¿Cuál es la capital del estado de Aguascalientes?,Calvillo,Jesús María,Aguascalientes,Rincón de Romos,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,103,¿Cuál es la capital del estado de Hidalgo?,Tulancingo,Pachuca,Tula de Allende,Huejutla de Reyes,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,104,¿Cuál es la capital del estado de Tlaxcala?,Tlaxcala,Apizaco,Huamantla,Zacatelco,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,105,¿Cuál es la capital del estado de Morelos?,Cuautla,Cuernavaca,Jiutepec,Temixco,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,106,¿Cuál es la capital del estado de Michoacán?,Lázaro Cárdenas,Uruapan,Zamora,Morelia,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,107,¿Cuál es la capital del estado de Guanajuato?,Guanajuato,León,Irapuato,Celaya,Respuesta_d,Respuesta_a
+263051655,ECOEMS 2026,Geografía,108,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,109,¿Cuál es la capital del estado de Chiapas?,Tuxtla Gutiérrez,San Cristóbal de las Casas,Tapachula,Comitán,Respuesta_d,Respuesta_a
+263051655,ECOEMS 2026,Geografía,110,¿Cuál es la capital del estado de Oaxaca?,Oaxaca,Puerto Escondido,Huatulco,Juchitán,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,111,¿Cuál es la capital del estado de Guerrero?,Acapulco,Chilpancingo,Taxco,Zihuatanejo,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,112,¿Cuál es la capital del estado de Nuevo León?,Reynosa,Saltillo,Monterrey,Matamoros,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,113,¿Cuál es la capital del estado de Veracruz?,Veracruz,Xalapa,Coatzacoalcos,Poza Rica,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,114,¿Cuál es la capital del estado de Puebla?,Cholula,Tlaxcala,Puebla,Atlixco,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,115,¿Cuál es la capital del estado de Chihuahua?,Chihuahua,Tijuana,Monterrey,Hermosillo,Respuesta_a,Respuesta_a
+263051655,ECOEMS 2026,Geografía,116,¿Cuál es la capital del estado de Yucatán?,Cancún,Mérida,Campeche,Villahermosa,Respuesta_c,Respuesta_b
+263051655,ECOEMS 2026,Geografía,117,¿Cuál es la capital del estado de Jalisco?,Puerto Vallarta,San Juan De Los Lagos,Guadalajara,Zapopan,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,118,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,119,¿Cuál es la capital de Francia?,Niza,Marsella,Lyon,París,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,120,¿Cuál es la capital de Italia?,Turín,Milán,Nápoles,Roma,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,121,¿Cuál es la capital de España?,Sevilla,Barcelona,Valencia,Madrid,Respuesta_d,Respuesta_d
+263051655,ECOEMS 2026,Geografía,122,¿Cuál es la capital de Alemania?,Múnich,Hamburgo,Berlín,Colonia,Respuesta_b,Respuesta_c
+263051655,ECOEMS 2026,Geografía,123,¿Cuál es la capital de Reino Unido?,Manchester,Birmingham,Londres,Leeds,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,124,¿Cuál es la capital de Portugal?,Lisboa,Oporto,Braga,Coímbra,Respuesta_c,Respuesta_a
+263051655,ECOEMS 2026,Geografía,125,¿Cuál es la capital de Rusia?,San Petersburgo,Moscú,Novosibirsk,Ekaterimburgo,Respuesta_b,Respuesta_b
+263051655,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_c,Respuesta_c
+263051655,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_a,Respuesta_b
+263051655,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,1,¿Cuál es el río más largo de México?,Río Bravo,Río Lerma,Río Balsas,Río Grijalva,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,2,¿Cuál es la ubicación geográfica de México?,América del Sur,América Central,América del Norte,Europa,Respuesta_a,Respuesta_c
+264476043,ECOEMS 2026,Geografía,3,¿Cuál es la península más grande de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,4,¿Cuál es la capital de México?,Guadalajara,Monterrey,Puebla,Ciudad de México,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,5,¿Cuál es el lago más grande de México?,Lago de Chapala,Lago de Pátzcuaro,Lago de Cuitzeo,Lago de Zirahuén,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,6,¿Cuál es el estado más grande de México?,Chihuahua,Sonora,Coahuila,Durango,Respuesta_d,Respuesta_a
+264476043,ECOEMS 2026,Geografía,7,¿Qué océanos bañan las costas de México?,Atlántico e Índico,Pacífico y Ártico,Atlántico y Pacífico,Índico y Ártico,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,8,¿Con qué países limita México al norte?,Guatemala y Belice,Estados Unidos,Canadá,Brasil,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,9,¿Cuál es el desierto más grande de México?,Desierto de Sonora,Desierto de Chihuahua,Desierto de Altar,Desierto de Mapimí,Respuesta_d,Respuesta_a
+264476043,ECOEMS 2026,Geografía,10,¿Cuál es la montaña más alta de México?,Iztaccíhuatl,Popocatépetl,Pico de Orizaba,Nevado de Toluca,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,11,¿Cuál es el estado más pequeño de México?,Aguascalientes,Colima,Tlaxcala,Morelos,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,12,¿Cuál es el estado más poblado de México (Excepto Ciudad de México)?,Ciudad de México,Estado de México,Veracruz,Jalisco,Respuesta_d,Respuesta_b
+264476043,ECOEMS 2026,Geografía,13,¿Cuál es el volcán más activo de México?,Paricutín,Iztaccíhuatl,Pico de Orizaba,Popocatépetl,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,14,¿Cuál es la ciudad más poblada de México?,Puebla,Guadalajara,Monterrey,Ciudad de México,Respuesta_a,Respuesta_d
+264476043,ECOEMS 2026,Geografía,15,¿Cuál es el río más caudaloso de México?,Río Balsas,Río Lerma,Río Bravo,Río Grijalva,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,16,¿Cuál es la isla más grande de México?,Isla Mujeres,Isla Ángel de la Guarda,Isla Cozumel,Isla Tiburón,Respuesta_c,Respuesta_d
+264476043,ECOEMS 2026,Geografía,17,¿Cuál es el estado más al norte de México?,Baja California,Sonora,Chihuahua,Coahuila,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,18,¿Cuál es el estado más al sur de México?,Campeche,Tabasco,Chiapas,Yucatán,Respuesta_a,Respuesta_c
+264476043,ECOEMS 2026,Geografía,19,¿Cuál es el estado más al oeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,20,¿Cuál es la península más al sur de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,21,¿Cuál es el estado más al centro de México?,Hidalgo,Estado de México,Aguascalientes,Tlaxcala,Respuesta_a,Respuesta_c
+264476043,ECOEMS 2026,Geografía,22,¿Cuál es el estado más al sureste de México?,Yucatán,Tabasco,Campeche,Chiapas,Respuesta_b,Respuesta_d
+264476043,ECOEMS 2026,Geografía,23,¿Cuál es el estado más al noroeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,24,¿Cuál es el estado más al noreste de México?,Nuevo León,Estado de México,Tamaulipas,Chihuahua,Respuesta_d,Respuesta_c
+264476043,ECOEMS 2026,Geografía,25,¿Cuál es el estado más al suroeste de México?,Colima,Oaxaca,Guerrero,Michoacán,Respuesta_d,Respuesta_b
+264476043,ECOEMS 2026,Geografía,26,¿Cuál es el estado más al centro-norte de México?,Zacatecas,San Luis Potosí,Aguascalientes,Durango,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,27,¿Cuáles son los continentes del mundo?,"América, Europa, Asia, África y Oceania","América, Europa, Asia y África","América del Norte, América del Sur, Europa","América del Norte, América Central, Asia",Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,28,¿Cuál es el continente más extenso?,Antártida,América,África,Asia,Respuesta_b,Respuesta_d
+264476043,ECOEMS 2026,Geografía,29,¿Cuál es el continente más poblado?,América,Asia,Europa,África,Respuesta_d,Respuesta_b
+264476043,ECOEMS 2026,Geografía,30,¿Cuál es el océano más grande del mundo?,Atlántico,Índico,Pacífico,Antártico,Respuesta_d,Respuesta_c
+264476043,ECOEMS 2026,Geografía,31,¿Cuál es el país más grande del mundo?,Canadá,China,Estados Unidos,Rusia,Respuesta_c,Respuesta_d
+264476043,ECOEMS 2026,Geografía,32,¿Cuál es el país más poblado del mundo?,Pakistan,Japón,India,China,Respuesta_a,Respuesta_d
+264476043,ECOEMS 2026,Geografía,33,¿Cuál es la montaña más alta del mundo?,K2,Monte Everest,Kangchenjunga,Lhotse,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,34,¿Cuál es el río más largo del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,35,¿Cuál es el desierto más grande del mundo?,Desierto de los Leones,Desierto de Gobi,Desierto de Kalahari,Desierto del Sahara,Respuesta_c,Respuesta_d
+264476043,ECOEMS 2026,Geografía,36,¿Cuál es la isla más grande del mundo?,Groenlandia,Nueva Guinea,Borneo,Madagascar,Respuesta_d,Respuesta_a
+264476043,ECOEMS 2026,Geografía,37,¿Cuál es el volcán más activo del mundo?,Monte Vesubio,Monte Etna,Kilauea,Monte Santa Helena,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,38,¿Cuál es la ciudad más poblada del mundo?,Londres,Nueva Delhi,Shanghái,São Paulo,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,39,¿Cuál es el parque nacional más grande del mundo?,Parque Nacional Yellowstone,Parque Nacional Banff,Parque Nacional Kruger,Parque Nacional Noreste de Groenlandia,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,40,¿Cuál es el río más caudaloso del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,41,¿Cuál es la península más grande del mundo?,Península Canadiense,Península Ibérica,Península de Kamchatka,Península de Malaca,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,42,¿Cuál es el país más al norte del mundo?,Canadá,Rusia,Noruega,Dinamarca,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,43,¿Cuál es el país más al sur del mundo?,Argentina,Chile,Nueva Zelanda,Australia,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,44,¿Cuál es el país más al este del mundo?,Nueva Zelanda,Australia,Japón,Rusia,Respuesta_b,Respuesta_d
+264476043,ECOEMS 2026,Geografía,45,¿Cuál es el país más al oeste del mundo?,Rusia,Nueva Zelanda,Australia,EE.UU,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,46,¿Cuál es el país más al centro del mundo?,Ecuador,Colombia,Brasil,Perú,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,47,¿Cuál es el país más al noreste del mundo?,Suecia,Rusia,Noruega,Finlandia,Respuesta_d,Respuesta_b
+264476043,ECOEMS 2026,Geografía,48,¿Cuál es la capa más alta de la Tierra?,Núcleo,Manto,Corteza,Atmósfera,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,49,¿Qué es un continente?,Una gran masa de tierra rodeada de agua,Una gran masa de agua rodeada de tierra,Una gran masa de tierra y agua,Una gran masa de agua y aire,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,50,¿Cuál es el océano más pequeño del mundo?,Atlántico,Índico,Ártico,Antártico,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,51,¿Qué es un archipiélago?,Un grupo de montañas,Un grupo de ríos,Un grupo de islas,Un grupo de lagos,Respuesta_d,Respuesta_c
+264476043,ECOEMS 2026,Geografía,52,¿Qué es una península?,Una extensión de tierra rodeada de agua por tres lados,Una extensión de tierra rodeada de agua por dos lados,Una extensión de tierra rodeada de agua por un lado,Una extensión de tierra rodeada de agua por cuatro lados,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,53,¿Qué es una cordillera?,Un conjunto de volcanes activos,Un conjunto de valles alineados,Un conjunto de ríos alineados,Un conjunto de montañas alineadas,Respuesta_b,Respuesta_d
+264476043,ECOEMS 2026,Geografía,54,¿Qué es un istmo?,Una franja estrecha de tierra que une dos masas continentales mayores,Una franja estrecha de agua que une dos masas continentales mayores,Una franja estrecha de aire que une dos masas continentales mayores,Una franja estrecha de tierra que separa dos masas continentales mayores,Respuesta_d,Respuesta_a
+264476043,ECOEMS 2026,Geografía,55,¿Qué es un acantilado?,Una pendiente abrupta y alta junto al mar o a un río,Una pendiente suave y baja junto al mar o a un río,Una pendiente abrupta y baja junto al mar o a un río,Una pendiente suave y alta junto al mar o a un río,Respuesta_d,Respuesta_a
+264476043,ECOEMS 2026,Geografía,56,¿Qué es una meseta?,Una extensión de tierra baja y elevada,Una extensión de tierra plana y baja,Una extensión de tierra inclinada y elevada,Una extensión de tierra plana y alta,Respuesta_c,Respuesta_d
+264476043,ECOEMS 2026,Geografía,57,¿Qué es una cuenca hidrográfica?,El área de tierra donde el agua de lluvia drena hacia un río o lago específico,El área de tierra donde el agua de lluvia no drena hacia un río o lago específico,El área de agua donde el agua de lluvia drena hacia un río o lago específico,El área de aire donde el agua de lluvia drena hacia un río o lago específico,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,58,¿Qué es una depresión?,Una zona más baja que las áreas circundantes,Una zona más alta que las áreas circundantes,Una zona igual que las áreas circundantes,Una zona más baja que las áreas lejanas,Respuesta_d,Respuesta_a
+264476043,ECOEMS 2026,Geografía,59,¿Qué es una falla geológica?,Una fractura en la corteza terrestre donde no ha habido movimiento,Una fractura en la corteza terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde no ha habido movimiento,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,60,¿Qué es una fosa oceánica?,Un valle no profundo en el fondo del océano,Un valle profundo en la superficie del océano,Un valle poco profundo en el fondo del océano,Un valle poco profundo en la superficie del océano,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,61,¿Qué es una duna?,Un montículo de arena formado por el agua,Un montículo de arena formado por el fuego,Un montículo de arena formado por el aire,Un montículo de arena formado por la tierra,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,62,¿Qué es una bahía?,Una entrada del mar en la costa que forma una concavidad.,Una entrada del mar en la costa que forma una convexidad.,Una entrada del aire en la costa que forma una concavidad.,Una entrada del aire en la costa que forma una convexidad.,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,63,¿Qué es un volcán?,"Una abertura en la superficie terrestre por donde entra aire, ceniza y gases","Una abertura en la superficie terrestre por donde sale magma, ceniza y gases","Una abertura en la superficie terrestre por donde sale agua, ceniza y gases","Una abertura en la superficie terrestre por donde entra agua, ceniza y gases",Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,64,¿Qué es una laguna costera?,Un cuerpo de agua salada separado del mar por una franja de tierra,Un cuerpo de agua dulce separado del mar por una franja de tierra,Un cuerpo de agua separado del aire por una franja de tierra,Un cuerpo de agua separado del aire por una franja de mar,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,65,¿Qué es un cañón?,"Un valle poco profundo con paredes empinadas, creado por la erosión del agua o del viento","Un valle profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle poco profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle profundo con paredes empinadas, creado por la erosión del agua o del viento",Respuesta_a,Respuesta_d
+264476043,ECOEMS 2026,Geografía,66,¿Qué es un oasis?,Un área infértil en un desierto donde no hay agua ni vegetación,Un área fértil en un desierto donde hay agua y vegetación,Un área fértil en una selva donde hay agua y vegetación,Un área fértil en una selva donde no hay agua ni vegetación,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,67,¿Qué es un valle?,Una elevación alargada entre montañas o colinas,Una depresión alargada entre ríos o lagos,Una depresión alargada entre montañas o colinas,Una elevación alargada entre ríos o lagos,Respuesta_d,Respuesta_c
+264476043,ECOEMS 2026,Geografía,68,¿Qué es un golfo?,Una gran entrada del mar en la costa que forma una concavidad.,Una gran entrada del mar en la costa que forma una convexidad.,Una gran entrada de océano en un contiene formando una concavidad.,Una gran entrada del aire en la costa que forma una convexidad.,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,69,¿Qué es un lago?,Un cuerpo de agua salada rodeado de tierra,Un cuerpo de tierra rodeado de agua,Un cuerpo de aire rodeado de tierra,Un cuerpo de agua dulce rodeado de tierra,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,70,¿Qué es un río?,"Un curso natural de agua que fluye hacia el mar, un lago u otro río",Un curso natural de agua que fluye hacia la montaña o la colina,"Un curso natural de tierra que fluye hacia el mar, un lago u otro río",Un curso natural de tierra que fluye hacia la montaña o la colina,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,71,¿Qué es una isla?,Una extensión de tierra rodeada de agua salada,Una extensión de agua salada rodeada de tierra,Una extensión de aire contaminado rodeada de tierra,Una extensión de tierra rodeada de aire,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,72,¿Qué es un mar?,Un cuerpo de agua dulce conectado con el océano,Un cuerpo de agua salada conectado con el océano,Un cuerpo de agua salada no conectado con el océano,Un cuerpo de agua dulce no conectado con el océano,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,73,¿Qué es una montaña?,Una elevación natural del terreno con una cima definida y una altura considerable,Una depresión natural del terreno con una cima definida y una altura considerable,Una elevación natural del terreno con una base definida y una altura considerable,Una depresión natural del terreno con una base definida y una altura considerable,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,74,¿Qué es un océano?,Un cuerpo enorme de agua salada que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de agua dulce que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de tierra que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de aire que cubre la mayor parte de la superficie terrestre,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,75,¿Qué es un pantano?,Un área húmeda y pantanosa donde crecen plantas acuáticas,Un área seca y arenosa donde crecen plantas acuáticas,Un área húmeda y pantanosa donde no crecen plantas acuáticas,Un área seca y arenosa donde no crecen plantas acuáticas,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,76,¿Qué es una planicie?,Una extensión grande y alta de mar,Una extensión grande y plana de tierra,Una extensión grande e inclinada de tierra,Una extensión grande y plana de tierra,Respuesta_d,Respuesta_b
+264476043,ECOEMS 2026,Geografía,77,¿Qué es un estrecho?,Un canal de tierra que conecta dos cuerpos de agua más grandes,Un canal de aire que conecta dos cuerpos de agua más grandes,Un canal de fuego que conecta dos cuerpos de agua más grandes,Un canal de agua que conecta dos cuerpos de agua más grandes,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,78,¿Qué es una tundra?,Un bioma frío y seco con vegetación alta y permafrost,Un bioma cálido y húmedo con vegetación alta y permafrost,Un bioma frío y húmedo con vegetación baja y permafrost,Un bioma cálido y seco con vegetación alta y permafrost,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,79,¿Qué es un valle glaciar?,Un monte en forma de U creado por la erosión de un glaciar,Un valle en forma de V creado por la erosión de un glaciar,Un valle en forma de U creado por la erosión de un río,Un valle en forma de V creado por la erosión de un río,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,80,¿Qué es una zona climática?,Una región del planeta con características climáticas similares,Una región del planeta con características geográficas similares,Una región del planeta con características políticas similares,Una región del planeta con características económicas similares,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,81,¿Qué es una zona de subducción?,Una región donde una placa tectónica se desliza debajo de otra,Una región donde una placa tectónica se desliza encima de otra,Una región donde una placa tectónica se desliza al lado de otra,Una región donde una placa tectónica se separa de otra,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,82,¿Qué es un acuífero?,Una capa subterránea de roca o sedimento que no contiene agua,Una capa subterránea de roca o sedimento que contiene agua,Una capa subterránea de aire o gas que contiene agua,Una capa subterránea de aire o gas que no contiene agua,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,83,¿Qué es un arrecife de coral?,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismos marinos,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismo marinos,Una estructura submarina formada por el crecimiento y depósito de peces y otros organismos marinos,Una estructura terrestre formada por el crecimiento y depósito de coral y otros organismos marinos,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,84,¿Qué es un bosque lluvioso?,Un bioma cálido y húmedo con baja precipitación y vegetación densa,Un bioma frío y seco con baja precipitación y vegetación escasa,Un bioma cálido y seco con baja precipitación y vegetación densa,Un bioma frío y húmedo con alta precipitación y vegetación escasa,Respuesta_c,Respuesta_d
+264476043,ECOEMS 2026,Geografía,85,¿Qué es un desierto?,Un bioma árido con baja precipitación y vegetación densa,Un bioma húmedo con alta precipitación y vegetación densa,Un bioma árido con alta precipitación y vegetación escasa,Un bioma húmedo con baja precipitación y vegetación densa,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,86,¿Cuál es la capital del estado de México?,Nezahualcóyotl,Ecatepec,Naucalpan,Toluca,Respuesta_b,Respuesta_d
+264476043,ECOEMS 2026,Geografía,87,¿Cuál es la capital del estado de Ciudad de México?,Ciudad de México,Iztapalapa,Gustavo A. Madero,Álvaro Obregón,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,88,¿Cuál es la capital del estado de Tabasco?,Tabasco,Cárdenas,Comalcalco,Villahermosa,Respuesta_a,Respuesta_d
+264476043,ECOEMS 2026,Geografía,89,¿Cuál es la capital del estado de Campeche?,Calkiní,Ciudad del Carmen,Campeche,Champotón,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,90,¿Cuál es la capital del estado de Quintana Roo?,Cancún,Chetumal,Playa del Carmen,Cozumel,Respuesta_c,Respuesta_b
+264476043,ECOEMS 2026,Geografía,91,¿Cuál es la capital del estado de Baja California Sur?,Loreto,Cabo San Lucas,San José del Cabo,La Paz,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,92,¿Cuál es la capital del estado de Sonora?,Nogales,Ciudad Obregón,Hermosillo,San Luis Río Colorado,Respuesta_d,Respuesta_c
+264476043,ECOEMS 2026,Geografía,93,¿Cuál es la capital del estado de Sinaloa?,Los Mochis,Mazatlán,Culiacán,Guasave,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,94,¿Cuál es la capital del estado de Coahuila?,Piedras Negras,Torreón,Saltillo,Coahuila,Respuesta_d,Respuesta_c
+264476043,ECOEMS 2026,Geografía,95,¿Cuál es la capital del estado de Tamaulipas?,Ciudad Victoria,Reynosa,Matamoros,Nuevo Laredo,Respuesta_b,Respuesta_a
+264476043,ECOEMS 2026,Geografía,96,¿Cuál es la capital del estado de Baja California?,Tijuana,Mexicali,Ensenada,Tecate,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,97,¿Cuál es la capital del estado de Zacatecas?,Río Grande,Fresnillo,Guadalupe,Zacatecas,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,98,¿Cuál es la capital del estado de San Luis Potosí?,Matehuala,Ciudad Valles,San Luis Potosí,Rioverde,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,99,¿Cuál es la capital del estado de Durango?,El Salto,Gómez Palacio,Ciudad Lerdo,Durango,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,100,¿Cuál es la capital del estado de Nayarit?,San Blas,Puerto Vallarta,Tepic,Compostela,Respuesta_a,Respuesta_c
+264476043,ECOEMS 2026,Geografía,101,¿Cuál es la capital del estado de Colima?,Armería,Manzanillo,Colima,Villa de Álvarez,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,102,¿Cuál es la capital del estado de Aguascalientes?,Calvillo,Jesús María,Aguascalientes,Rincón de Romos,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,103,¿Cuál es la capital del estado de Hidalgo?,Tulancingo,Pachuca,Tula de Allende,Huejutla de Reyes,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,104,¿Cuál es la capital del estado de Tlaxcala?,Tlaxcala,Apizaco,Huamantla,Zacatelco,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,105,¿Cuál es la capital del estado de Morelos?,Cuautla,Cuernavaca,Jiutepec,Temixco,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,106,¿Cuál es la capital del estado de Michoacán?,Lázaro Cárdenas,Uruapan,Zamora,Morelia,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,107,¿Cuál es la capital del estado de Guanajuato?,Guanajuato,León,Irapuato,Celaya,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,108,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_a,Respuesta_c
+264476043,ECOEMS 2026,Geografía,109,¿Cuál es la capital del estado de Chiapas?,Tuxtla Gutiérrez,San Cristóbal de las Casas,Tapachula,Comitán,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,110,¿Cuál es la capital del estado de Oaxaca?,Oaxaca,Puerto Escondido,Huatulco,Juchitán,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,111,¿Cuál es la capital del estado de Guerrero?,Acapulco,Chilpancingo,Taxco,Zihuatanejo,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,112,¿Cuál es la capital del estado de Nuevo León?,Reynosa,Saltillo,Monterrey,Matamoros,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,113,¿Cuál es la capital del estado de Veracruz?,Veracruz,Xalapa,Coatzacoalcos,Poza Rica,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,114,¿Cuál es la capital del estado de Puebla?,Cholula,Tlaxcala,Puebla,Atlixco,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,115,¿Cuál es la capital del estado de Chihuahua?,Chihuahua,Tijuana,Monterrey,Hermosillo,Respuesta_a,Respuesta_a
+264476043,ECOEMS 2026,Geografía,116,¿Cuál es la capital del estado de Yucatán?,Cancún,Mérida,Campeche,Villahermosa,Respuesta_b,Respuesta_b
+264476043,ECOEMS 2026,Geografía,117,¿Cuál es la capital del estado de Jalisco?,Puerto Vallarta,San Juan De Los Lagos,Guadalajara,Zapopan,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,118,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_a,Respuesta_c
+264476043,ECOEMS 2026,Geografía,119,¿Cuál es la capital de Francia?,Niza,Marsella,Lyon,París,Respuesta_c,Respuesta_d
+264476043,ECOEMS 2026,Geografía,120,¿Cuál es la capital de Italia?,Turín,Milán,Nápoles,Roma,Respuesta_a,Respuesta_d
+264476043,ECOEMS 2026,Geografía,121,¿Cuál es la capital de España?,Sevilla,Barcelona,Valencia,Madrid,Respuesta_d,Respuesta_d
+264476043,ECOEMS 2026,Geografía,122,¿Cuál es la capital de Alemania?,Múnich,Hamburgo,Berlín,Colonia,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,123,¿Cuál es la capital de Reino Unido?,Manchester,Birmingham,Londres,Leeds,Respuesta_c,Respuesta_c
+264476043,ECOEMS 2026,Geografía,124,¿Cuál es la capital de Portugal?,Lisboa,Oporto,Braga,Coímbra,Respuesta_c,Respuesta_a
+264476043,ECOEMS 2026,Geografía,125,¿Cuál es la capital de Rusia?,San Petersburgo,Moscú,Novosibirsk,Ekaterimburgo,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_b,Respuesta_c
+264476043,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_a,Respuesta_b
+264476043,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,1,¿Cuál es el río más largo de México?,Río Bravo,Río Lerma,Río Balsas,Río Grijalva,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,2,¿Cuál es la ubicación geográfica de México?,América del Sur,América Central,América del Norte,Europa,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,3,¿Cuál es la península más grande de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,4,¿Cuál es la capital de México?,Guadalajara,Monterrey,Puebla,Ciudad de México,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,5,¿Cuál es el lago más grande de México?,Lago de Chapala,Lago de Pátzcuaro,Lago de Cuitzeo,Lago de Zirahuén,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,6,¿Cuál es el estado más grande de México?,Chihuahua,Sonora,Coahuila,Durango,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,7,¿Qué océanos bañan las costas de México?,Atlántico e Índico,Pacífico y Ártico,Atlántico y Pacífico,Índico y Ártico,Respuesta_c,Respuesta_b
+267368701,ECOEMS 2026,Geografía,8,¿Con qué países limita México al norte?,Guatemala y Belice,Estados Unidos,Canadá,Brasil,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,9,¿Cuál es el desierto más grande de México?,Desierto de Sonora,Desierto de Chihuahua,Desierto de Altar,Desierto de Mapimí,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,10,¿Cuál es la montaña más alta de México?,Iztaccíhuatl,Popocatépetl,Pico de Orizaba,Nevado de Toluca,Respuesta_d,Respuesta_c
+267368701,ECOEMS 2026,Geografía,11,¿Cuál es el estado más pequeño de México?,Aguascalientes,Colima,Tlaxcala,Morelos,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,12,¿Cuál es el estado más poblado de México (Excepto Ciudad de México)?,Ciudad de México,Estado de México,Veracruz,Jalisco,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,13,¿Cuál es el volcán más activo de México?,Paricutín,Iztaccíhuatl,Pico de Orizaba,Popocatépetl,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,14,¿Cuál es la ciudad más poblada de México?,Puebla,Guadalajara,Monterrey,Ciudad de México,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,15,¿Cuál es el río más caudaloso de México?,Río Balsas,Río Lerma,Río Bravo,Río Grijalva,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,16,¿Cuál es la isla más grande de México?,Isla Mujeres,Isla Ángel de la Guarda,Isla Cozumel,Isla Tiburón,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,17,¿Cuál es el estado más al norte de México?,Baja California,Sonora,Chihuahua,Coahuila,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,18,¿Cuál es el estado más al sur de México?,Campeche,Tabasco,Chiapas,Yucatán,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,19,¿Cuál es el estado más al oeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,20,¿Cuál es la península más al sur de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,21,¿Cuál es el estado más al centro de México?,Hidalgo,Estado de México,Aguascalientes,Tlaxcala,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,22,¿Cuál es el estado más al sureste de México?,Yucatán,Tabasco,Campeche,Chiapas,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,23,¿Cuál es el estado más al noroeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,24,¿Cuál es el estado más al noreste de México?,Nuevo León,Estado de México,Tamaulipas,Chihuahua,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,25,¿Cuál es el estado más al suroeste de México?,Colima,Oaxaca,Guerrero,Michoacán,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,26,¿Cuál es el estado más al centro-norte de México?,Zacatecas,San Luis Potosí,Aguascalientes,Durango,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,27,¿Cuáles son los continentes del mundo?,"América, Europa, Asia, África y Oceania","América, Europa, Asia y África","América del Norte, América del Sur, Europa","América del Norte, América Central, Asia",Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,28,¿Cuál es el continente más extenso?,Antártida,América,África,Asia,Respuesta_b,Respuesta_d
+267368701,ECOEMS 2026,Geografía,29,¿Cuál es el continente más poblado?,América,Asia,Europa,África,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,30,¿Cuál es el océano más grande del mundo?,Atlántico,Índico,Pacífico,Antártico,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,31,¿Cuál es el país más grande del mundo?,Canadá,China,Estados Unidos,Rusia,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,32,¿Cuál es el país más poblado del mundo?,Pakistan,Japón,India,China,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,33,¿Cuál es la montaña más alta del mundo?,K2,Monte Everest,Kangchenjunga,Lhotse,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,34,¿Cuál es el río más largo del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,35,¿Cuál es el desierto más grande del mundo?,Desierto de los Leones,Desierto de Gobi,Desierto de Kalahari,Desierto del Sahara,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,36,¿Cuál es la isla más grande del mundo?,Groenlandia,Nueva Guinea,Borneo,Madagascar,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,37,¿Cuál es el volcán más activo del mundo?,Monte Vesubio,Monte Etna,Kilauea,Monte Santa Helena,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,38,¿Cuál es la ciudad más poblada del mundo?,Londres,Nueva Delhi,Shanghái,São Paulo,Respuesta_d,Respuesta_b
+267368701,ECOEMS 2026,Geografía,39,¿Cuál es el parque nacional más grande del mundo?,Parque Nacional Yellowstone,Parque Nacional Banff,Parque Nacional Kruger,Parque Nacional Noreste de Groenlandia,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,40,¿Cuál es el río más caudaloso del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,41,¿Cuál es la península más grande del mundo?,Península Canadiense,Península Ibérica,Península de Kamchatka,Península de Malaca,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,42,¿Cuál es el país más al norte del mundo?,Canadá,Rusia,Noruega,Dinamarca,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,43,¿Cuál es el país más al sur del mundo?,Argentina,Chile,Nueva Zelanda,Australia,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,44,¿Cuál es el país más al este del mundo?,Nueva Zelanda,Australia,Japón,Rusia,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,45,¿Cuál es el país más al oeste del mundo?,Rusia,Nueva Zelanda,Australia,EE.UU,Respuesta_b,Respuesta_d
+267368701,ECOEMS 2026,Geografía,46,¿Cuál es el país más al centro del mundo?,Ecuador,Colombia,Brasil,Perú,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,47,¿Cuál es el país más al noreste del mundo?,Suecia,Rusia,Noruega,Finlandia,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,48,¿Cuál es la capa más alta de la Tierra?,Núcleo,Manto,Corteza,Atmósfera,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,49,¿Qué es un continente?,Una gran masa de tierra rodeada de agua,Una gran masa de agua rodeada de tierra,Una gran masa de tierra y agua,Una gran masa de agua y aire,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,50,¿Cuál es el océano más pequeño del mundo?,Atlántico,Índico,Ártico,Antártico,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,51,¿Qué es un archipiélago?,Un grupo de montañas,Un grupo de ríos,Un grupo de islas,Un grupo de lagos,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,52,¿Qué es una península?,Una extensión de tierra rodeada de agua por tres lados,Una extensión de tierra rodeada de agua por dos lados,Una extensión de tierra rodeada de agua por un lado,Una extensión de tierra rodeada de agua por cuatro lados,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,53,¿Qué es una cordillera?,Un conjunto de volcanes activos,Un conjunto de valles alineados,Un conjunto de ríos alineados,Un conjunto de montañas alineadas,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,54,¿Qué es un istmo?,Una franja estrecha de tierra que une dos masas continentales mayores,Una franja estrecha de agua que une dos masas continentales mayores,Una franja estrecha de aire que une dos masas continentales mayores,Una franja estrecha de tierra que separa dos masas continentales mayores,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,55,¿Qué es un acantilado?,Una pendiente abrupta y alta junto al mar o a un río,Una pendiente suave y baja junto al mar o a un río,Una pendiente abrupta y baja junto al mar o a un río,Una pendiente suave y alta junto al mar o a un río,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,56,¿Qué es una meseta?,Una extensión de tierra baja y elevada,Una extensión de tierra plana y baja,Una extensión de tierra inclinada y elevada,Una extensión de tierra plana y alta,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,57,¿Qué es una cuenca hidrográfica?,El área de tierra donde el agua de lluvia drena hacia un río o lago específico,El área de tierra donde el agua de lluvia no drena hacia un río o lago específico,El área de agua donde el agua de lluvia drena hacia un río o lago específico,El área de aire donde el agua de lluvia drena hacia un río o lago específico,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,58,¿Qué es una depresión?,Una zona más baja que las áreas circundantes,Una zona más alta que las áreas circundantes,Una zona igual que las áreas circundantes,Una zona más baja que las áreas lejanas,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,59,¿Qué es una falla geológica?,Una fractura en la corteza terrestre donde no ha habido movimiento,Una fractura en la corteza terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde no ha habido movimiento,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,60,¿Qué es una fosa oceánica?,Un valle no profundo en el fondo del océano,Un valle profundo en la superficie del océano,Un valle poco profundo en el fondo del océano,Un valle poco profundo en la superficie del océano,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,61,¿Qué es una duna?,Un montículo de arena formado por el agua,Un montículo de arena formado por el fuego,Un montículo de arena formado por el aire,Un montículo de arena formado por la tierra,Respuesta_d,Respuesta_c
+267368701,ECOEMS 2026,Geografía,62,¿Qué es una bahía?,Una entrada del mar en la costa que forma una concavidad.,Una entrada del mar en la costa que forma una convexidad.,Una entrada del aire en la costa que forma una concavidad.,Una entrada del aire en la costa que forma una convexidad.,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,63,¿Qué es un volcán?,"Una abertura en la superficie terrestre por donde entra aire, ceniza y gases","Una abertura en la superficie terrestre por donde sale magma, ceniza y gases","Una abertura en la superficie terrestre por donde sale agua, ceniza y gases","Una abertura en la superficie terrestre por donde entra agua, ceniza y gases",Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,64,¿Qué es una laguna costera?,Un cuerpo de agua salada separado del mar por una franja de tierra,Un cuerpo de agua dulce separado del mar por una franja de tierra,Un cuerpo de agua separado del aire por una franja de tierra,Un cuerpo de agua separado del aire por una franja de mar,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,65,¿Qué es un cañón?,"Un valle poco profundo con paredes empinadas, creado por la erosión del agua o del viento","Un valle profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle poco profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle profundo con paredes empinadas, creado por la erosión del agua o del viento",Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,66,¿Qué es un oasis?,Un área infértil en un desierto donde no hay agua ni vegetación,Un área fértil en un desierto donde hay agua y vegetación,Un área fértil en una selva donde hay agua y vegetación,Un área fértil en una selva donde no hay agua ni vegetación,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,67,¿Qué es un valle?,Una elevación alargada entre montañas o colinas,Una depresión alargada entre ríos o lagos,Una depresión alargada entre montañas o colinas,Una elevación alargada entre ríos o lagos,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,68,¿Qué es un golfo?,Una gran entrada del mar en la costa que forma una concavidad.,Una gran entrada del mar en la costa que forma una convexidad.,Una gran entrada de océano en un contiene formando una concavidad.,Una gran entrada del aire en la costa que forma una convexidad.,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,69,¿Qué es un lago?,Un cuerpo de agua salada rodeado de tierra,Un cuerpo de tierra rodeado de agua,Un cuerpo de aire rodeado de tierra,Un cuerpo de agua dulce rodeado de tierra,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,70,¿Qué es un río?,"Un curso natural de agua que fluye hacia el mar, un lago u otro río",Un curso natural de agua que fluye hacia la montaña o la colina,"Un curso natural de tierra que fluye hacia el mar, un lago u otro río",Un curso natural de tierra que fluye hacia la montaña o la colina,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,71,¿Qué es una isla?,Una extensión de tierra rodeada de agua salada,Una extensión de agua salada rodeada de tierra,Una extensión de aire contaminado rodeada de tierra,Una extensión de tierra rodeada de aire,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,72,¿Qué es un mar?,Un cuerpo de agua dulce conectado con el océano,Un cuerpo de agua salada conectado con el océano,Un cuerpo de agua salada no conectado con el océano,Un cuerpo de agua dulce no conectado con el océano,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,73,¿Qué es una montaña?,Una elevación natural del terreno con una cima definida y una altura considerable,Una depresión natural del terreno con una cima definida y una altura considerable,Una elevación natural del terreno con una base definida y una altura considerable,Una depresión natural del terreno con una base definida y una altura considerable,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,74,¿Qué es un océano?,Un cuerpo enorme de agua salada que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de agua dulce que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de tierra que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de aire que cubre la mayor parte de la superficie terrestre,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,75,¿Qué es un pantano?,Un área húmeda y pantanosa donde crecen plantas acuáticas,Un área seca y arenosa donde crecen plantas acuáticas,Un área húmeda y pantanosa donde no crecen plantas acuáticas,Un área seca y arenosa donde no crecen plantas acuáticas,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,76,¿Qué es una planicie?,Una extensión grande y alta de mar,Una extensión grande y plana de tierra,Una extensión grande e inclinada de tierra,Una extensión grande y plana de tierra,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,77,¿Qué es un estrecho?,Un canal de tierra que conecta dos cuerpos de agua más grandes,Un canal de aire que conecta dos cuerpos de agua más grandes,Un canal de fuego que conecta dos cuerpos de agua más grandes,Un canal de agua que conecta dos cuerpos de agua más grandes,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,78,¿Qué es una tundra?,Un bioma frío y seco con vegetación alta y permafrost,Un bioma cálido y húmedo con vegetación alta y permafrost,Un bioma frío y húmedo con vegetación baja y permafrost,Un bioma cálido y seco con vegetación alta y permafrost,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,79,¿Qué es un valle glaciar?,Un monte en forma de U creado por la erosión de un glaciar,Un valle en forma de V creado por la erosión de un glaciar,Un valle en forma de U creado por la erosión de un río,Un valle en forma de V creado por la erosión de un río,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,80,¿Qué es una zona climática?,Una región del planeta con características climáticas similares,Una región del planeta con características geográficas similares,Una región del planeta con características políticas similares,Una región del planeta con características económicas similares,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,81,¿Qué es una zona de subducción?,Una región donde una placa tectónica se desliza debajo de otra,Una región donde una placa tectónica se desliza encima de otra,Una región donde una placa tectónica se desliza al lado de otra,Una región donde una placa tectónica se separa de otra,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,82,¿Qué es un acuífero?,Una capa subterránea de roca o sedimento que no contiene agua,Una capa subterránea de roca o sedimento que contiene agua,Una capa subterránea de aire o gas que contiene agua,Una capa subterránea de aire o gas que no contiene agua,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,83,¿Qué es un arrecife de coral?,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismos marinos,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismo marinos,Una estructura submarina formada por el crecimiento y depósito de peces y otros organismos marinos,Una estructura terrestre formada por el crecimiento y depósito de coral y otros organismos marinos,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,84,¿Qué es un bosque lluvioso?,Un bioma cálido y húmedo con baja precipitación y vegetación densa,Un bioma frío y seco con baja precipitación y vegetación escasa,Un bioma cálido y seco con baja precipitación y vegetación densa,Un bioma frío y húmedo con alta precipitación y vegetación escasa,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,85,¿Qué es un desierto?,Un bioma árido con baja precipitación y vegetación densa,Un bioma húmedo con alta precipitación y vegetación densa,Un bioma árido con alta precipitación y vegetación escasa,Un bioma húmedo con baja precipitación y vegetación densa,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,86,¿Cuál es la capital del estado de México?,Nezahualcóyotl,Ecatepec,Naucalpan,Toluca,Respuesta_b,Respuesta_d
+267368701,ECOEMS 2026,Geografía,87,¿Cuál es la capital del estado de Ciudad de México?,Ciudad de México,Iztapalapa,Gustavo A. Madero,Álvaro Obregón,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,88,¿Cuál es la capital del estado de Tabasco?,Tabasco,Cárdenas,Comalcalco,Villahermosa,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,89,¿Cuál es la capital del estado de Campeche?,Calkiní,Ciudad del Carmen,Campeche,Champotón,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,90,¿Cuál es la capital del estado de Quintana Roo?,Cancún,Chetumal,Playa del Carmen,Cozumel,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,91,¿Cuál es la capital del estado de Baja California Sur?,Loreto,Cabo San Lucas,San José del Cabo,La Paz,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,92,¿Cuál es la capital del estado de Sonora?,Nogales,Ciudad Obregón,Hermosillo,San Luis Río Colorado,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,93,¿Cuál es la capital del estado de Sinaloa?,Los Mochis,Mazatlán,Culiacán,Guasave,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,94,¿Cuál es la capital del estado de Coahuila?,Piedras Negras,Torreón,Saltillo,Coahuila,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,95,¿Cuál es la capital del estado de Tamaulipas?,Ciudad Victoria,Reynosa,Matamoros,Nuevo Laredo,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,96,¿Cuál es la capital del estado de Baja California?,Tijuana,Mexicali,Ensenada,Tecate,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,97,¿Cuál es la capital del estado de Zacatecas?,Río Grande,Fresnillo,Guadalupe,Zacatecas,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,98,¿Cuál es la capital del estado de San Luis Potosí?,Matehuala,Ciudad Valles,San Luis Potosí,Rioverde,Respuesta_d,Respuesta_c
+267368701,ECOEMS 2026,Geografía,99,¿Cuál es la capital del estado de Durango?,El Salto,Gómez Palacio,Ciudad Lerdo,Durango,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,100,¿Cuál es la capital del estado de Nayarit?,San Blas,Puerto Vallarta,Tepic,Compostela,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,101,¿Cuál es la capital del estado de Colima?,Armería,Manzanillo,Colima,Villa de Álvarez,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,102,¿Cuál es la capital del estado de Aguascalientes?,Calvillo,Jesús María,Aguascalientes,Rincón de Romos,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,103,¿Cuál es la capital del estado de Hidalgo?,Tulancingo,Pachuca,Tula de Allende,Huejutla de Reyes,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,104,¿Cuál es la capital del estado de Tlaxcala?,Tlaxcala,Apizaco,Huamantla,Zacatelco,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,105,¿Cuál es la capital del estado de Morelos?,Cuautla,Cuernavaca,Jiutepec,Temixco,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,106,¿Cuál es la capital del estado de Michoacán?,Lázaro Cárdenas,Uruapan,Zamora,Morelia,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,107,¿Cuál es la capital del estado de Guanajuato?,Guanajuato,León,Irapuato,Celaya,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,108,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,109,¿Cuál es la capital del estado de Chiapas?,Tuxtla Gutiérrez,San Cristóbal de las Casas,Tapachula,Comitán,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,110,¿Cuál es la capital del estado de Oaxaca?,Oaxaca,Puerto Escondido,Huatulco,Juchitán,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,111,¿Cuál es la capital del estado de Guerrero?,Acapulco,Chilpancingo,Taxco,Zihuatanejo,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,112,¿Cuál es la capital del estado de Nuevo León?,Reynosa,Saltillo,Monterrey,Matamoros,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,113,¿Cuál es la capital del estado de Veracruz?,Veracruz,Xalapa,Coatzacoalcos,Poza Rica,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,114,¿Cuál es la capital del estado de Puebla?,Cholula,Tlaxcala,Puebla,Atlixco,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,115,¿Cuál es la capital del estado de Chihuahua?,Chihuahua,Tijuana,Monterrey,Hermosillo,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,116,¿Cuál es la capital del estado de Yucatán?,Cancún,Mérida,Campeche,Villahermosa,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,117,¿Cuál es la capital del estado de Jalisco?,Puerto Vallarta,San Juan De Los Lagos,Guadalajara,Zapopan,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,118,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,119,¿Cuál es la capital de Francia?,Niza,Marsella,Lyon,París,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,120,¿Cuál es la capital de Italia?,Turín,Milán,Nápoles,Roma,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,121,¿Cuál es la capital de España?,Sevilla,Barcelona,Valencia,Madrid,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,122,¿Cuál es la capital de Alemania?,Múnich,Hamburgo,Berlín,Colonia,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,123,¿Cuál es la capital de Reino Unido?,Manchester,Birmingham,Londres,Leeds,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,124,¿Cuál es la capital de Portugal?,Lisboa,Oporto,Braga,Coímbra,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,125,¿Cuál es la capital de Rusia?,San Petersburgo,Moscú,Novosibirsk,Ekaterimburgo,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_c,Respuesta_b
+267368701,ECOEMS 2026,Geografía,1,¿Cuál es el río más largo de México?,Río Bravo,Río Lerma,Río Balsas,Río Grijalva,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,2,¿Cuál es la ubicación geográfica de México?,América del Sur,América Central,América del Norte,Europa,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,3,¿Cuál es la península más grande de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,4,¿Cuál es la capital de México?,Guadalajara,Monterrey,Puebla,Ciudad de México,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,5,¿Cuál es el lago más grande de México?,Lago de Chapala,Lago de Pátzcuaro,Lago de Cuitzeo,Lago de Zirahuén,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,6,¿Cuál es el estado más grande de México?,Chihuahua,Sonora,Coahuila,Durango,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,7,¿Qué océanos bañan las costas de México?,Atlántico e Índico,Pacífico y Ártico,Atlántico y Pacífico,Índico y Ártico,Respuesta_c,Respuesta_b
+267368701,ECOEMS 2026,Geografía,8,¿Con qué países limita México al norte?,Guatemala y Belice,Estados Unidos,Canadá,Brasil,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,9,¿Cuál es el desierto más grande de México?,Desierto de Sonora,Desierto de Chihuahua,Desierto de Altar,Desierto de Mapimí,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,10,¿Cuál es la montaña más alta de México?,Iztaccíhuatl,Popocatépetl,Pico de Orizaba,Nevado de Toluca,Respuesta_d,Respuesta_c
+267368701,ECOEMS 2026,Geografía,11,¿Cuál es el estado más pequeño de México?,Aguascalientes,Colima,Tlaxcala,Morelos,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,12,¿Cuál es el estado más poblado de México (Excepto Ciudad de México)?,Ciudad de México,Estado de México,Veracruz,Jalisco,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,13,¿Cuál es el volcán más activo de México?,Paricutín,Iztaccíhuatl,Pico de Orizaba,Popocatépetl,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,14,¿Cuál es la ciudad más poblada de México?,Puebla,Guadalajara,Monterrey,Ciudad de México,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,15,¿Cuál es el río más caudaloso de México?,Río Balsas,Río Lerma,Río Bravo,Río Grijalva,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,16,¿Cuál es la isla más grande de México?,Isla Mujeres,Isla Ángel de la Guarda,Isla Cozumel,Isla Tiburón,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,17,¿Cuál es el estado más al norte de México?,Baja California,Sonora,Chihuahua,Coahuila,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,18,¿Cuál es el estado más al sur de México?,Campeche,Tabasco,Chiapas,Yucatán,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,19,¿Cuál es el estado más al oeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,20,¿Cuál es la península más al sur de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,21,¿Cuál es el estado más al centro de México?,Hidalgo,Estado de México,Aguascalientes,Tlaxcala,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,22,¿Cuál es el estado más al sureste de México?,Yucatán,Tabasco,Campeche,Chiapas,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,23,¿Cuál es el estado más al noroeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,24,¿Cuál es el estado más al noreste de México?,Nuevo León,Estado de México,Tamaulipas,Chihuahua,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,25,¿Cuál es el estado más al suroeste de México?,Colima,Oaxaca,Guerrero,Michoacán,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,26,¿Cuál es el estado más al centro-norte de México?,Zacatecas,San Luis Potosí,Aguascalientes,Durango,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,27,¿Cuáles son los continentes del mundo?,"América, Europa, Asia, África y Oceania","América, Europa, Asia y África","América del Norte, América del Sur, Europa","América del Norte, América Central, Asia",Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,28,¿Cuál es el continente más extenso?,Antártida,América,África,Asia,Respuesta_b,Respuesta_d
+267368701,ECOEMS 2026,Geografía,29,¿Cuál es el continente más poblado?,América,Asia,Europa,África,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,30,¿Cuál es el océano más grande del mundo?,Atlántico,Índico,Pacífico,Antártico,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,31,¿Cuál es el país más grande del mundo?,Canadá,China,Estados Unidos,Rusia,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,32,¿Cuál es el país más poblado del mundo?,Pakistan,Japón,India,China,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,33,¿Cuál es la montaña más alta del mundo?,K2,Monte Everest,Kangchenjunga,Lhotse,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,34,¿Cuál es el río más largo del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,35,¿Cuál es el desierto más grande del mundo?,Desierto de los Leones,Desierto de Gobi,Desierto de Kalahari,Desierto del Sahara,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,36,¿Cuál es la isla más grande del mundo?,Groenlandia,Nueva Guinea,Borneo,Madagascar,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,37,¿Cuál es el volcán más activo del mundo?,Monte Vesubio,Monte Etna,Kilauea,Monte Santa Helena,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,38,¿Cuál es la ciudad más poblada del mundo?,Londres,Nueva Delhi,Shanghái,São Paulo,Respuesta_d,Respuesta_b
+267368701,ECOEMS 2026,Geografía,39,¿Cuál es el parque nacional más grande del mundo?,Parque Nacional Yellowstone,Parque Nacional Banff,Parque Nacional Kruger,Parque Nacional Noreste de Groenlandia,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,40,¿Cuál es el río más caudaloso del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,41,¿Cuál es la península más grande del mundo?,Península Canadiense,Península Ibérica,Península de Kamchatka,Península de Malaca,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,42,¿Cuál es el país más al norte del mundo?,Canadá,Rusia,Noruega,Dinamarca,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,43,¿Cuál es el país más al sur del mundo?,Argentina,Chile,Nueva Zelanda,Australia,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,44,¿Cuál es el país más al este del mundo?,Nueva Zelanda,Australia,Japón,Rusia,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,45,¿Cuál es el país más al oeste del mundo?,Rusia,Nueva Zelanda,Australia,EE.UU,Respuesta_b,Respuesta_d
+267368701,ECOEMS 2026,Geografía,46,¿Cuál es el país más al centro del mundo?,Ecuador,Colombia,Brasil,Perú,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,47,¿Cuál es el país más al noreste del mundo?,Suecia,Rusia,Noruega,Finlandia,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,48,¿Cuál es la capa más alta de la Tierra?,Núcleo,Manto,Corteza,Atmósfera,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,49,¿Qué es un continente?,Una gran masa de tierra rodeada de agua,Una gran masa de agua rodeada de tierra,Una gran masa de tierra y agua,Una gran masa de agua y aire,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,50,¿Cuál es el océano más pequeño del mundo?,Atlántico,Índico,Ártico,Antártico,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,51,¿Qué es un archipiélago?,Un grupo de montañas,Un grupo de ríos,Un grupo de islas,Un grupo de lagos,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,52,¿Qué es una península?,Una extensión de tierra rodeada de agua por tres lados,Una extensión de tierra rodeada de agua por dos lados,Una extensión de tierra rodeada de agua por un lado,Una extensión de tierra rodeada de agua por cuatro lados,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,53,¿Qué es una cordillera?,Un conjunto de volcanes activos,Un conjunto de valles alineados,Un conjunto de ríos alineados,Un conjunto de montañas alineadas,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,54,¿Qué es un istmo?,Una franja estrecha de tierra que une dos masas continentales mayores,Una franja estrecha de agua que une dos masas continentales mayores,Una franja estrecha de aire que une dos masas continentales mayores,Una franja estrecha de tierra que separa dos masas continentales mayores,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,55,¿Qué es un acantilado?,Una pendiente abrupta y alta junto al mar o a un río,Una pendiente suave y baja junto al mar o a un río,Una pendiente abrupta y baja junto al mar o a un río,Una pendiente suave y alta junto al mar o a un río,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,56,¿Qué es una meseta?,Una extensión de tierra baja y elevada,Una extensión de tierra plana y baja,Una extensión de tierra inclinada y elevada,Una extensión de tierra plana y alta,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,57,¿Qué es una cuenca hidrográfica?,El área de tierra donde el agua de lluvia drena hacia un río o lago específico,El área de tierra donde el agua de lluvia no drena hacia un río o lago específico,El área de agua donde el agua de lluvia drena hacia un río o lago específico,El área de aire donde el agua de lluvia drena hacia un río o lago específico,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,58,¿Qué es una depresión?,Una zona más baja que las áreas circundantes,Una zona más alta que las áreas circundantes,Una zona igual que las áreas circundantes,Una zona más baja que las áreas lejanas,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,59,¿Qué es una falla geológica?,Una fractura en la corteza terrestre donde no ha habido movimiento,Una fractura en la corteza terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde no ha habido movimiento,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,60,¿Qué es una fosa oceánica?,Un valle no profundo en el fondo del océano,Un valle profundo en la superficie del océano,Un valle poco profundo en el fondo del océano,Un valle poco profundo en la superficie del océano,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,61,¿Qué es una duna?,Un montículo de arena formado por el agua,Un montículo de arena formado por el fuego,Un montículo de arena formado por el aire,Un montículo de arena formado por la tierra,Respuesta_d,Respuesta_c
+267368701,ECOEMS 2026,Geografía,62,¿Qué es una bahía?,Una entrada del mar en la costa que forma una concavidad.,Una entrada del mar en la costa que forma una convexidad.,Una entrada del aire en la costa que forma una concavidad.,Una entrada del aire en la costa que forma una convexidad.,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,63,¿Qué es un volcán?,"Una abertura en la superficie terrestre por donde entra aire, ceniza y gases","Una abertura en la superficie terrestre por donde sale magma, ceniza y gases","Una abertura en la superficie terrestre por donde sale agua, ceniza y gases","Una abertura en la superficie terrestre por donde entra agua, ceniza y gases",Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,64,¿Qué es una laguna costera?,Un cuerpo de agua salada separado del mar por una franja de tierra,Un cuerpo de agua dulce separado del mar por una franja de tierra,Un cuerpo de agua separado del aire por una franja de tierra,Un cuerpo de agua separado del aire por una franja de mar,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,65,¿Qué es un cañón?,"Un valle poco profundo con paredes empinadas, creado por la erosión del agua o del viento","Un valle profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle poco profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle profundo con paredes empinadas, creado por la erosión del agua o del viento",Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,66,¿Qué es un oasis?,Un área infértil en un desierto donde no hay agua ni vegetación,Un área fértil en un desierto donde hay agua y vegetación,Un área fértil en una selva donde hay agua y vegetación,Un área fértil en una selva donde no hay agua ni vegetación,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,67,¿Qué es un valle?,Una elevación alargada entre montañas o colinas,Una depresión alargada entre ríos o lagos,Una depresión alargada entre montañas o colinas,Una elevación alargada entre ríos o lagos,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,68,¿Qué es un golfo?,Una gran entrada del mar en la costa que forma una concavidad.,Una gran entrada del mar en la costa que forma una convexidad.,Una gran entrada de océano en un contiene formando una concavidad.,Una gran entrada del aire en la costa que forma una convexidad.,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,69,¿Qué es un lago?,Un cuerpo de agua salada rodeado de tierra,Un cuerpo de tierra rodeado de agua,Un cuerpo de aire rodeado de tierra,Un cuerpo de agua dulce rodeado de tierra,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,70,¿Qué es un río?,"Un curso natural de agua que fluye hacia el mar, un lago u otro río",Un curso natural de agua que fluye hacia la montaña o la colina,"Un curso natural de tierra que fluye hacia el mar, un lago u otro río",Un curso natural de tierra que fluye hacia la montaña o la colina,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,71,¿Qué es una isla?,Una extensión de tierra rodeada de agua salada,Una extensión de agua salada rodeada de tierra,Una extensión de aire contaminado rodeada de tierra,Una extensión de tierra rodeada de aire,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,72,¿Qué es un mar?,Un cuerpo de agua dulce conectado con el océano,Un cuerpo de agua salada conectado con el océano,Un cuerpo de agua salada no conectado con el océano,Un cuerpo de agua dulce no conectado con el océano,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,73,¿Qué es una montaña?,Una elevación natural del terreno con una cima definida y una altura considerable,Una depresión natural del terreno con una cima definida y una altura considerable,Una elevación natural del terreno con una base definida y una altura considerable,Una depresión natural del terreno con una base definida y una altura considerable,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,74,¿Qué es un océano?,Un cuerpo enorme de agua salada que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de agua dulce que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de tierra que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de aire que cubre la mayor parte de la superficie terrestre,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,75,¿Qué es un pantano?,Un área húmeda y pantanosa donde crecen plantas acuáticas,Un área seca y arenosa donde crecen plantas acuáticas,Un área húmeda y pantanosa donde no crecen plantas acuáticas,Un área seca y arenosa donde no crecen plantas acuáticas,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,76,¿Qué es una planicie?,Una extensión grande y alta de mar,Una extensión grande y plana de tierra,Una extensión grande e inclinada de tierra,Una extensión grande y plana de tierra,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,77,¿Qué es un estrecho?,Un canal de tierra que conecta dos cuerpos de agua más grandes,Un canal de aire que conecta dos cuerpos de agua más grandes,Un canal de fuego que conecta dos cuerpos de agua más grandes,Un canal de agua que conecta dos cuerpos de agua más grandes,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,78,¿Qué es una tundra?,Un bioma frío y seco con vegetación alta y permafrost,Un bioma cálido y húmedo con vegetación alta y permafrost,Un bioma frío y húmedo con vegetación baja y permafrost,Un bioma cálido y seco con vegetación alta y permafrost,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,79,¿Qué es un valle glaciar?,Un monte en forma de U creado por la erosión de un glaciar,Un valle en forma de V creado por la erosión de un glaciar,Un valle en forma de U creado por la erosión de un río,Un valle en forma de V creado por la erosión de un río,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,80,¿Qué es una zona climática?,Una región del planeta con características climáticas similares,Una región del planeta con características geográficas similares,Una región del planeta con características políticas similares,Una región del planeta con características económicas similares,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,81,¿Qué es una zona de subducción?,Una región donde una placa tectónica se desliza debajo de otra,Una región donde una placa tectónica se desliza encima de otra,Una región donde una placa tectónica se desliza al lado de otra,Una región donde una placa tectónica se separa de otra,Respuesta_b,Respuesta_a
+267368701,ECOEMS 2026,Geografía,82,¿Qué es un acuífero?,Una capa subterránea de roca o sedimento que no contiene agua,Una capa subterránea de roca o sedimento que contiene agua,Una capa subterránea de aire o gas que contiene agua,Una capa subterránea de aire o gas que no contiene agua,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,83,¿Qué es un arrecife de coral?,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismos marinos,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismo marinos,Una estructura submarina formada por el crecimiento y depósito de peces y otros organismos marinos,Una estructura terrestre formada por el crecimiento y depósito de coral y otros organismos marinos,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,84,¿Qué es un bosque lluvioso?,Un bioma cálido y húmedo con baja precipitación y vegetación densa,Un bioma frío y seco con baja precipitación y vegetación escasa,Un bioma cálido y seco con baja precipitación y vegetación densa,Un bioma frío y húmedo con alta precipitación y vegetación escasa,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,85,¿Qué es un desierto?,Un bioma árido con baja precipitación y vegetación densa,Un bioma húmedo con alta precipitación y vegetación densa,Un bioma árido con alta precipitación y vegetación escasa,Un bioma húmedo con baja precipitación y vegetación densa,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,86,¿Cuál es la capital del estado de México?,Nezahualcóyotl,Ecatepec,Naucalpan,Toluca,Respuesta_b,Respuesta_d
+267368701,ECOEMS 2026,Geografía,87,¿Cuál es la capital del estado de Ciudad de México?,Ciudad de México,Iztapalapa,Gustavo A. Madero,Álvaro Obregón,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,88,¿Cuál es la capital del estado de Tabasco?,Tabasco,Cárdenas,Comalcalco,Villahermosa,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,89,¿Cuál es la capital del estado de Campeche?,Calkiní,Ciudad del Carmen,Campeche,Champotón,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,90,¿Cuál es la capital del estado de Quintana Roo?,Cancún,Chetumal,Playa del Carmen,Cozumel,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,91,¿Cuál es la capital del estado de Baja California Sur?,Loreto,Cabo San Lucas,San José del Cabo,La Paz,Respuesta_c,Respuesta_d
+267368701,ECOEMS 2026,Geografía,92,¿Cuál es la capital del estado de Sonora?,Nogales,Ciudad Obregón,Hermosillo,San Luis Río Colorado,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,93,¿Cuál es la capital del estado de Sinaloa?,Los Mochis,Mazatlán,Culiacán,Guasave,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,94,¿Cuál es la capital del estado de Coahuila?,Piedras Negras,Torreón,Saltillo,Coahuila,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,95,¿Cuál es la capital del estado de Tamaulipas?,Ciudad Victoria,Reynosa,Matamoros,Nuevo Laredo,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,96,¿Cuál es la capital del estado de Baja California?,Tijuana,Mexicali,Ensenada,Tecate,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,97,¿Cuál es la capital del estado de Zacatecas?,Río Grande,Fresnillo,Guadalupe,Zacatecas,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,98,¿Cuál es la capital del estado de San Luis Potosí?,Matehuala,Ciudad Valles,San Luis Potosí,Rioverde,Respuesta_d,Respuesta_c
+267368701,ECOEMS 2026,Geografía,99,¿Cuál es la capital del estado de Durango?,El Salto,Gómez Palacio,Ciudad Lerdo,Durango,Respuesta_a,Respuesta_d
+267368701,ECOEMS 2026,Geografía,100,¿Cuál es la capital del estado de Nayarit?,San Blas,Puerto Vallarta,Tepic,Compostela,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,101,¿Cuál es la capital del estado de Colima?,Armería,Manzanillo,Colima,Villa de Álvarez,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,102,¿Cuál es la capital del estado de Aguascalientes?,Calvillo,Jesús María,Aguascalientes,Rincón de Romos,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,103,¿Cuál es la capital del estado de Hidalgo?,Tulancingo,Pachuca,Tula de Allende,Huejutla de Reyes,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,104,¿Cuál es la capital del estado de Tlaxcala?,Tlaxcala,Apizaco,Huamantla,Zacatelco,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,105,¿Cuál es la capital del estado de Morelos?,Cuautla,Cuernavaca,Jiutepec,Temixco,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,106,¿Cuál es la capital del estado de Michoacán?,Lázaro Cárdenas,Uruapan,Zamora,Morelia,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,107,¿Cuál es la capital del estado de Guanajuato?,Guanajuato,León,Irapuato,Celaya,Respuesta_d,Respuesta_a
+267368701,ECOEMS 2026,Geografía,108,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,109,¿Cuál es la capital del estado de Chiapas?,Tuxtla Gutiérrez,San Cristóbal de las Casas,Tapachula,Comitán,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,110,¿Cuál es la capital del estado de Oaxaca?,Oaxaca,Puerto Escondido,Huatulco,Juchitán,Respuesta_c,Respuesta_a
+267368701,ECOEMS 2026,Geografía,111,¿Cuál es la capital del estado de Guerrero?,Acapulco,Chilpancingo,Taxco,Zihuatanejo,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,112,¿Cuál es la capital del estado de Nuevo León?,Reynosa,Saltillo,Monterrey,Matamoros,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,113,¿Cuál es la capital del estado de Veracruz?,Veracruz,Xalapa,Coatzacoalcos,Poza Rica,Respuesta_a,Respuesta_b
+267368701,ECOEMS 2026,Geografía,114,¿Cuál es la capital del estado de Puebla?,Cholula,Tlaxcala,Puebla,Atlixco,Respuesta_a,Respuesta_c
+267368701,ECOEMS 2026,Geografía,115,¿Cuál es la capital del estado de Chihuahua?,Chihuahua,Tijuana,Monterrey,Hermosillo,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,116,¿Cuál es la capital del estado de Yucatán?,Cancún,Mérida,Campeche,Villahermosa,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,117,¿Cuál es la capital del estado de Jalisco?,Puerto Vallarta,San Juan De Los Lagos,Guadalajara,Zapopan,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,118,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+267368701,ECOEMS 2026,Geografía,119,¿Cuál es la capital de Francia?,Niza,Marsella,Lyon,París,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,120,¿Cuál es la capital de Italia?,Turín,Milán,Nápoles,Roma,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,121,¿Cuál es la capital de España?,Sevilla,Barcelona,Valencia,Madrid,Respuesta_d,Respuesta_d
+267368701,ECOEMS 2026,Geografía,122,¿Cuál es la capital de Alemania?,Múnich,Hamburgo,Berlín,Colonia,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,123,¿Cuál es la capital de Reino Unido?,Manchester,Birmingham,Londres,Leeds,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,124,¿Cuál es la capital de Portugal?,Lisboa,Oporto,Braga,Coímbra,Respuesta_a,Respuesta_a
+267368701,ECOEMS 2026,Geografía,125,¿Cuál es la capital de Rusia?,San Petersburgo,Moscú,Novosibirsk,Ekaterimburgo,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_c,Respuesta_c
+267368701,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_b,Respuesta_b
+267368701,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_c,Respuesta_b
+264477590,ECOEMS 2026,Geografía,1,¿Cuál es el río más largo de México?,Río Bravo,Río Lerma,Río Balsas,Río Grijalva,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,2,¿Cuál es la ubicación geográfica de México?,América del Sur,América Central,América del Norte,Europa,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,3,¿Cuál es la península más grande de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,4,¿Cuál es la capital de México?,Guadalajara,Monterrey,Puebla,Ciudad de México,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,5,¿Cuál es el lago más grande de México?,Lago de Chapala,Lago de Pátzcuaro,Lago de Cuitzeo,Lago de Zirahuén,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,6,¿Cuál es el estado más grande de México?,Chihuahua,Sonora,Coahuila,Durango,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,7,¿Qué océanos bañan las costas de México?,Atlántico e Índico,Pacífico y Ártico,Atlántico y Pacífico,Índico y Ártico,Respuesta_c,Respuesta_b
+264477590,ECOEMS 2026,Geografía,8,¿Con qué países limita México al norte?,Guatemala y Belice,Estados Unidos,Canadá,Brasil,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,9,¿Cuál es el desierto más grande de México?,Desierto de Sonora,Desierto de Chihuahua,Desierto de Altar,Desierto de Mapimí,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,10,¿Cuál es la montaña más alta de México?,Iztaccíhuatl,Popocatépetl,Pico de Orizaba,Nevado de Toluca,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,11,¿Cuál es el estado más pequeño de México?,Aguascalientes,Colima,Tlaxcala,Morelos,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,12,¿Cuál es el estado más poblado de México (Excepto Ciudad de México)?,Ciudad de México,Estado de México,Veracruz,Jalisco,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,13,¿Cuál es el volcán más activo de México?,Paricutín,Iztaccíhuatl,Pico de Orizaba,Popocatépetl,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,14,¿Cuál es la ciudad más poblada de México?,Puebla,Guadalajara,Monterrey,Ciudad de México,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,15,¿Cuál es el río más caudaloso de México?,Río Balsas,Río Lerma,Río Bravo,Río Grijalva,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,16,¿Cuál es la isla más grande de México?,Isla Mujeres,Isla Ángel de la Guarda,Isla Cozumel,Isla Tiburón,Respuesta_a,Respuesta_d
+264477590,ECOEMS 2026,Geografía,17,¿Cuál es el estado más al norte de México?,Baja California,Sonora,Chihuahua,Coahuila,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,18,¿Cuál es el estado más al sur de México?,Campeche,Tabasco,Chiapas,Yucatán,Respuesta_d,Respuesta_c
+264477590,ECOEMS 2026,Geografía,19,¿Cuál es el estado más al oeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,20,¿Cuál es la península más al sur de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,21,¿Cuál es el estado más al centro de México?,Hidalgo,Estado de México,Aguascalientes,Tlaxcala,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,22,¿Cuál es el estado más al sureste de México?,Yucatán,Tabasco,Campeche,Chiapas,Respuesta_b,Respuesta_d
+264477590,ECOEMS 2026,Geografía,23,¿Cuál es el estado más al noroeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_d,Respuesta_a
+264477590,ECOEMS 2026,Geografía,24,¿Cuál es el estado más al noreste de México?,Nuevo León,Estado de México,Tamaulipas,Chihuahua,Respuesta_a,Respuesta_c
+264477590,ECOEMS 2026,Geografía,25,¿Cuál es el estado más al suroeste de México?,Colima,Oaxaca,Guerrero,Michoacán,Respuesta_a,Respuesta_b
+264477590,ECOEMS 2026,Geografía,26,¿Cuál es el estado más al centro-norte de México?,Zacatecas,San Luis Potosí,Aguascalientes,Durango,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,27,¿Cuáles son los continentes del mundo?,"América, Europa, Asia, África y Oceania","América, Europa, Asia y África","América del Norte, América del Sur, Europa","América del Norte, América Central, Asia",Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,28,¿Cuál es el continente más extenso?,Antártida,América,África,Asia,Respuesta_a,Respuesta_d
+264477590,ECOEMS 2026,Geografía,29,¿Cuál es el continente más poblado?,América,Asia,Europa,África,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,30,¿Cuál es el océano más grande del mundo?,Atlántico,Índico,Pacífico,Antártico,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,31,¿Cuál es el país más grande del mundo?,Canadá,China,Estados Unidos,Rusia,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,32,¿Cuál es el país más poblado del mundo?,Pakistan,Japón,India,China,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,33,¿Cuál es la montaña más alta del mundo?,K2,Monte Everest,Kangchenjunga,Lhotse,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,34,¿Cuál es el río más largo del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,35,¿Cuál es el desierto más grande del mundo?,Desierto de los Leones,Desierto de Gobi,Desierto de Kalahari,Desierto del Sahara,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,36,¿Cuál es la isla más grande del mundo?,Groenlandia,Nueva Guinea,Borneo,Madagascar,Respuesta_d,Respuesta_a
+264477590,ECOEMS 2026,Geografía,37,¿Cuál es el volcán más activo del mundo?,Monte Vesubio,Monte Etna,Kilauea,Monte Santa Helena,Respuesta_d,Respuesta_c
+264477590,ECOEMS 2026,Geografía,38,¿Cuál es la ciudad más poblada del mundo?,Londres,Nueva Delhi,Shanghái,São Paulo,Respuesta_c,Respuesta_b
+264477590,ECOEMS 2026,Geografía,39,¿Cuál es el parque nacional más grande del mundo?,Parque Nacional Yellowstone,Parque Nacional Banff,Parque Nacional Kruger,Parque Nacional Noreste de Groenlandia,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,40,¿Cuál es el río más caudaloso del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_d,Respuesta_b
+264477590,ECOEMS 2026,Geografía,41,¿Cuál es la península más grande del mundo?,Península Canadiense,Península Ibérica,Península de Kamchatka,Península de Malaca,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,42,¿Cuál es el país más al norte del mundo?,Canadá,Rusia,Noruega,Dinamarca,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,43,¿Cuál es el país más al sur del mundo?,Argentina,Chile,Nueva Zelanda,Australia,Respuesta_d,Respuesta_a
+264477590,ECOEMS 2026,Geografía,44,¿Cuál es el país más al este del mundo?,Nueva Zelanda,Australia,Japón,Rusia,Respuesta_a,Respuesta_d
+264477590,ECOEMS 2026,Geografía,45,¿Cuál es el país más al oeste del mundo?,Rusia,Nueva Zelanda,Australia,EE.UU,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,46,¿Cuál es el país más al centro del mundo?,Ecuador,Colombia,Brasil,Perú,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,47,¿Cuál es el país más al noreste del mundo?,Suecia,Rusia,Noruega,Finlandia,Respuesta_c,Respuesta_b
+264477590,ECOEMS 2026,Geografía,48,¿Cuál es la capa más alta de la Tierra?,Núcleo,Manto,Corteza,Atmósfera,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,49,¿Qué es un continente?,Una gran masa de tierra rodeada de agua,Una gran masa de agua rodeada de tierra,Una gran masa de tierra y agua,Una gran masa de agua y aire,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,50,¿Cuál es el océano más pequeño del mundo?,Atlántico,Índico,Ártico,Antártico,Respuesta_d,Respuesta_c
+264477590,ECOEMS 2026,Geografía,51,¿Qué es un archipiélago?,Un grupo de montañas,Un grupo de ríos,Un grupo de islas,Un grupo de lagos,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,52,¿Qué es una península?,Una extensión de tierra rodeada de agua por tres lados,Una extensión de tierra rodeada de agua por dos lados,Una extensión de tierra rodeada de agua por un lado,Una extensión de tierra rodeada de agua por cuatro lados,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,53,¿Qué es una cordillera?,Un conjunto de volcanes activos,Un conjunto de valles alineados,Un conjunto de ríos alineados,Un conjunto de montañas alineadas,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,54,¿Qué es un istmo?,Una franja estrecha de tierra que une dos masas continentales mayores,Una franja estrecha de agua que une dos masas continentales mayores,Una franja estrecha de aire que une dos masas continentales mayores,Una franja estrecha de tierra que separa dos masas continentales mayores,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,55,¿Qué es un acantilado?,Una pendiente abrupta y alta junto al mar o a un río,Una pendiente suave y baja junto al mar o a un río,Una pendiente abrupta y baja junto al mar o a un río,Una pendiente suave y alta junto al mar o a un río,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,56,¿Qué es una meseta?,Una extensión de tierra baja y elevada,Una extensión de tierra plana y baja,Una extensión de tierra inclinada y elevada,Una extensión de tierra plana y alta,Respuesta_c,Respuesta_d
+264477590,ECOEMS 2026,Geografía,57,¿Qué es una cuenca hidrográfica?,El área de tierra donde el agua de lluvia drena hacia un río o lago específico,El área de tierra donde el agua de lluvia no drena hacia un río o lago específico,El área de agua donde el agua de lluvia drena hacia un río o lago específico,El área de aire donde el agua de lluvia drena hacia un río o lago específico,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,58,¿Qué es una depresión?,Una zona más baja que las áreas circundantes,Una zona más alta que las áreas circundantes,Una zona igual que las áreas circundantes,Una zona más baja que las áreas lejanas,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,59,¿Qué es una falla geológica?,Una fractura en la corteza terrestre donde no ha habido movimiento,Una fractura en la corteza terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde no ha habido movimiento,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,60,¿Qué es una fosa oceánica?,Un valle no profundo en el fondo del océano,Un valle profundo en la superficie del océano,Un valle poco profundo en el fondo del océano,Un valle poco profundo en la superficie del océano,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,61,¿Qué es una duna?,Un montículo de arena formado por el agua,Un montículo de arena formado por el fuego,Un montículo de arena formado por el aire,Un montículo de arena formado por la tierra,Respuesta_d,Respuesta_c
+264477590,ECOEMS 2026,Geografía,62,¿Qué es una bahía?,Una entrada del mar en la costa que forma una concavidad.,Una entrada del mar en la costa que forma una convexidad.,Una entrada del aire en la costa que forma una concavidad.,Una entrada del aire en la costa que forma una convexidad.,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,63,¿Qué es un volcán?,"Una abertura en la superficie terrestre por donde entra aire, ceniza y gases","Una abertura en la superficie terrestre por donde sale magma, ceniza y gases","Una abertura en la superficie terrestre por donde sale agua, ceniza y gases","Una abertura en la superficie terrestre por donde entra agua, ceniza y gases",Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,64,¿Qué es una laguna costera?,Un cuerpo de agua salada separado del mar por una franja de tierra,Un cuerpo de agua dulce separado del mar por una franja de tierra,Un cuerpo de agua separado del aire por una franja de tierra,Un cuerpo de agua separado del aire por una franja de mar,Respuesta_a,Respuesta_b
+264477590,ECOEMS 2026,Geografía,65,¿Qué es un cañón?,"Un valle poco profundo con paredes empinadas, creado por la erosión del agua o del viento","Un valle profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle poco profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle profundo con paredes empinadas, creado por la erosión del agua o del viento",Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,66,¿Qué es un oasis?,Un área infértil en un desierto donde no hay agua ni vegetación,Un área fértil en un desierto donde hay agua y vegetación,Un área fértil en una selva donde hay agua y vegetación,Un área fértil en una selva donde no hay agua ni vegetación,Respuesta_c,Respuesta_b
+264477590,ECOEMS 2026,Geografía,67,¿Qué es un valle?,Una elevación alargada entre montañas o colinas,Una depresión alargada entre ríos o lagos,Una depresión alargada entre montañas o colinas,Una elevación alargada entre ríos o lagos,Respuesta_a,Respuesta_c
+264477590,ECOEMS 2026,Geografía,68,¿Qué es un golfo?,Una gran entrada del mar en la costa que forma una concavidad.,Una gran entrada del mar en la costa que forma una convexidad.,Una gran entrada de océano en un contiene formando una concavidad.,Una gran entrada del aire en la costa que forma una convexidad.,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,69,¿Qué es un lago?,Un cuerpo de agua salada rodeado de tierra,Un cuerpo de tierra rodeado de agua,Un cuerpo de aire rodeado de tierra,Un cuerpo de agua dulce rodeado de tierra,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,70,¿Qué es un río?,"Un curso natural de agua que fluye hacia el mar, un lago u otro río",Un curso natural de agua que fluye hacia la montaña o la colina,"Un curso natural de tierra que fluye hacia el mar, un lago u otro río",Un curso natural de tierra que fluye hacia la montaña o la colina,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,71,¿Qué es una isla?,Una extensión de tierra rodeada de agua salada,Una extensión de agua salada rodeada de tierra,Una extensión de aire contaminado rodeada de tierra,Una extensión de tierra rodeada de aire,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,72,¿Qué es un mar?,Un cuerpo de agua dulce conectado con el océano,Un cuerpo de agua salada conectado con el océano,Un cuerpo de agua salada no conectado con el océano,Un cuerpo de agua dulce no conectado con el océano,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,73,¿Qué es una montaña?,Una elevación natural del terreno con una cima definida y una altura considerable,Una depresión natural del terreno con una cima definida y una altura considerable,Una elevación natural del terreno con una base definida y una altura considerable,Una depresión natural del terreno con una base definida y una altura considerable,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,74,¿Qué es un océano?,Un cuerpo enorme de agua salada que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de agua dulce que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de tierra que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de aire que cubre la mayor parte de la superficie terrestre,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,75,¿Qué es un pantano?,Un área húmeda y pantanosa donde crecen plantas acuáticas,Un área seca y arenosa donde crecen plantas acuáticas,Un área húmeda y pantanosa donde no crecen plantas acuáticas,Un área seca y arenosa donde no crecen plantas acuáticas,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,76,¿Qué es una planicie?,Una extensión grande y alta de mar,Una extensión grande y plana de tierra,Una extensión grande e inclinada de tierra,Una extensión grande y plana de tierra,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,77,¿Qué es un estrecho?,Un canal de tierra que conecta dos cuerpos de agua más grandes,Un canal de aire que conecta dos cuerpos de agua más grandes,Un canal de fuego que conecta dos cuerpos de agua más grandes,Un canal de agua que conecta dos cuerpos de agua más grandes,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,78,¿Qué es una tundra?,Un bioma frío y seco con vegetación alta y permafrost,Un bioma cálido y húmedo con vegetación alta y permafrost,Un bioma frío y húmedo con vegetación baja y permafrost,Un bioma cálido y seco con vegetación alta y permafrost,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,79,¿Qué es un valle glaciar?,Un monte en forma de U creado por la erosión de un glaciar,Un valle en forma de V creado por la erosión de un glaciar,Un valle en forma de U creado por la erosión de un río,Un valle en forma de V creado por la erosión de un río,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,80,¿Qué es una zona climática?,Una región del planeta con características climáticas similares,Una región del planeta con características geográficas similares,Una región del planeta con características políticas similares,Una región del planeta con características económicas similares,Respuesta_a,Respuesta_b
+264477590,ECOEMS 2026,Geografía,81,¿Qué es una zona de subducción?,Una región donde una placa tectónica se desliza debajo de otra,Una región donde una placa tectónica se desliza encima de otra,Una región donde una placa tectónica se desliza al lado de otra,Una región donde una placa tectónica se separa de otra,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,82,¿Qué es un acuífero?,Una capa subterránea de roca o sedimento que no contiene agua,Una capa subterránea de roca o sedimento que contiene agua,Una capa subterránea de aire o gas que contiene agua,Una capa subterránea de aire o gas que no contiene agua,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,83,¿Qué es un arrecife de coral?,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismos marinos,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismo marinos,Una estructura submarina formada por el crecimiento y depósito de peces y otros organismos marinos,Una estructura terrestre formada por el crecimiento y depósito de coral y otros organismos marinos,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,84,¿Qué es un bosque lluvioso?,Un bioma cálido y húmedo con baja precipitación y vegetación densa,Un bioma frío y seco con baja precipitación y vegetación escasa,Un bioma cálido y seco con baja precipitación y vegetación densa,Un bioma frío y húmedo con alta precipitación y vegetación escasa,Respuesta_a,Respuesta_d
+264477590,ECOEMS 2026,Geografía,85,¿Qué es un desierto?,Un bioma árido con baja precipitación y vegetación densa,Un bioma húmedo con alta precipitación y vegetación densa,Un bioma árido con alta precipitación y vegetación escasa,Un bioma húmedo con baja precipitación y vegetación densa,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,86,¿Cuál es la capital del estado de México?,Nezahualcóyotl,Ecatepec,Naucalpan,Toluca,Respuesta_b,Respuesta_d
+264477590,ECOEMS 2026,Geografía,87,¿Cuál es la capital del estado de Ciudad de México?,Ciudad de México,Iztapalapa,Gustavo A. Madero,Álvaro Obregón,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,88,¿Cuál es la capital del estado de Tabasco?,Tabasco,Cárdenas,Comalcalco,Villahermosa,Respuesta_a,Respuesta_d
+264477590,ECOEMS 2026,Geografía,89,¿Cuál es la capital del estado de Campeche?,Calkiní,Ciudad del Carmen,Campeche,Champotón,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,90,¿Cuál es la capital del estado de Quintana Roo?,Cancún,Chetumal,Playa del Carmen,Cozumel,Respuesta_d,Respuesta_b
+264477590,ECOEMS 2026,Geografía,91,¿Cuál es la capital del estado de Baja California Sur?,Loreto,Cabo San Lucas,San José del Cabo,La Paz,Respuesta_b,Respuesta_d
+264477590,ECOEMS 2026,Geografía,92,¿Cuál es la capital del estado de Sonora?,Nogales,Ciudad Obregón,Hermosillo,San Luis Río Colorado,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,93,¿Cuál es la capital del estado de Sinaloa?,Los Mochis,Mazatlán,Culiacán,Guasave,Respuesta_a,Respuesta_c
+264477590,ECOEMS 2026,Geografía,94,¿Cuál es la capital del estado de Coahuila?,Piedras Negras,Torreón,Saltillo,Coahuila,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,95,¿Cuál es la capital del estado de Tamaulipas?,Ciudad Victoria,Reynosa,Matamoros,Nuevo Laredo,Respuesta_b,Respuesta_a
+264477590,ECOEMS 2026,Geografía,96,¿Cuál es la capital del estado de Baja California?,Tijuana,Mexicali,Ensenada,Tecate,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,97,¿Cuál es la capital del estado de Zacatecas?,Río Grande,Fresnillo,Guadalupe,Zacatecas,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,98,¿Cuál es la capital del estado de San Luis Potosí?,Matehuala,Ciudad Valles,San Luis Potosí,Rioverde,Respuesta_d,Respuesta_c
+264477590,ECOEMS 2026,Geografía,99,¿Cuál es la capital del estado de Durango?,El Salto,Gómez Palacio,Ciudad Lerdo,Durango,Respuesta_c,Respuesta_d
+264477590,ECOEMS 2026,Geografía,100,¿Cuál es la capital del estado de Nayarit?,San Blas,Puerto Vallarta,Tepic,Compostela,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,101,¿Cuál es la capital del estado de Colima?,Armería,Manzanillo,Colima,Villa de Álvarez,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,102,¿Cuál es la capital del estado de Aguascalientes?,Calvillo,Jesús María,Aguascalientes,Rincón de Romos,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,103,¿Cuál es la capital del estado de Hidalgo?,Tulancingo,Pachuca,Tula de Allende,Huejutla de Reyes,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,104,¿Cuál es la capital del estado de Tlaxcala?,Tlaxcala,Apizaco,Huamantla,Zacatelco,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,105,¿Cuál es la capital del estado de Morelos?,Cuautla,Cuernavaca,Jiutepec,Temixco,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,106,¿Cuál es la capital del estado de Michoacán?,Lázaro Cárdenas,Uruapan,Zamora,Morelia,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,107,¿Cuál es la capital del estado de Guanajuato?,Guanajuato,León,Irapuato,Celaya,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,108,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,109,¿Cuál es la capital del estado de Chiapas?,Tuxtla Gutiérrez,San Cristóbal de las Casas,Tapachula,Comitán,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,110,¿Cuál es la capital del estado de Oaxaca?,Oaxaca,Puerto Escondido,Huatulco,Juchitán,Respuesta_c,Respuesta_a
+264477590,ECOEMS 2026,Geografía,111,¿Cuál es la capital del estado de Guerrero?,Acapulco,Chilpancingo,Taxco,Zihuatanejo,Respuesta_a,Respuesta_b
+264477590,ECOEMS 2026,Geografía,112,¿Cuál es la capital del estado de Nuevo León?,Reynosa,Saltillo,Monterrey,Matamoros,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,113,¿Cuál es la capital del estado de Veracruz?,Veracruz,Xalapa,Coatzacoalcos,Poza Rica,Respuesta_a,Respuesta_b
+264477590,ECOEMS 2026,Geografía,114,¿Cuál es la capital del estado de Puebla?,Cholula,Tlaxcala,Puebla,Atlixco,Respuesta_a,Respuesta_c
+264477590,ECOEMS 2026,Geografía,115,¿Cuál es la capital del estado de Chihuahua?,Chihuahua,Tijuana,Monterrey,Hermosillo,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,116,¿Cuál es la capital del estado de Yucatán?,Cancún,Mérida,Campeche,Villahermosa,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,117,¿Cuál es la capital del estado de Jalisco?,Puerto Vallarta,San Juan De Los Lagos,Guadalajara,Zapopan,Respuesta_d,Respuesta_c
+264477590,ECOEMS 2026,Geografía,118,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_b,Respuesta_c
+264477590,ECOEMS 2026,Geografía,119,¿Cuál es la capital de Francia?,Niza,Marsella,Lyon,París,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,120,¿Cuál es la capital de Italia?,Turín,Milán,Nápoles,Roma,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,121,¿Cuál es la capital de España?,Sevilla,Barcelona,Valencia,Madrid,Respuesta_d,Respuesta_d
+264477590,ECOEMS 2026,Geografía,122,¿Cuál es la capital de Alemania?,Múnich,Hamburgo,Berlín,Colonia,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,123,¿Cuál es la capital de Reino Unido?,Manchester,Birmingham,Londres,Leeds,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,124,¿Cuál es la capital de Portugal?,Lisboa,Oporto,Braga,Coímbra,Respuesta_a,Respuesta_a
+264477590,ECOEMS 2026,Geografía,125,¿Cuál es la capital de Rusia?,San Petersburgo,Moscú,Novosibirsk,Ekaterimburgo,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_c,Respuesta_c
+264477590,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_b,Respuesta_b
+264477590,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_d,Respuesta_b
+264065837,ECOEMS 2026,Geografía,1,¿Cuál es el río más largo de México?,Río Bravo,Río Lerma,Río Balsas,Río Grijalva,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,2,¿Cuál es la ubicación geográfica de México?,América del Sur,América Central,América del Norte,Europa,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,3,¿Cuál es la península más grande de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,4,¿Cuál es la capital de México?,Guadalajara,Monterrey,Puebla,Ciudad de México,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,5,¿Cuál es el lago más grande de México?,Lago de Chapala,Lago de Pátzcuaro,Lago de Cuitzeo,Lago de Zirahuén,Respuesta_b,Respuesta_a
+264065837,ECOEMS 2026,Geografía,6,¿Cuál es el estado más grande de México?,Chihuahua,Sonora,Coahuila,Durango,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,7,¿Qué océanos bañan las costas de México?,Atlántico e Índico,Pacífico y Ártico,Atlántico y Pacífico,Índico y Ártico,Respuesta_c,Respuesta_b
+264065837,ECOEMS 2026,Geografía,8,¿Con qué países limita México al norte?,Guatemala y Belice,Estados Unidos,Canadá,Brasil,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,9,¿Cuál es el desierto más grande de México?,Desierto de Sonora,Desierto de Chihuahua,Desierto de Altar,Desierto de Mapimí,Respuesta_b,Respuesta_a
+264065837,ECOEMS 2026,Geografía,10,¿Cuál es la montaña más alta de México?,Iztaccíhuatl,Popocatépetl,Pico de Orizaba,Nevado de Toluca,Respuesta_b,Respuesta_c
+264065837,ECOEMS 2026,Geografía,11,¿Cuál es el estado más pequeño de México?,Aguascalientes,Colima,Tlaxcala,Morelos,Respuesta_a,Respuesta_c
+264065837,ECOEMS 2026,Geografía,12,¿Cuál es el estado más poblado de México (Excepto Ciudad de México)?,Ciudad de México,Estado de México,Veracruz,Jalisco,Respuesta_d,Respuesta_b
+264065837,ECOEMS 2026,Geografía,13,¿Cuál es el volcán más activo de México?,Paricutín,Iztaccíhuatl,Pico de Orizaba,Popocatépetl,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,14,¿Cuál es la ciudad más poblada de México?,Puebla,Guadalajara,Monterrey,Ciudad de México,Respuesta_c,Respuesta_d
+264065837,ECOEMS 2026,Geografía,15,¿Cuál es el río más caudaloso de México?,Río Balsas,Río Lerma,Río Bravo,Río Grijalva,Respuesta_a,Respuesta_c
+264065837,ECOEMS 2026,Geografía,16,¿Cuál es la isla más grande de México?,Isla Mujeres,Isla Ángel de la Guarda,Isla Cozumel,Isla Tiburón,Respuesta_b,Respuesta_d
+264065837,ECOEMS 2026,Geografía,17,¿Cuál es el estado más al norte de México?,Baja California,Sonora,Chihuahua,Coahuila,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,18,¿Cuál es el estado más al sur de México?,Campeche,Tabasco,Chiapas,Yucatán,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,19,¿Cuál es el estado más al oeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,20,¿Cuál es la península más al sur de México?,Península de Baja California,Península de Yucatán,Península de California,Península de Sonora,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,21,¿Cuál es el estado más al centro de México?,Hidalgo,Estado de México,Aguascalientes,Tlaxcala,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,22,¿Cuál es el estado más al sureste de México?,Yucatán,Tabasco,Campeche,Chiapas,Respuesta_b,Respuesta_d
+264065837,ECOEMS 2026,Geografía,23,¿Cuál es el estado más al noroeste de México?,Baja California,Baja California Sur,Sonora,Sinaloa,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,24,¿Cuál es el estado más al noreste de México?,Nuevo León,Estado de México,Tamaulipas,Chihuahua,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,25,¿Cuál es el estado más al suroeste de México?,Colima,Oaxaca,Guerrero,Michoacán,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,26,¿Cuál es el estado más al centro-norte de México?,Zacatecas,San Luis Potosí,Aguascalientes,Durango,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,27,¿Cuáles son los continentes del mundo?,"América, Europa, Asia, África y Oceania","América, Europa, Asia y África","América del Norte, América del Sur, Europa","América del Norte, América Central, Asia",Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,28,¿Cuál es el continente más extenso?,Antártida,América,África,Asia,Respuesta_b,Respuesta_d
+264065837,ECOEMS 2026,Geografía,29,¿Cuál es el continente más poblado?,América,Asia,Europa,África,Respuesta_c,Respuesta_b
+264065837,ECOEMS 2026,Geografía,30,¿Cuál es el océano más grande del mundo?,Atlántico,Índico,Pacífico,Antártico,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,31,¿Cuál es el país más grande del mundo?,Canadá,China,Estados Unidos,Rusia,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,32,¿Cuál es el país más poblado del mundo?,Pakistan,Japón,India,China,Respuesta_c,Respuesta_d
+264065837,ECOEMS 2026,Geografía,33,¿Cuál es la montaña más alta del mundo?,K2,Monte Everest,Kangchenjunga,Lhotse,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,34,¿Cuál es el río más largo del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_b,Respuesta_a
+264065837,ECOEMS 2026,Geografía,35,¿Cuál es el desierto más grande del mundo?,Desierto de los Leones,Desierto de Gobi,Desierto de Kalahari,Desierto del Sahara,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,36,¿Cuál es la isla más grande del mundo?,Groenlandia,Nueva Guinea,Borneo,Madagascar,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,37,¿Cuál es el volcán más activo del mundo?,Monte Vesubio,Monte Etna,Kilauea,Monte Santa Helena,Respuesta_d,Respuesta_c
+264065837,ECOEMS 2026,Geografía,38,¿Cuál es la ciudad más poblada del mundo?,Londres,Nueva Delhi,Shanghái,São Paulo,Respuesta_a,Respuesta_b
+264065837,ECOEMS 2026,Geografía,39,¿Cuál es el parque nacional más grande del mundo?,Parque Nacional Yellowstone,Parque Nacional Banff,Parque Nacional Kruger,Parque Nacional Noreste de Groenlandia,Respuesta_c,Respuesta_a
+264065837,ECOEMS 2026,Geografía,40,¿Cuál es el río más caudaloso del mundo?,Río Nilo,Río Amazonas,Río Yangtsé,Río Misisipi,Respuesta_d,Respuesta_b
+264065837,ECOEMS 2026,Geografía,41,¿Cuál es la península más grande del mundo?,Península Canadiense,Península Ibérica,Península de Kamchatka,Península de Malaca,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,42,¿Cuál es el país más al norte del mundo?,Canadá,Rusia,Noruega,Dinamarca,Respuesta_c,Respuesta_b
+264065837,ECOEMS 2026,Geografía,43,¿Cuál es el país más al sur del mundo?,Argentina,Chile,Nueva Zelanda,Australia,Respuesta_b,Respuesta_a
+264065837,ECOEMS 2026,Geografía,44,¿Cuál es el país más al este del mundo?,Nueva Zelanda,Australia,Japón,Rusia,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,45,¿Cuál es el país más al oeste del mundo?,Rusia,Nueva Zelanda,Australia,EE.UU,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,46,¿Cuál es el país más al centro del mundo?,Ecuador,Colombia,Brasil,Perú,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,47,¿Cuál es el país más al noreste del mundo?,Suecia,Rusia,Noruega,Finlandia,Respuesta_d,Respuesta_b
+264065837,ECOEMS 2026,Geografía,48,¿Cuál es la capa más alta de la Tierra?,Núcleo,Manto,Corteza,Atmósfera,Respuesta_a,Respuesta_d
+264065837,ECOEMS 2026,Geografía,49,¿Qué es un continente?,Una gran masa de tierra rodeada de agua,Una gran masa de agua rodeada de tierra,Una gran masa de tierra y agua,Una gran masa de agua y aire,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,50,¿Cuál es el océano más pequeño del mundo?,Atlántico,Índico,Ártico,Antártico,Respuesta_a,Respuesta_c
+264065837,ECOEMS 2026,Geografía,51,¿Qué es un archipiélago?,Un grupo de montañas,Un grupo de ríos,Un grupo de islas,Un grupo de lagos,Respuesta_d,Respuesta_c
+264065837,ECOEMS 2026,Geografía,52,¿Qué es una península?,Una extensión de tierra rodeada de agua por tres lados,Una extensión de tierra rodeada de agua por dos lados,Una extensión de tierra rodeada de agua por un lado,Una extensión de tierra rodeada de agua por cuatro lados,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,53,¿Qué es una cordillera?,Un conjunto de volcanes activos,Un conjunto de valles alineados,Un conjunto de ríos alineados,Un conjunto de montañas alineadas,Respuesta_b,Respuesta_d
+264065837,ECOEMS 2026,Geografía,54,¿Qué es un istmo?,Una franja estrecha de tierra que une dos masas continentales mayores,Una franja estrecha de agua que une dos masas continentales mayores,Una franja estrecha de aire que une dos masas continentales mayores,Una franja estrecha de tierra que separa dos masas continentales mayores,Respuesta_d,Respuesta_a
+264065837,ECOEMS 2026,Geografía,55,¿Qué es un acantilado?,Una pendiente abrupta y alta junto al mar o a un río,Una pendiente suave y baja junto al mar o a un río,Una pendiente abrupta y baja junto al mar o a un río,Una pendiente suave y alta junto al mar o a un río,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,56,¿Qué es una meseta?,Una extensión de tierra baja y elevada,Una extensión de tierra plana y baja,Una extensión de tierra inclinada y elevada,Una extensión de tierra plana y alta,Respuesta_b,Respuesta_d
+264065837,ECOEMS 2026,Geografía,57,¿Qué es una cuenca hidrográfica?,El área de tierra donde el agua de lluvia drena hacia un río o lago específico,El área de tierra donde el agua de lluvia no drena hacia un río o lago específico,El área de agua donde el agua de lluvia drena hacia un río o lago específico,El área de aire donde el agua de lluvia drena hacia un río o lago específico,Respuesta_d,Respuesta_a
+264065837,ECOEMS 2026,Geografía,58,¿Qué es una depresión?,Una zona más baja que las áreas circundantes,Una zona más alta que las áreas circundantes,Una zona igual que las áreas circundantes,Una zona más baja que las áreas lejanas,Respuesta_c,Respuesta_a
+264065837,ECOEMS 2026,Geografía,59,¿Qué es una falla geológica?,Una fractura en la corteza terrestre donde no ha habido movimiento,Una fractura en la corteza terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde ha habido movimiento,Una fractura en la atmósfera terrestre donde no ha habido movimiento,Respuesta_a,Respuesta_b
+264065837,ECOEMS 2026,Geografía,60,¿Qué es una fosa oceánica?,Un valle no profundo en el fondo del océano,Un valle profundo en la superficie del océano,Un valle poco profundo en el fondo del océano,Un valle poco profundo en la superficie del océano,Respuesta_c,Respuesta_b
+264065837,ECOEMS 2026,Geografía,61,¿Qué es una duna?,Un montículo de arena formado por el agua,Un montículo de arena formado por el fuego,Un montículo de arena formado por el aire,Un montículo de arena formado por la tierra,Respuesta_b,Respuesta_c
+264065837,ECOEMS 2026,Geografía,62,¿Qué es una bahía?,Una entrada del mar en la costa que forma una concavidad.,Una entrada del mar en la costa que forma una convexidad.,Una entrada del aire en la costa que forma una concavidad.,Una entrada del aire en la costa que forma una convexidad.,Respuesta_b,Respuesta_a
+264065837,ECOEMS 2026,Geografía,63,¿Qué es un volcán?,"Una abertura en la superficie terrestre por donde entra aire, ceniza y gases","Una abertura en la superficie terrestre por donde sale magma, ceniza y gases","Una abertura en la superficie terrestre por donde sale agua, ceniza y gases","Una abertura en la superficie terrestre por donde entra agua, ceniza y gases",Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,64,¿Qué es una laguna costera?,Un cuerpo de agua salada separado del mar por una franja de tierra,Un cuerpo de agua dulce separado del mar por una franja de tierra,Un cuerpo de agua separado del aire por una franja de tierra,Un cuerpo de agua separado del aire por una franja de mar,Respuesta_a,Respuesta_b
+264065837,ECOEMS 2026,Geografía,65,¿Qué es un cañón?,"Un valle poco profundo con paredes empinadas, creado por la erosión del agua o del viento","Un valle profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle poco profundo con paredes suaves, creado por la erosión del agua o del viento","Un valle profundo con paredes empinadas, creado por la erosión del agua o del viento",Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,66,¿Qué es un oasis?,Un área infértil en un desierto donde no hay agua ni vegetación,Un área fértil en un desierto donde hay agua y vegetación,Un área fértil en una selva donde hay agua y vegetación,Un área fértil en una selva donde no hay agua ni vegetación,Respuesta_a,Respuesta_b
+264065837,ECOEMS 2026,Geografía,67,¿Qué es un valle?,Una elevación alargada entre montañas o colinas,Una depresión alargada entre ríos o lagos,Una depresión alargada entre montañas o colinas,Una elevación alargada entre ríos o lagos,Respuesta_d,Respuesta_c
+264065837,ECOEMS 2026,Geografía,68,¿Qué es un golfo?,Una gran entrada del mar en la costa que forma una concavidad.,Una gran entrada del mar en la costa que forma una convexidad.,Una gran entrada de océano en un contiene formando una concavidad.,Una gran entrada del aire en la costa que forma una convexidad.,Respuesta_a,Respuesta_c
+264065837,ECOEMS 2026,Geografía,69,¿Qué es un lago?,Un cuerpo de agua salada rodeado de tierra,Un cuerpo de tierra rodeado de agua,Un cuerpo de aire rodeado de tierra,Un cuerpo de agua dulce rodeado de tierra,Respuesta_b,Respuesta_d
+264065837,ECOEMS 2026,Geografía,70,¿Qué es un río?,"Un curso natural de agua que fluye hacia el mar, un lago u otro río",Un curso natural de agua que fluye hacia la montaña o la colina,"Un curso natural de tierra que fluye hacia el mar, un lago u otro río",Un curso natural de tierra que fluye hacia la montaña o la colina,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,71,¿Qué es una isla?,Una extensión de tierra rodeada de agua salada,Una extensión de agua salada rodeada de tierra,Una extensión de aire contaminado rodeada de tierra,Una extensión de tierra rodeada de aire,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,72,¿Qué es un mar?,Un cuerpo de agua dulce conectado con el océano,Un cuerpo de agua salada conectado con el océano,Un cuerpo de agua salada no conectado con el océano,Un cuerpo de agua dulce no conectado con el océano,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,73,¿Qué es una montaña?,Una elevación natural del terreno con una cima definida y una altura considerable,Una depresión natural del terreno con una cima definida y una altura considerable,Una elevación natural del terreno con una base definida y una altura considerable,Una depresión natural del terreno con una base definida y una altura considerable,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,74,¿Qué es un océano?,Un cuerpo enorme de agua salada que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de agua dulce que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de tierra que cubre la mayor parte de la superficie terrestre,Un cuerpo enorme de aire que cubre la mayor parte de la superficie terrestre,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,75,¿Qué es un pantano?,Un área húmeda y pantanosa donde crecen plantas acuáticas,Un área seca y arenosa donde crecen plantas acuáticas,Un área húmeda y pantanosa donde no crecen plantas acuáticas,Un área seca y arenosa donde no crecen plantas acuáticas,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,76,¿Qué es una planicie?,Una extensión grande y alta de mar,Una extensión grande y plana de tierra,Una extensión grande e inclinada de tierra,Una extensión grande y plana de tierra,Respuesta_a,Respuesta_b
+264065837,ECOEMS 2026,Geografía,77,¿Qué es un estrecho?,Un canal de tierra que conecta dos cuerpos de agua más grandes,Un canal de aire que conecta dos cuerpos de agua más grandes,Un canal de fuego que conecta dos cuerpos de agua más grandes,Un canal de agua que conecta dos cuerpos de agua más grandes,Respuesta_a,Respuesta_d
+264065837,ECOEMS 2026,Geografía,78,¿Qué es una tundra?,Un bioma frío y seco con vegetación alta y permafrost,Un bioma cálido y húmedo con vegetación alta y permafrost,Un bioma frío y húmedo con vegetación baja y permafrost,Un bioma cálido y seco con vegetación alta y permafrost,Respuesta_c,Respuesta_a
+264065837,ECOEMS 2026,Geografía,79,¿Qué es un valle glaciar?,Un monte en forma de U creado por la erosión de un glaciar,Un valle en forma de V creado por la erosión de un glaciar,Un valle en forma de U creado por la erosión de un río,Un valle en forma de V creado por la erosión de un río,Respuesta_c,Respuesta_b
+264065837,ECOEMS 2026,Geografía,80,¿Qué es una zona climática?,Una región del planeta con características climáticas similares,Una región del planeta con características geográficas similares,Una región del planeta con características políticas similares,Una región del planeta con características económicas similares,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,81,¿Qué es una zona de subducción?,Una región donde una placa tectónica se desliza debajo de otra,Una región donde una placa tectónica se desliza encima de otra,Una región donde una placa tectónica se desliza al lado de otra,Una región donde una placa tectónica se separa de otra,Respuesta_d,Respuesta_a
+264065837,ECOEMS 2026,Geografía,82,¿Qué es un acuífero?,Una capa subterránea de roca o sedimento que no contiene agua,Una capa subterránea de roca o sedimento que contiene agua,Una capa subterránea de aire o gas que contiene agua,Una capa subterránea de aire o gas que no contiene agua,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,83,¿Qué es un arrecife de coral?,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismos marinos,Una estructura submarina formada por el crecimiento y depósito de algas y otros organismo marinos,Una estructura submarina formada por el crecimiento y depósito de peces y otros organismos marinos,Una estructura terrestre formada por el crecimiento y depósito de coral y otros organismos marinos,Respuesta_d,Respuesta_a
+264065837,ECOEMS 2026,Geografía,84,¿Qué es un bosque lluvioso?,Un bioma cálido y húmedo con baja precipitación y vegetación densa,Un bioma frío y seco con baja precipitación y vegetación escasa,Un bioma cálido y seco con baja precipitación y vegetación densa,Un bioma frío y húmedo con alta precipitación y vegetación escasa,Respuesta_a,Respuesta_d
+264065837,ECOEMS 2026,Geografía,85,¿Qué es un desierto?,Un bioma árido con baja precipitación y vegetación densa,Un bioma húmedo con alta precipitación y vegetación densa,Un bioma árido con alta precipitación y vegetación escasa,Un bioma húmedo con baja precipitación y vegetación densa,Respuesta_b,Respuesta_a
+264065837,ECOEMS 2026,Geografía,86,¿Cuál es la capital del estado de México?,Nezahualcóyotl,Ecatepec,Naucalpan,Toluca,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,87,¿Cuál es la capital del estado de Ciudad de México?,Ciudad de México,Iztapalapa,Gustavo A. Madero,Álvaro Obregón,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,88,¿Cuál es la capital del estado de Tabasco?,Tabasco,Cárdenas,Comalcalco,Villahermosa,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,89,¿Cuál es la capital del estado de Campeche?,Calkiní,Ciudad del Carmen,Campeche,Champotón,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,90,¿Cuál es la capital del estado de Quintana Roo?,Cancún,Chetumal,Playa del Carmen,Cozumel,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,91,¿Cuál es la capital del estado de Baja California Sur?,Loreto,Cabo San Lucas,San José del Cabo,La Paz,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,92,¿Cuál es la capital del estado de Sonora?,Nogales,Ciudad Obregón,Hermosillo,San Luis Río Colorado,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,93,¿Cuál es la capital del estado de Sinaloa?,Los Mochis,Mazatlán,Culiacán,Guasave,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,94,¿Cuál es la capital del estado de Coahuila?,Piedras Negras,Torreón,Saltillo,Coahuila,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,95,¿Cuál es la capital del estado de Tamaulipas?,Ciudad Victoria,Reynosa,Matamoros,Nuevo Laredo,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,96,¿Cuál es la capital del estado de Baja California?,Tijuana,Mexicali,Ensenada,Tecate,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,97,¿Cuál es la capital del estado de Zacatecas?,Río Grande,Fresnillo,Guadalupe,Zacatecas,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,98,¿Cuál es la capital del estado de San Luis Potosí?,Matehuala,Ciudad Valles,San Luis Potosí,Rioverde,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,99,¿Cuál es la capital del estado de Durango?,El Salto,Gómez Palacio,Ciudad Lerdo,Durango,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,100,¿Cuál es la capital del estado de Nayarit?,San Blas,Puerto Vallarta,Tepic,Compostela,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,101,¿Cuál es la capital del estado de Colima?,Armería,Manzanillo,Colima,Villa de Álvarez,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,102,¿Cuál es la capital del estado de Aguascalientes?,Calvillo,Jesús María,Aguascalientes,Rincón de Romos,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,103,¿Cuál es la capital del estado de Hidalgo?,Tulancingo,Pachuca,Tula de Allende,Huejutla de Reyes,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,104,¿Cuál es la capital del estado de Tlaxcala?,Tlaxcala,Apizaco,Huamantla,Zacatelco,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,105,¿Cuál es la capital del estado de Morelos?,Cuautla,Cuernavaca,Jiutepec,Temixco,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,106,¿Cuál es la capital del estado de Michoacán?,Lázaro Cárdenas,Uruapan,Zamora,Morelia,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,107,¿Cuál es la capital del estado de Guanajuato?,Guanajuato,León,Irapuato,Celaya,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,108,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,109,¿Cuál es la capital del estado de Chiapas?,Tuxtla Gutiérrez,San Cristóbal de las Casas,Tapachula,Comitán,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,110,¿Cuál es la capital del estado de Oaxaca?,Oaxaca,Puerto Escondido,Huatulco,Juchitán,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,111,¿Cuál es la capital del estado de Guerrero?,Acapulco,Chilpancingo,Taxco,Zihuatanejo,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,112,¿Cuál es la capital del estado de Nuevo León?,Reynosa,Saltillo,Monterrey,Matamoros,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,113,¿Cuál es la capital del estado de Veracruz?,Veracruz,Xalapa,Coatzacoalcos,Poza Rica,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,114,¿Cuál es la capital del estado de Puebla?,Cholula,Tlaxcala,Puebla,Atlixco,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,115,¿Cuál es la capital del estado de Chihuahua?,Chihuahua,Tijuana,Monterrey,Hermosillo,Respuesta_a,Respuesta_a
+264065837,ECOEMS 2026,Geografía,116,¿Cuál es la capital del estado de Yucatán?,Cancún,Mérida,Campeche,Villahermosa,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,117,¿Cuál es la capital del estado de Jalisco?,Puerto Vallarta,San Juan De Los Lagos,Guadalajara,Zapopan,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,118,¿Cuál es la capital del estado de Querétaro?,Tequisquiapan,San Juan del Río,Querétaro,Jalpan de Serra,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,119,¿Cuál es la capital de Francia?,Niza,Marsella,Lyon,París,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,120,¿Cuál es la capital de Italia?,Turín,Milán,Nápoles,Roma,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,121,¿Cuál es la capital de España?,Sevilla,Barcelona,Valencia,Madrid,Respuesta_d,Respuesta_d
+264065837,ECOEMS 2026,Geografía,122,¿Cuál es la capital de Alemania?,Múnich,Hamburgo,Berlín,Colonia,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,123,¿Cuál es la capital de Reino Unido?,Manchester,Birmingham,Londres,Leeds,Respuesta_c,Respuesta_c
+264065837,ECOEMS 2026,Geografía,124,¿Cuál es la capital de Portugal?,Lisboa,Oporto,Braga,Coímbra,Respuesta_d,Respuesta_a
+264065837,ECOEMS 2026,Geografía,125,¿Cuál es la capital de Rusia?,San Petersburgo,Moscú,Novosibirsk,Ekaterimburgo,Respuesta_b,Respuesta_b
+264065837,ECOEMS 2026,Geografía,126,¿Cuál es la capital de Ucrania?,Chernobyl,Járkov,Kiev,Dnipro,Respuesta_a,Respuesta_c
+264065837,ECOEMS 2026,Geografía,127,¿Cuál es la capital de Bielorrusia?,Grodno,Minsk,Moguiliov,Vitebsk,Respuesta_a,Respuesta_b
+264065837,ECOEMS 2026,Geografía,128,¿Cuál es la capital de Islandia?,Garðabæ,Reykavik,Hafnarfjörður,Akureyri,Respuesta_d,Respuesta_b
