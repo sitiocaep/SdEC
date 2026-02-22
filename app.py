@@ -1582,22 +1582,76 @@ def save_exam_results_api():
 @app.route('/resultados')
 def resultados():
     if not session.get('logged_in'): return redirect(url_for('index'))
-    materia = request.args.get('materia')
-    if not materia: return redirect(url_for('launcher'))
+    materia_actual = request.args.get('materia')
+    
+    is_admin = is_admin_user()
+    
+    # Si no hay materia en la URL y no es admin, lo sacamos.
+    # Si es admin, lo dejamos entrar al dashboard vacío para que busque.
+    if not materia_actual and not is_admin: 
+        return redirect(url_for('launcher'))
+        
+    admin_data = {}
+    if is_admin:
+        try:
+            all_users = get_all_users()
+            try:
+                df_c = pd.read_csv(COURSES_CSV, encoding='utf-8-sig', engine='python')
+            except:
+                df_c = pd.read_csv(COURSES_CSV, encoding='latin-1', engine='python')
+            
+            df_c.columns = df_c.columns.str.strip().str.lower()
+            
+            cursos_dict = {}
+            col_curso = next((c for c in df_c.columns if c == 'curso'), None)
+            col_mat = next((c for c in df_c.columns if c == 'materia'), None)
+
+            # Agrupar materias por curso
+            if col_curso and col_mat:
+                for curso in df_c[col_curso].dropna().unique():
+                    c_str = str(curso).strip()
+                    if c_str not in cursos_dict:
+                        cursos_dict[c_str] = {'materias': [], 'usuarios': []}
+                    
+                    materias = df_c[df_c[col_curso] == curso][col_mat].dropna().unique().tolist()
+                    cursos_dict[c_str]['materias'] = [str(m).strip() for m in materias]
+            
+            # Agrupar usuarios por curso
+            for u in all_users:
+                c_str = str(u.get('curso', '')).strip()
+                if c_str in cursos_dict:
+                    cursos_dict[c_str]['usuarios'].append({
+                        'folio': u.get('folio'),
+                        'nombre_completo': f"{u.get('nombre')} {u.get('apellido_paterno')} {u.get('apellido_materno')}".strip()
+                    })
+            
+            admin_data = cursos_dict
+        except Exception as e:
+            print(f"Error cargando admin data en resultados: {e}")
     
     return render_template('resultados.html', 
                          fullname=session.get('fullname'), 
                          curso=session.get('curso'),
-                         materia=materia)
+                         materia=materia_actual or '',
+                         is_admin=is_admin,
+                         admin_data=admin_data)
 
 @app.route('/api/get-exam-results')
 def get_exam_results_api():
     if not session.get('logged_in'):
         return jsonify({'success': False, 'message': 'No autorizado'}), 401
     
-    folio_usuario = str(session.get('folio'))
-    curso_usuario = session.get('curso')
     materia_solicitada = request.args.get('materia')
+    
+    folio_admin_req = request.args.get('folio')
+    curso_admin_req = request.args.get('curso')
+
+    if is_admin_user() and folio_admin_req:
+        folio_usuario = str(folio_admin_req)
+        curso_usuario = curso_admin_req if curso_admin_req else session.get('curso')
+    else:
+        folio_usuario = str(session.get('folio'))
+        curso_usuario = session.get('curso')
     
     if not materia_solicitada:
         return jsonify({'success': False, 'message': 'Falta especificar la materia'}), 400
@@ -1620,7 +1674,7 @@ def get_exam_results_api():
         df_res = df[mask].copy()
         
         if df_res.empty:
-            return jsonify({'success': False, 'message': 'No se encontraron resultados para este examen y usuario.'}), 404
+            return jsonify({'success': False, 'message': 'No se encontraron resultados para este alumno en esta materia.'}), 404
         
         details = []
         correctas = 0
@@ -1632,7 +1686,6 @@ def get_exam_results_api():
             pregunta_txt = row.get('Pregunta', 'Pregunta sin texto')
             
             seleccion_raw = str(row.get('Respuesta_seleccionada', '')).strip()
-            
             correcta_raw = str(row.get('Respuesta_correcta', '')).strip()
             
             def normalizar_opcion(texto):

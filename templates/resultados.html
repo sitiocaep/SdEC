@@ -29,61 +29,99 @@
         <div class="content-area">
             <div class="content-section" style="max-width: 1400px;">
                 
-                <h1>RESULTADOS - <span id="materia-title">{{ materia }}</span></h1>
+                <h1>RESULTADOS - <span id="materia-title">{{ materia | default('PANEL ADMIN') }}</span></h1>
 
-                <div class="selection-container results-split-layout">
+                <div class="selection-container">
                     
-                    <div class="summary-panel option-card">
-                        <h3 class="panel-title">Filtros de Revisión</h3>
-                        
-                        <div class="chart-container">
-                            <canvas id="resultsChart"></canvas>
+                    {% if is_admin %}
+                    <div class="option-card" style="margin-bottom: 25px; padding: 20px; background-color: #e8f4f8; border-color: #4a90e2; border-width: 2px;">
+                        <div style="font-weight: 700; color: #2c3e50; margin-bottom: 15px; font-size: 16px;">
+                            <i class="fas fa-users-cog" style="color: #4a90e2;"></i> BÚSQUEDA DE RESULTADOS (ADMIN)
                         </div>
-                        
-                        <div class="stats-list">
-                            <div class="stat-item filter-btn total active-filter" data-filter="all">
-                                <span>Total de preguntas</span>
-                                <strong id="count-total">0</strong>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                            
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">1. CURSO</label>
+                                <select id="admin-curso-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; outline: none; cursor: pointer;">
+                                    <option value="">-- Selecciona Curso --</option>
+                                </select>
                             </div>
-                            <div class="stat-item filter-btn correct" data-filter="correcta">
-                                <span>Correctas</span>
-                                <strong id="count-correct">0</strong>
+                            
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">2. MATERIA</label>
+                                <select id="admin-materia-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; outline: none; cursor: pointer;" disabled>
+                                    <option value="">-- Selecciona Materia --</option>
+                                </select>
                             </div>
-                            <div class="stat-item filter-btn incorrect" data-filter="incorrecta">
-                                <span>Incorrectas</span>
-                                <strong id="count-incorrect">0</strong>
+                            
+                            <div style="flex: 1; min-width: 250px;">
+                                <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">3. USUARIO</label>
+                                <select id="admin-user-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; outline: none; cursor: pointer;" disabled>
+                                    <option value="">-- Selecciona Usuario --</option>
+                                </select>
                             </div>
-                            <div class="stat-item filter-btn unanswered" data-filter="sin_responder">
-                                <span>Sin responder</span>
-                                <strong id="count-unanswered">0</strong>
-                            </div>
-                        </div>
 
-                        <div class="score-circle" style="margin-top: 10px;">
-                            <span class="score-label">CALIFICACIÓN</span>
-                            <span id="score-number">0.0</span>
                         </div>
                     </div>
+                    {% endif %}
 
-                    <div class="details-panel option-card">
-                        <h3 class="panel-title">Revisión de Preguntas</h3>
+                    <div class="results-split-layout">
                         
-                        <div id="questions-nav" class="questions-nav-bar">
-                            <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+                        <div class="summary-panel option-card">
+                            <h3 class="panel-title">Filtros de Revisión</h3>
+                            
+                            <div class="chart-container">
+                                <canvas id="resultsChart"></canvas>
+                            </div>
+                            
+                            <div class="stats-list">
+                                <div class="stat-item filter-btn total active-filter" data-filter="all">
+                                    <span>Total de preguntas</span>
+                                    <strong id="count-total">0</strong>
+                                </div>
+                                <div class="stat-item filter-btn correct" data-filter="correcta">
+                                    <span>Correctas</span>
+                                    <strong id="count-correct">0</strong>
+                                </div>
+                                <div class="stat-item filter-btn incorrect" data-filter="incorrecta">
+                                    <span>Incorrectas</span>
+                                    <strong id="count-incorrect">0</strong>
+                                </div>
+                                <div class="stat-item filter-btn unanswered" data-filter="sin_responder">
+                                    <span>Sin responder</span>
+                                    <strong id="count-unanswered">0</strong>
+                                </div>
+                            </div>
+
+                            <div class="score-circle" style="margin-top: 10px;">
+                                <span class="score-label">CALIFICACIÓN</span>
+                                <span id="score-number">0.0</span>
+                            </div>
                         </div>
 
-                        <div id="single-question-container" class="question-viewer">
+                        <div class="details-panel option-card">
+                            <h3 class="panel-title">Revisión de Preguntas</h3>
+                            
+                            <div id="questions-nav" class="questions-nav-bar">
+                                <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Esperando...</div>
                             </div>
-                    </div>
 
+                            <div id="single-question-container" class="question-viewer">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Exportamos las variables de backend al frontend
         window.resultsConfig = {
-            materia: "{{ materia }}"
+            materia: "{{ materia }}",
+            isAdmin: {{ 'true' if is_admin else 'false' }},
+            adminData: {{ admin_data | tojson | safe if is_admin else 'null' }}
         };
     </script>
     <script src="{{ url_for('static', filename='js/resultados.js') }}"></script>

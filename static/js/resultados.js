@@ -1,35 +1,130 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const materia = window.resultsConfig.materia;
+    let materiaActual = window.resultsConfig.materia;
     const chartCtx = document.getElementById('resultsChart').getContext('2d');
     
+    let currentChart = null; 
     let globalQuestions = [];
-    let currentFilter = 'all'; // Filtro actual (all, correcta, incorrecta, sin_responder)
+    let currentFilter = 'all';
 
-    // --- Cargar Datos ---
-    fetch(`/api/get-exam-results?materia=${encodeURIComponent(materia)}`)
-        .then(res => {
-            if (!res.ok) throw new Error("No se encontraron resultados");
-            return res.json();
-        })
-        .then(data => {
-            if (!data.success) throw new Error(data.message);
-            // Guardamos las preguntas con su índice original para no perder la referencia al filtrar
-            globalQuestions = data.details.map((q, idx) => ({ ...q, originalIndex: idx }));
-            
-            renderSummary(data.summary);
-            renderChart(data.summary);
-            setupFilters();
-            renderNavigation(); // Renderiza la barra inicial (Todas)
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('questions-nav').innerHTML = '';
-            document.getElementById('single-question-container').innerHTML = `<div style="text-align:center; color:#e74c3c; padding:20px;">
-                <i class="fas fa-exclamation-triangle"></i> Error: ${err.message}
-            </div>`;
+    // ==========================================
+    // 1. LÓGICA DE MENÚ EN CASCADA (ADMIN)
+    // ==========================================
+    if (window.resultsConfig.isAdmin && window.resultsConfig.adminData) {
+        const adminData = window.resultsConfig.adminData;
+        const cursoSel = document.getElementById('admin-curso-select');
+        const materiaSel = document.getElementById('admin-materia-select');
+        const userSel = document.getElementById('admin-user-select');
+
+        // Llenar primer filtro: Cursos
+        Object.keys(adminData).forEach(curso => {
+            cursoSel.add(new Option(curso, curso));
         });
 
-    // --- Renderizado del Resumen ---
+        // Evento: Al cambiar Curso
+        cursoSel.addEventListener('change', function() {
+            materiaSel.innerHTML = '<option value="">-- Selecciona Materia --</option>';
+            userSel.innerHTML = '<option value="">-- Selecciona Usuario --</option>';
+            materiaSel.disabled = true;
+            userSel.disabled = true;
+
+            const selectedCurso = this.value;
+            if (selectedCurso && adminData[selectedCurso]) {
+                adminData[selectedCurso].materias.forEach(m => {
+                    materiaSel.add(new Option(m, m));
+                });
+                materiaSel.disabled = false;
+            }
+        });
+
+        // Evento: Al cambiar Materia
+        materiaSel.addEventListener('change', function() {
+            userSel.innerHTML = '<option value="">-- Selecciona Usuario --</option>';
+            userSel.disabled = true;
+
+            const selectedCurso = cursoSel.value;
+            if (this.value && selectedCurso) {
+                adminData[selectedCurso].usuarios.forEach(u => {
+                    userSel.add(new Option(u.nombre_completo, u.folio));
+                });
+                userSel.disabled = false;
+            }
+        });
+
+        // Evento: Al cambiar Usuario (AUTO-BÚSQUEDA)
+        userSel.addEventListener('change', function() {
+            const folio = this.value;
+            if (!folio) return; // Si selecciona la opción por defecto vacía, no hace nada
+
+            const curso = cursoSel.value;
+            materiaActual = materiaSel.value; 
+
+            // Actualizar Título de la página
+            const titleEl = document.getElementById('materia-title');
+            if (titleEl) titleEl.textContent = materiaActual;
+            
+            // Reiniciar estado de filtros visuales
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+            document.querySelector('.filter-btn.total').classList.add('active-filter');
+
+            // Cargar los resultados automáticamente
+            loadResults(folio, curso, materiaActual);
+        });
+    }
+
+    // ==========================================
+    // 2. DISPARADOR INICIAL
+    // ==========================================
+    if (materiaActual) {
+        // Si el usuario normal entra, o el admin recarga la página
+        loadResults('', '', materiaActual);
+    } else {
+        // Si el admin entra desde el menú, la gráfica arranca vacía
+        document.getElementById('questions-nav').innerHTML = '<div style="padding: 15px; color: #7f8c8d; font-weight: 500;">Utiliza los filtros superiores para seleccionar un examen.</div>';
+    }
+
+    // ==========================================
+    // 3. CARGA DE DATOS Y RENDERIZADO
+    // ==========================================
+    function loadResults(folio = '', curso = '', reqMateria = '') {
+        const matToFetch = reqMateria || materiaActual;
+        if (!matToFetch) return; 
+
+        document.getElementById('questions-nav').innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Cargando examen...</div>';
+        document.getElementById('single-question-container').innerHTML = '';
+
+        let url = `/api/get-exam-results?materia=${encodeURIComponent(matToFetch)}`;
+        if (folio) {
+            url += `&folio=${encodeURIComponent(folio)}&curso=${encodeURIComponent(curso)}`;
+        }
+
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error("No se encontraron resultados para este alumno en esta materia.");
+                return res.json();
+            })
+            .then(data => {
+                if (!data.success) throw new Error(data.message);
+                
+                globalQuestions = data.details.map((q, idx) => ({ ...q, originalIndex: idx }));
+                
+                renderSummary(data.summary);
+                renderChart(data.summary);
+                setupFilters();
+                renderNavigation(); 
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('questions-nav').innerHTML = '';
+                document.getElementById('single-question-container').innerHTML = `<div style="text-align:center; color:#e74c3c; padding:30px; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> ${err.message}
+                </div>`;
+                
+                renderSummary({calificacion: 0, total: 0, correctas: 0, incorrectas: 0, sin_responder: 0});
+                if (currentChart) currentChart.destroy();
+            });
+    }
+
     function renderSummary(summary) {
         document.getElementById('score-number').textContent = summary.calificacion;
         document.getElementById('count-total').textContent = summary.total;
@@ -38,9 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('count-unanswered').textContent = summary.sin_responder;
     }
 
-    // --- Gráfica Chart.js ---
     function renderChart(summary) {
-        new Chart(chartCtx, {
+        if (currentChart) currentChart.destroy();
+
+        currentChart = new Chart(chartCtx, {
             type: 'doughnut',
             data: {
                 labels: ['Correctas', 'Incorrectas', 'Sin Responder'],
@@ -53,49 +149,39 @@ document.addEventListener('DOMContentLoaded', function() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false } 
-                },
+                plugins: { legend: { display: false } },
                 cutout: '65%' 
             }
         });
     }
 
-    // --- Configurar los clics de los Filtros ---
     function setupFilters() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         filterBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Quitar clase activa a todos
-                filterBtns.forEach(b => b.classList.remove('active-filter'));
-                // Poner clase activa al clickeado
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
                 this.classList.add('active-filter');
-                
-                // Actualizar la variable de filtro
                 currentFilter = this.getAttribute('data-filter');
-                
-                // Re-renderizar la botonera derecha
                 renderNavigation();
             });
         });
     }
 
-    // --- Renderizado de la barra de navegación (Aplica Filtros) ---
     function renderNavigation() {
         const navContainer = document.getElementById('questions-nav');
         navContainer.innerHTML = ''; 
         
-        // Filtrar las preguntas según el botón clickeado en la izquierda
         const filteredQuestions = globalQuestions.filter(q => currentFilter === 'all' || q.status === currentFilter);
 
-        // Si no hay preguntas en este filtro
         if (filteredQuestions.length === 0) {
-            navContainer.innerHTML = '<div style="color:#7f8c8d; padding:10px; width: 100%; text-align: center;">No hay preguntas en esta categoría.</div>';
+            navContainer.innerHTML = '<div style="color:#7f8c8d; padding:15px; width: 100%; text-align: center; font-weight: 600;">No hay preguntas en esta categoría.</div>';
             document.getElementById('single-question-container').innerHTML = '';
             return;
         }
 
-        // Crear los botones
         filteredQuestions.forEach((item) => {
             const btn = document.createElement('div');
             
@@ -105,23 +191,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             btn.className = `nav-item ${statusClass}`;
             btn.textContent = item.numero;
-            
-            // Usamos el originalIndex para que siempre muestre la pregunta correcta
             btn.onclick = () => showQuestion(item.originalIndex);
-            
-            // Identificador en el DOM para poder pintar la clase active más adelante
             btn.setAttribute('data-target-index', item.originalIndex);
             
             navContainer.appendChild(btn);
         });
 
-        // Mostrar automáticamente la PRIMERA pregunta de la lista filtrada
+        // Autoseleccionar la primera pregunta visible
         showQuestion(filteredQuestions[0].originalIndex);
     }
 
-    // --- Mostrar una pregunta individual ---
     function showQuestion(originalIndex) {
-        // 1. Actualizar el estado visual del botón activo en la barra
         const navButtons = document.querySelectorAll('.nav-item');
         navButtons.forEach(btn => {
             if(parseInt(btn.getAttribute('data-target-index')) === originalIndex) {
@@ -131,17 +211,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // 2. Obtener los datos de la pregunta
         const item = globalQuestions[originalIndex];
         const container = document.getElementById('single-question-container');
 
-        // 3. Generar el estado de la pregunta (icono y color)
         let statusText = '';
         if (item.status === 'correcta') statusText = '<span style="color:#27ae60"><i class="fas fa-check-circle"></i> Respondida Correctamente</span>';
         else if (item.status === 'incorrecta') statusText = '<span style="color:#e74c3c"><i class="fas fa-times-circle"></i> Respondida Incorrectamente</span>';
         else statusText = '<span style="color:#f39c12"><i class="fas fa-minus-circle"></i> No se respondió</span>';
 
-        // 4. Construir el HTML
         let html = `
             <div class="q-header">
                 <span>PREGUNTA ${item.numero}</span>
