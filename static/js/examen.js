@@ -348,11 +348,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 saveProgress(); 
             }
         });
+        
+        // --- NUEVA LÓGICA DE CLIC BOTÓN SIGUIENTE / FINALIZAR ---
         nextBtn.addEventListener('click', () => { 
             if (currentQuestion < totalQuestions) {
                 currentQuestion++;
                 showQuestion(currentQuestion); 
                 saveProgress(); 
+            } else if (currentQuestion === totalQuestions) {
+                // Si es la última pregunta, lanza el modal de finalizar
+                finishExam();
             }
         });
         
@@ -473,9 +478,26 @@ document.addEventListener('DOMContentLoaded', function() {
         reviewBtn.style.opacity = reviewBtn.disabled ? '0.5' : '1';
         reviewBtn.style.cursor = reviewBtn.disabled ? 'not-allowed' : 'pointer';
         
-        nextBtn.disabled = currentQuestion === totalQuestions;
-        nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-        nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
+        // --- NUEVA LÓGICA BOTÓN SIGUIENTE / FINALIZAR ---
+        if (currentQuestion === totalQuestions && totalQuestions > 0) {
+            nextBtn.textContent = 'FINALIZAR';
+            nextBtn.style.backgroundColor = '#27ae60'; // Color verde
+            nextBtn.style.color = 'white';
+            nextBtn.style.borderColor = '#27ae60';
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = '1';
+            nextBtn.style.cursor = 'pointer';
+        } else {
+            nextBtn.textContent = 'SIGUIENTE';
+            nextBtn.style.backgroundColor = ''; // Restaura el estilo original
+            nextBtn.style.color = '';
+            nextBtn.style.borderColor = '';
+            
+            // Desactiva solo si hay un error y se pasa del total
+            nextBtn.disabled = currentQuestion > totalQuestions;
+            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
+        }
     }
 
     // ==========================================
@@ -784,40 +806,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // 10. EJECUCIÓN Y EVENTOS GLOBALES
     // ==========================================
 
-    // A. Eventos de SEGURIDAD
-    if (startSecureBtn) {
-        startSecureBtn.addEventListener('click', enableSecureMode);
+    if (window.examConfig.isAdmin) {
+        // A. MODO ADMIN: Ocultar bloqueos de seguridad e iniciar directamente
+        if (securityOverlay) securityOverlay.style.display = 'none';
+        if (blackoutCurtain) blackoutCurtain.style.display = 'none';
+        if (mainContainer) mainContainer.classList.remove('content-blur');
+        
+        console.log("Modo Admin detectado: Seguridad y bloqueos desactivados.");
+        initExam(); // Iniciamos el examen sin pasar por enableSecureMode()
+        
+    } else {
+        // A. Eventos de SEGURIDAD (Solo para estudiantes)
+        if (startSecureBtn) {
+            startSecureBtn.addEventListener('click', enableSecureMode);
+        }
+
+        // Bloqueo de teclado general (Event fallback)
+        document.addEventListener('keydown', blockKeyboard, true);
+
+        // Bloqueo de click derecho (Context Menu)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Bloqueo de copiar/pegar
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('cut', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+
+        // Detección de cambio de pestaña
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Detección de pérdida de foco (Anti-Captura / Alt+Tab)
+        window.addEventListener('blur', handleFocusLoss);
+        window.addEventListener('focus', handleFocusGain);
+
+        // Monitor de Pantalla Completa
+        document.addEventListener('fullscreenchange', checkFullScreen);
+        document.addEventListener('webkitfullscreenchange', checkFullScreen);
     }
 
-    // Bloqueo de teclado general (Event fallback)
-    document.addEventListener('keydown', blockKeyboard, true);
-
-    // Bloqueo de click derecho (Context Menu)
-    document.addEventListener('contextmenu', event => event.preventDefault());
-
-    // Bloqueo de copiar/pegar
-    document.addEventListener('copy', e => e.preventDefault());
-    document.addEventListener('cut', e => e.preventDefault());
-    document.addEventListener('paste', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-
-    // Detección de cambio de pestaña
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Detección de pérdida de foco (Anti-Captura / Alt+Tab)
-    window.addEventListener('blur', handleFocusLoss);
-    window.addEventListener('focus', handleFocusGain);
-
-    // Monitor de Pantalla Completa
-    document.addEventListener('fullscreenchange', checkFullScreen);
-    document.addEventListener('webkitfullscreenchange', checkFullScreen);
-
-    // B. Limpieza al cerrar
+    // B. Limpieza al cerrar (Aplica para ambos)
     window.addEventListener('beforeunload', stopCamera);
     
-    // C. Configuración de botones de cámara
+    // C. Configuración de botones de cámara (Aplica para ambos)
     setupCameraEvents();
-
-    // NOTA: initExam() NO se llama aquí directamente. 
-    // Se llamará cuando el usuario acepte el "Modo Seguro" en enableSecureMode().
 });

@@ -161,19 +161,19 @@
                             <div class="answers-container">
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A">
-                                    <label for="q{{ loop.index }}-a">{{ q.Respuesta_a }}</label>
+                                    <label for="q{{ loop.index }}-a"><strong>A)</strong> {{ q.Respuesta_a }}</label>
                                 </div>
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B">
-                                    <label for="q{{ loop.index }}-b">{{ q.Respuesta_b }}</label>
+                                    <label for="q{{ loop.index }}-b"><strong>B)</strong> {{ q.Respuesta_b }}</label>
                                 </div>
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C">
-                                    <label for="q{{ loop.index }}-c">{{ q.Respuesta_c }}</label>
+                                    <label for="q{{ loop.index }}-c"><strong>C)</strong> {{ q.Respuesta_c }}</label>
                                 </div>
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D">
-                                    <label for="q{{ loop.index }}-d">{{ q.Respuesta_d }}</label>
+                                    <label for="q{{ loop.index }}-d"><strong>D)</strong> {{ q.Respuesta_d }}</label>
                                 </div>
                             </div>
                         </div>
@@ -215,7 +215,9 @@
             // Datos del usuario y examen para guardar resultados
             folio: "{{ session['folio'] | default('') }}",
             curso: "{{ session['curso'] | default('') }}",
-            materia: "{{ request.args.get('materia') | default('') }}"
+            materia: "{{ request.args.get('materia') | default('') }}",
+            // --- NUEVO: Variable para JS ---
+            isAdmin: {{ 'true' if is_admin else 'false' }}
         };
     </script>
     <script src="{{ url_for('static', filename='js/examen.js') }}"></script>

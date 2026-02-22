@@ -1543,7 +1543,9 @@ def examen():
         df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
         q_df = df_p[(df_p['Curso'] == curso) & (df_p['Materia'] == materia)].sort_values(by='Pregunta_número')
         questions = q_df.to_dict('records')
-        return render_template('examen.html', fullname=session.get('fullname'), questions=questions, exam_details=details)
+        is_admin = is_admin_user()
+
+        return render_template('examen.html', fullname=session.get('fullname'), questions=questions, exam_details=details, is_admin=is_admin)
     except Exception as e:
         print(f"Error cargando examen: {e}")
         return redirect(url_for('launcher'))
