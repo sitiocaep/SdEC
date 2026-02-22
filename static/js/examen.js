@@ -63,20 +63,17 @@ document.addEventListener('DOMContentLoaded', function() {
     async function enableSecureMode() {
         const elem = document.documentElement;
         
-        // FIX: Bandera para ignorar eventos de blur durante la transición
         window.isSwitchingToFullscreen = true;
 
         try {
-            // 1. Intentar Pantalla Completa
             if (elem.requestFullscreen) {
                 await elem.requestFullscreen();
             } else if (elem.webkitRequestFullscreen) {
-                await elem.webkitRequestFullscreen(); // Safari
+                await elem.webkitRequestFullscreen(); 
             } else if (elem.msRequestFullscreen) {
-                await elem.msRequestFullscreen(); // IE/Edge legacy
+                await elem.msRequestFullscreen(); 
             }
 
-            // 2. Intentar Bloqueo de Teclado
             if ('keyboard' in navigator && 'lock' in navigator.keyboard) {
                 try {
                     await navigator.keyboard.lock(['Escape', 'AltLeft', 'AltRight', 'Tab', 'MetaLeft', 'MetaRight']);
@@ -86,10 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // 3. Ocultar overlay e iniciar examen
             securityOverlay.style.display = 'none';
-            
-            // FIX: Asegurar explícitamente que la cortina negra esté oculta y el blur desactivado
             blackoutCurtain.style.display = 'none';
             if (mainContainer) mainContainer.classList.remove('content-blur');
 
@@ -97,12 +91,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (err) {
             console.error(err);
-            // Si falla (ej: usuario canceló), quitamos la bandera
             window.isSwitchingToFullscreen = false;
             alert(`Error: Debes permitir la pantalla completa para realizar el examen.`);
         }
 
-        // FIX: Restaurar la detección de blur después de 1 segundo (cuando la transición haya terminado)
         setTimeout(() => {
             window.isSwitchingToFullscreen = false;
         }, 1000);
@@ -143,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleFocusGain() {
         blackoutCurtain.style.display = 'none';
         if (mainContainer) mainContainer.classList.remove('content-blur');
-        
         window.focus();
     }
 
@@ -234,6 +225,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
                 if (radio) {
                     radio.checked = true;
+                    
+                    // --- APLICACIÓN DE ESTILOS A RESPUESTAS RESTAURADAS ---
+                    const parentOption = radio.closest('.answer-option');
+                    if (parentOption) {
+                        parentOption.classList.add('selected-option');
+                        parentOption.style.backgroundColor = '#e8f4f8';
+                        parentOption.style.borderColor = '#4a90e2';
+                        parentOption.style.boxShadow = '0 2px 5px rgba(74, 144, 226, 0.15)';
+                    }
+
                     const qNum = parseInt(name.split('-')[1]);
                     if (!isNaN(qNum)) {
                         answeredQuestions.add(qNum);
@@ -322,14 +323,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // --- LÓGICA DE CLIC BOTÓN SIGUIENTE / FINALIZAR ---
         nextBtn.addEventListener('click', () => { 
             if (currentQuestion < totalQuestions) {
                 currentQuestion++;
                 showQuestion(currentQuestion); 
                 saveProgress(); 
             } else if (currentQuestion === totalQuestions) {
-                // Si es la última pregunta, lanza el modal de finalizar
                 finishExam();
             }
         });
@@ -373,12 +372,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // --- NUEVO SISTEMA ROBUSTO DE SELECCIÓN DE RESPUESTAS ---
     function setupAnswerEvents() {
+        // A. Manejador para cuando cambia un radio
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const questionNumber = parseInt(this.name.split('-')[1]);
                 if (isNaN(questionNumber)) return;
                 
+                // 1. Limpiar visualmente todas las opciones de ESTA pregunta
+                const container = this.closest('.answers-container');
+                if (container) {
+                    container.querySelectorAll('.answer-option').forEach(opt => {
+                        opt.classList.remove('selected-option');
+                        opt.style.backgroundColor = '#f8f9fa';
+                        opt.style.borderColor = '#e9ecef';
+                        opt.style.boxShadow = 'none';
+                    });
+                }
+                
+                // 2. Colorear la opción que se acaba de seleccionar
+                const selectedOption = this.closest('.answer-option');
+                if (selectedOption && this.checked) {
+                    selectedOption.classList.add('selected-option');
+                    selectedOption.style.backgroundColor = '#e8f4f8';
+                    selectedOption.style.borderColor = '#4a90e2';
+                    selectedOption.style.boxShadow = '0 2px 5px rgba(74, 144, 226, 0.15)';
+                }
+                
+                // 3. Actualizar la barra superior y estatus
                 answeredQuestions.add(questionNumber);
                 const statusElement = document.getElementById(`question-status-${questionNumber}`);
                 const navElement = document.querySelector(`.nav-item[data-question="${questionNumber}"]`);
@@ -393,17 +415,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     navElement.classList.remove('review');
                 }
                 
+                // 4. Forzar el guardado inmediato en caché
                 saveProgress(); 
             });
         });
 
+        // B. Manejador para cuando se hace clic en cualquier parte de la caja
         document.querySelectorAll('.answer-option').forEach(option => {
             option.addEventListener('click', function(e) {
-                if (e.target.type === 'radio' || e.target.tagName === 'LABEL') return;
-
                 const radio = this.querySelector('input[type="radio"]');
-                if (radio && !radio.checked) {
+                if (!radio) return;
+
+                // Si no estaba marcada, la marcamos manualmente y disparamos el cambio
+                if (!radio.checked) {
                     radio.checked = true;
+                    // Esto gatilla el EventListener de arriba, asegurando el resaltado y el guardado
                     radio.dispatchEvent(new Event('change'));
                 }
             });
@@ -447,7 +473,6 @@ document.addEventListener('DOMContentLoaded', function() {
         reviewBtn.style.opacity = reviewBtn.disabled ? '0.5' : '1';
         reviewBtn.style.cursor = reviewBtn.disabled ? 'not-allowed' : 'pointer';
         
-        // --- LÓGICA BOTÓN SIGUIENTE / FINALIZAR ---
         if (currentQuestion === totalQuestions && totalQuestions > 0) {
             nextBtn.textContent = 'FINALIZAR';
             nextBtn.style.backgroundColor = '#27ae60'; 
@@ -578,6 +603,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function finishExam() {
+        // Guardado forzoso de última hora antes de revisar
+        saveProgress();
+
         const unanswered = totalQuestions - answeredQuestions.size;
         const msg = unanswered > 0 
             ? `Tienes <strong>${unanswered}</strong> pregunta(s) sin responder.<br><br>¿Seguro que deseas finalizar?` 
@@ -599,6 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('alert-modal-ok').style.display = 'none';
         document.getElementById('alert-modal-countdown').style.display = 'none';
         
+        // Recopilamos directamente del DOM actual
         const respuestas = {};
         document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
             const name = radio.name; 
@@ -855,7 +884,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
 
     if (window.examConfig.isAdmin) {
-        // A. MODO ADMIN: Ocultar bloqueos de seguridad e iniciar directamente
         if (securityOverlay) securityOverlay.style.display = 'none';
         if (blackoutCurtain) blackoutCurtain.style.display = 'none';
         if (mainContainer) mainContainer.classList.remove('content-blur');
@@ -864,7 +892,6 @@ document.addEventListener('DOMContentLoaded', function() {
         initExam(); 
         
     } else {
-        // A. Eventos de SEGURIDAD (Solo para estudiantes)
         if (startSecureBtn) {
             startSecureBtn.addEventListener('click', enableSecureMode);
         }
@@ -886,9 +913,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('webkitfullscreenchange', checkFullScreen);
     }
 
-    // B. Limpieza al cerrar (Aplica para ambos)
     window.addEventListener('beforeunload', stopCamera);
-    
-    // C. Configuración de botones de cámara (Aplica para ambos)
     setupCameraEvents();
 });
