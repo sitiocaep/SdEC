@@ -11,7 +11,6 @@ import sys
 import random
 import pandas as pd
 from docxtpl import DocxTemplate
-# Eliminada la importación de docx2pdf
 import tempfile
 import base64
 import locale
