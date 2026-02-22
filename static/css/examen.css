@@ -906,6 +906,21 @@ body {
 }
 
 /* ==========================================================================
+   MARCA DE AGUA DEL FOLIO
+   ========================================================================== */
+.watermark-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Crucial: permite que los clics traspasen la marca de agua */
+    z-index: 9990; /* Por encima de todo el examen, pero debajo de los modales y capa de seguridad negra */
+    opacity: 0.05; /* Muy tenue, ajusta este valor si la quieres más o menos visible (ej. 0.08) */
+    background-repeat: repeat;
+}
+
+/* ==========================================================================
    MODALES PERSONALIZADOS (ESTILO ESCUELAS)
    ========================================================================== */
 .modal-overlay {
