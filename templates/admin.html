@@ -34,6 +34,7 @@
                 <h1>ADMINISTRACIÓN DE LA PLATAFORMA C.A.E.P.</h1>
                 
                 <div class="admin-container">
+                    
                     <div class="admin-card">
                         <div class="admin-header">
                             <h2><i class="fas fa-users"></i> Gestión de Usuarios</h2>
@@ -49,8 +50,8 @@
                                     <button id="searchBtn"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
-                            <p>Administra los usuarios registrados en un CSV del sistema (nombre, folio, contraseña).</p>
                         </div>
+                        <p style="margin-bottom: 20px;">Administra los usuarios registrados en un CSV del sistema (nombre, folio, contraseña).</p>
                         
                         <div class="table-container">
                             <table id="usersTable">
@@ -98,20 +99,47 @@
                     <div class="admin-card" style="margin-top: 30px;">
                         <div class="admin-header">
                             <h2><i class="fas fa-file-alt"></i> Gestión de Archivos</h2>
-                            <div class="admin-actions">
-                                <button class="btn-action" id="importFilesBtn">
-                                    <i class="fas fa-file-import"></i> Importar CSV
-                                </button>
-                                <button class="btn-action" id="exportFilesBtn">
-                                    <i class="fas fa-file-export"></i> Exportar CSV
-                                </button>
-                                <div class="search-container">
-                                    <input type="text" id="searchInput" placeholder="Buscar por nombre, formato...">
-                                    <button id="searchBtn"><i class="fas fa-search"></i></button>
-                                </div>
-                            </div>
                         </div>
-                        <p>Administra los archivos CSV del sistema (cursos, preguntas, puntajes).</p>
+                        <p style="margin-bottom: 20px;">Administra los archivos CSV principales del sistema. Las previsualizaciones muestran las primeras 10 filas.</p>
+                        
+                        <div class="table-container">
+                            <table id="filesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre del Archivo</th>
+                                        <th>Tamaño</th>
+                                        <th>Última Modificación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for file in files_info %}
+                                    <tr>
+                                        <td><strong>{{ file.name }}</strong></td>
+                                        <td>
+                                            {% if file.exists %}
+                                                {{ file.size }}
+                                            {% else %}
+                                                <span style="color: #e74c3c; font-weight: bold;">Archivo Vacío / No Existe</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ file.modified }}</td>
+                                        <td class="actions-cell">
+                                            <button class="btn-action small-btn action-preview-btn" style="background-color: #f39c12;" data-filename="{{ file.name }}" title="Previsualizar">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn-action small-btn action-export-btn" style="background-color: #27ae60;" data-filename="{{ file.name }}" title="Exportar (Descargar)">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn-action small-btn action-import-btn" style="background-color: #3498db;" data-filename="{{ file.name }}" title="Importar (Reemplazar)">
+                                                <i class="fas fa-upload"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="admin-card" style="margin-top: 30px;">
@@ -119,14 +147,14 @@
                             <h2><i class="fas fa-folder"></i> Gestión de Documentos</h2>
                             <div class="admin-actions">
                                 <button class="btn-action" id="importDocsBtn">
-                                    <i class="fas fa-file-import"></i> Importar CSV
+                                    <i class="fas fa-file-import"></i> Importar ZIP/Docs
                                 </button>
                                 <button class="btn-action" id="exportDocsBtn">
-                                    <i class="fas fa-file-export"></i> Exportar CSV
+                                    <i class="fas fa-file-export"></i> Exportar ZIP/Docs
                                 </button>
                                 <div class="search-container">
-                                    <input type="text" id="searchInput" placeholder="Buscar por nombre, formato...">
-                                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                                    <input type="text" id="searchDocsInput" placeholder="Buscar por nombre, formato...">
+                                    <button id="searchDocsBtn"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -184,10 +212,24 @@
                     <button type="button" class="btn-action" id="openCameraBtn" style="background-color: #e67e22;">
                         <i class="fas fa-camera"></i> Toma de Fotografía
                     </button>
-                    <button type="button" class="btn-action modal-close-btn">Cancelar</button>
+                    <button type="button" class="btn-action modal-close-btn" style="background-color: #7f8c8d;">Cancelar</button>
                     <button type="submit" class="btn-action" style="background-color: #27ae60;">Guardar Cambios</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="previewModal" class="modal">
+        <div class="modal-content" style="max-width: 90%;">
+            <div class="modal-header">
+                <h3 id="previewTitle">Previsualización de Archivo</h3>
+                <button class="close-modal preview-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="previewBody" style="overflow-x: auto; max-height: 60vh;">
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-action modal-close-btn preview-close-btn" style="background-color: #7f8c8d;">Cerrar</button>
+            </div>
         </div>
     </div>
 

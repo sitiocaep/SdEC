@@ -1034,11 +1034,56 @@ def admin():
     users = get_all_users()
     stats = get_user_stats()
     
+    # --- NUEVA LÓGICA: Obtener información de los archivos ---
+    ALLOWED_CSVS = ['cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
+    files_info = []
+    
+    for f in ALLOWED_CSVS:
+        if os.path.exists(f):
+            size = os.path.getsize(f) / 1024 # Convertir a KB
+            mtime = os.path.getmtime(f)
+            mod_time = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M:%S')
+            files_info.append({'name': f, 'size': f"{size:.2f} KB", 'modified': mod_time, 'exists': True})
+        else:
+            files_info.append({'name': f, 'size': "0 KB", 'modified': "No existe", 'exists': False})
+    
     return render_template('admin.html', 
                          fullname=session.get('fullname'),
                          users=users,
                          stats=stats,
-                         total_users=stats['total'])
+                         total_users=stats['total'],
+                         files_info=files_info) # <--- Enviamos la variable a la vista
+
+# --- NUEVA RUTA PARA PREVISUALIZAR ARCHIVOS ---
+@app.route('/api/admin/preview-file/<filename>')
+def preview_file(filename):
+    if not session.get('logged_in') or not is_admin_user():
+        return jsonify({'success': False, 'message': 'No autorizado'}), 403
+        
+    ALLOWED_CSVS = ['cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
+    if filename not in ALLOWED_CSVS:
+        return jsonify({'success': False, 'message': 'Archivo no permitido'})
+        
+    if not os.path.exists(filename):
+        return jsonify({'success': False, 'message': 'El archivo no existe'})
+        
+    try:
+        # ¡LÍMITE ELIMINADO! Ya no usamos nrows=10, leemos todo el archivo
+        df = pd.read_csv(filename, encoding='utf-8')
+    except:
+        try:
+            df = pd.read_csv(filename, encoding='latin-1')
+        except Exception as e:
+            return jsonify({'success': False, 'message': f'Error leyendo archivo: {str(e)}'})
+            
+    # Limpiamos campos vacíos (NaN) para que la tabla se vea estética
+    df = df.fillna('')
+            
+    # Forzamos a Pandas a renderizar TODAS las filas y columnas en el HTML
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.max_colwidth', None):
+        html_table = df.to_html(classes='preview-table', index=False, border=0)
+        
+    return jsonify({'success': True, 'html': html_table})
 
 @app.route('/api/user/<folio>')
 def get_user_details(folio):
@@ -1129,6 +1174,69 @@ def update_user(folio):
         print(f"Error al actualizar usuario: {e}")
         return jsonify({'success': False, 'message': 'Error del servidor'}), 500
 
+# --- RUTAS DE GESTIÓN DE ARCHIVOS CSV ---
+
+# Lista de archivos permitidos por seguridad (para evitar que descarguen app.py o certificados)
+ALLOWED_CSVS = ['cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
+
+@app.route('/api/admin/export-file/<filename>')
+def export_specific_file(filename):
+    if not session.get('logged_in'):
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+    
+    if not is_admin_user():
+        return jsonify({'success': False, 'message': 'Acceso denegado'}), 403
+        
+    if filename not in ALLOWED_CSVS:
+        return jsonify({'success': False, 'message': 'Archivo no permitido'}), 400
+        
+    if not os.path.exists(filename):
+        return jsonify({'success': False, 'message': 'El archivo no existe en el servidor'}), 404
+        
+    try:
+        # download_name asegura que se descargue con el mismo nombre original
+        return send_file(filename, as_attachment=True, download_name=filename)
+    except Exception as e:
+        print(f"Error al exportar {filename}: {e}")
+        return jsonify({'success': False, 'message': 'Error al exportar el archivo'}), 500
+
+@app.route('/api/admin/import-file/<filename>', methods=['POST'])
+def import_specific_file(filename):
+    if not session.get('logged_in'):
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+    
+    if not is_admin_user():
+        return jsonify({'success': False, 'message': 'Acceso denegado'}), 403
+        
+    if filename not in ALLOWED_CSVS:
+        return jsonify({'success': False, 'message': 'Archivo no permitido'}), 400
+        
+    try:
+        if 'file' not in request.files:
+            return jsonify({'success': False, 'message': 'No se encontró el archivo'}), 400
+            
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'success': False, 'message': 'No se seleccionó ningún archivo'}), 400
+            
+        if not file.filename.endswith('.csv'):
+            return jsonify({'success': False, 'message': 'El archivo debe ser un formato CSV'}), 400
+            
+        # Opcional pero recomendado: Crear un respaldo del archivo anterior
+        if os.path.exists(filename):
+            import shutil
+            backup_path = f"{filename}.backup_{get_now_mexico().strftime('%Y%m%d_%H%M%S')}"
+            shutil.copy2(filename, backup_path)
+            
+        # Sobrescribir el archivo en la carpeta raíz
+        file.save(filename)
+        
+        return jsonify({'success': True, 'message': f'Archivo {filename} actualizado exitosamente.'})
+        
+    except Exception as e:
+        print(f"Error al importar {filename}: {e}")
+        return jsonify({'success': False, 'message': f'Error al importar: {str(e)}'}), 500
+
 @app.route('/api/admin/export-users')
 def export_users():
     if not session.get('logged_in'):
@@ -1142,7 +1250,7 @@ def export_users():
             USERS_CSV,
             mimetype='text/csv',
             as_attachment=True,
-            download_name=f'usuarios_export_{get_now_mexico().strftime("%Y%m%d_%H%M%S")}.csv'
+            download_name='users.csv'
         )
     except Exception as e:
         print(f"Error al exportar usuarios: {e}")
