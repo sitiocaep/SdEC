@@ -27,7 +27,6 @@ body {
     transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
 }
 
-/* El resto del CSS sigue igual... */
 /* Barra superior con botones */
 .top-bar {
     display: flex;
@@ -113,12 +112,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* Se elimina overflow-y: auto para que el body controle el scroll */
     padding: 20px;
 }
 
 .content-section {
-    /* max-width: 1000px; */ 
     width: 100%;
 }
 
@@ -209,12 +206,11 @@ body {
     color: #333;
 }
 
-/* === ESTILO PARA CONTADOR DE BAÑO (AÑADIDO) === */
 #bathroom-countdown {
-    display: none; /* Oculto por defecto */
+    display: none; 
     font-size: 15px;
     font-weight: bold;
-    color: #f39c12; /* Naranja */
+    color: #f39c12; 
     margin-top: 5px;
 }
 
@@ -326,7 +322,6 @@ body {
     border-bottom: 1px solid #e9ecef;
 }
 
-/* Ocultamos el número de pregunta en el contenido */
 .question-number {
     display: none;
 }
@@ -439,7 +434,6 @@ body {
     gap: 10px;
 }
 
-/* Estados de preguntas */
 .question-status.review {
     color: #e74c3c;
     font-weight: 600;
@@ -524,7 +518,6 @@ body {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-/* Estados de la barra de volumen */
 .volume-level.low {
     background: linear-gradient(90deg, #27ae60, #2ecc71);
 }
@@ -556,10 +549,7 @@ body {
     object-fit: cover;
 }
 
-
-/* === INICIO: ESTILOS DE NOTIFICACIÓN (AÑADIDOS) === */
-
-/* Estilos para mensajes de alerta */
+/* ESTILOS DE NOTIFICACIÓN */
 .message-alert {
     position: fixed;
     top: 20px;
@@ -574,23 +564,10 @@ body {
     word-wrap: break-word;
 }
 
-/* Clases de color para alertas */
-.alert-info {
-    background-color: #3498db; /* Azul */
-}
-
-.alert-warning {
-    background-color: #f39c12; /* Naranja/Amarillo */
-}
-
-.alert-success {
-    background-color: #27ae60; /* Verde */
-}
-
-.alert-danger {
-    background-color: #e74c3c; /* Rojo */
-}
-
+.alert-info { background-color: #3498db; }
+.alert-warning { background-color: #f39c12; }
+.alert-success { background-color: #27ae60; }
+.alert-danger { background-color: #e74c3c; }
 
 @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
@@ -601,9 +578,6 @@ body {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(100%); opacity: 0; }
 }
-
-/* === FIN: ESTILOS DE NOTIFICACIÓN === */
-
 
 /* Media Queries para Responsividad */
 @media (max-width: 768px) {
@@ -659,7 +633,6 @@ body {
     }
     
     .nav-item {
-        /* width: 23px; */ 
         min-width: 23px; 
         height: 23px; 
         font-size: 9px; 
@@ -682,7 +655,6 @@ body {
     }
     
     .question-navigation .nav-btn {
-        /* width: 100%; */ 
         justify-content: center;
         margin-bottom: 10px;
     }
@@ -719,7 +691,6 @@ body {
         min-width: 28px;
     }
 
-    /* Media Queries para alertas en móviles (AÑADIDO) */
     .message-alert {
         top: 15px;
         right: 15px;
@@ -770,7 +741,6 @@ body {
     }
     
     .nav-item {
-        /* width: 20px; */ 
         min-width: 20px; 
         height: 20px; 
         font-size: 8px; 
@@ -815,7 +785,6 @@ body {
         min-width: 25px;
     }
 
-    /* Media Queries para alertas en móviles (AÑADIDO) */
     .message-alert {
         top: 10px;
         right: 10px;
@@ -828,9 +797,6 @@ body {
 /* ==========================================================================
    NUEVOS ESTILOS DE SEGURIDAD (PANTALLA COMPLETA Y BLOQUEO)
    ========================================================================== */
-
-/* 1. Cortina negra absoluta (Anti-Trampas / Anti-Captura) */
-/* Se activa cuando el usuario cambia de pestaña o pierde el foco */
 #blackout-curtain {
     display: none;
     position: fixed;
@@ -839,11 +805,9 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: #000;
-    z-index: 10000; /* Z-index máximo para tapar todo */
+    z-index: 10000; 
 }
 
-/* 2. Overlay de Modo Seguro (Pausa / Inicio) */
-/* Obliga a usar pantalla completa */
 #security-overlay {
     display: flex;
     flex-direction: column;
@@ -854,8 +818,8 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.95); /* Fondo oscuro casi opaco */
-    z-index: 9999; /* Debajo de la cortina negra, pero encima del examen */
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
     color: white;
     text-align: center;
     padding: 20px;
@@ -877,7 +841,6 @@ body {
     color: #ecf0f1;
 }
 
-/* Botón grande para iniciar/reanudar el examen */
 .btn-secure-start {
     padding: 20px 50px;
     font-size: 1.5rem;
@@ -903,26 +866,21 @@ body {
     100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
 }
 
-/* 3. Efecto borroso para el contenido del examen */
-/* Se aplica al contenedor principal cuando hay una alerta de seguridad */
 .content-blur {
     filter: blur(15px) grayscale(100%);
-    pointer-events: none; /* Evita clics */
-    user-select: none;    /* Evita selección de texto */
+    pointer-events: none; 
+    user-select: none;    
 }
 
 /* ==========================================================================
    FIX: CORRECCIÓN PANTALLA COMPLETA EN MÓVILES
    ========================================================================== */
-
-/* 1. Forzar fondo blanco y scroll cuando el elemento está en fullscreen */
 :fullscreen {
     background-color: #ffffff !important;
-    overflow-y: auto !important; /* Habilita el scroll */
+    overflow-y: auto !important; 
     overflow-x: hidden !important;
 }
 
-/* Soporte para Safari/iOS y Chrome antiguos */
 :-webkit-full-screen {
     background-color: #ffffff !important;
     overflow-y: auto !important;
@@ -930,25 +888,69 @@ body {
     height: 100% !important;
 }
 
-/* El fondo detrás del elemento fullscreen (a veces se ve negro al hacer rebote de scroll) */
 ::backdrop {
     background-color: #ffffff !important;
 }
 
-/* 2. Ajustar el contenedor principal dentro del modo fullscreen */
 :fullscreen .exam-container, 
 :-webkit-full-screen .exam-container {
     width: 100% !important;
     min-height: 100% !important;
     height: auto !important;
-    /* Desactivar transformaciones (zoom) en fullscreen móvil para evitar que el contenido se salga */
     transform: none !important; 
     margin: 0 !important;
 }
 
-/* 3. Asegurar que la cortina negra no se quede pegada por error de z-index */
 :fullscreen #blackout-curtain {
-    /* Nos aseguramos que siga siendo visible si se activa, 
-       pero el JS controlará su display */
     z-index: 2147483647 !important; 
+}
+
+/* ==========================================================================
+   MODALES PERSONALIZADOS (ESTILO ESCUELAS)
+   ========================================================================== */
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 2147483647; /* Máximo z-index posible para tapar el blackout */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeInModal 0.3s ease-out;
+}
+
+.modal-content h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.modal-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-success { background-color: #27ae60; color: white; font-size: 16px; padding: 10px 20px; }
+.btn-success:hover { background-color: #219653; }
+.btn-cancel { background-color: #e74c3c; color: white; font-size: 16px; padding: 10px 20px;}
+.btn-cancel:hover { background-color: #c0392b; }
+
+@keyframes fadeInModal { 
+    from { opacity: 0; transform: scale(0.9); } 
+    to { opacity: 1; transform: scale(1); } 
 }

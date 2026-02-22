@@ -109,15 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function blockKeyboard(e) {
-        // Esta función actúa como respaldo para bloquear teclas si la API keyboard.lock falla
-        
-        // Permitimos ESC solo si el navegador lo usa para salir de Fullscreen (lo detectaremos en checkFullScreen)
-        // Pero tratamos de bloquear todo lo demás.
         if (e.key === 'Escape') {
             return; 
         }
 
-        // Bloquear teclas de función, recarga y navegación
         if (e.key.startsWith('F') || e.ctrlKey || e.altKey || e.metaKey) {
             e.preventDefault();
             e.stopPropagation();
@@ -126,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleVisibilityChange() {
-        // FIX: Si estamos en transición a fullscreen, ignorar este evento
         if (window.isSwitchingToFullscreen) return; 
 
         if (document.hidden) {
@@ -140,36 +134,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleFocusLoss() {
-        // FIX: Si estamos en transición a fullscreen, ignorar este evento
         if (window.isSwitchingToFullscreen) return;
 
-        // Usuario dio clic fuera o abrió otra app
         blackoutCurtain.style.display = 'block';
         if (mainContainer) mainContainer.classList.add('content-blur');
     }
 
     function handleFocusGain() {
-        // Regresó el foco a la ventana
         blackoutCurtain.style.display = 'none';
         if (mainContainer) mainContainer.classList.remove('content-blur');
         
-        // Forzar foco en la ventana para recuperar control de teclado
         window.focus();
     }
 
     function checkFullScreen() {
-        // Monitor de estado: Si document.fullscreenElement es null, el usuario logró salir
         if (!document.fullscreenElement && !document.webkitFullscreenElement) {
             
-            // Re-activar overlay de bloqueo (Pausa forzada)
             securityOverlay.style.display = 'flex';
             
-            // Liberar el teclado si estaba bloqueado para que puedan escribir si es necesario
             if ('keyboard' in navigator && 'unlock' in navigator.keyboard) {
                 navigator.keyboard.unlock();
             }
 
-            // Mostrar mensaje de alerta agresivo
             securityOverlay.innerHTML = `
                 <i class="fas fa-exclamation-triangle" style="font-size: 5rem; margin-bottom: 20px; color: #e74c3c;"></i>
                 <h2>ALERTA DE SEGURIDAD</h2>
@@ -185,9 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
             
-            // Reasignar eventos a los botones dinámicos
             document.getElementById('btn-resume-secure').addEventListener('click', () => {
-                enableSecureMode(); // Volver a intentar bloquear todo
+                enableSecureMode(); 
             });
             
             document.getElementById('btn-exit-exam-escape').addEventListener('click', () => {
@@ -195,19 +180,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
         } else {
-            // SI ESTAMOS EN PANTALLA COMPLETA:
-            // Ocultar overlay
             securityOverlay.style.display = 'none';
-            // Forzamos el foco para atrapar el teclado
             window.focus();
         }
     }
 
-
     // ==========================================
     // 4. GUARDADO AUTOMÁTICO (LOCALSTORAGE)
     // ==========================================
-    // La clave es única por materia + fecha + horario (definido en examId en el HTML)
     const uniqueExamId = window.examConfig.examId || 'default';
     const STORAGE_KEY = 'exam_backup_' + window.location.search + '_' + uniqueExamId;
 
@@ -219,10 +199,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const progressData = {
             answers: answers,
-            currentQuestion: currentQuestion, // Guardamos en qué pregunta iba
+            currentQuestion: currentQuestion,
             bathroomBreakUsed: bathroomBreakUsed,
             timestamp: new Date().getTime()
-            // NOTA: NO guardamos timeLeft. Respetamos siempre el reloj del servidor.
         };
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData));
@@ -230,18 +209,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadProgress() {
         const savedData = localStorage.getItem(STORAGE_KEY);
-        // Si cambió el horario/fecha en la base de datos, savedData será null (clave nueva)
         if (!savedData) return;
 
         try {
             const data = JSON.parse(savedData);
             
-            // Restaurar pregunta actual
             if (typeof data.currentQuestion !== 'undefined') {
                 currentQuestion = data.currentQuestion;
             }
 
-            // Restaurar estado del baño
             if (data.bathroomBreakUsed) {
                 bathroomBreakUsed = true;
                 if (bathroomLink) {
@@ -251,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // Restaurar respuestas
             const answers = data.answers || {};
             let restoredCount = 0;
 
@@ -259,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
                 if (radio) {
                     radio.checked = true;
-                    // Actualizar lógica visual (barra verde)
                     const qNum = parseInt(name.split('-')[1]);
                     if (!isNaN(qNum)) {
                         answeredQuestions.add(qNum);
@@ -308,16 +282,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // 5. INICIALIZACIÓN DEL EXAMEN
     // ==========================================
     function initExam() {
-        // Cargar datos previos (si coincide la fecha/hora)
         loadProgress(); 
-        
         showQuestion(currentQuestion);
         
-        // Verificar tiempo real del servidor
         if (timeLeft <= 0) {
             if (countdownElement) countdownElement.textContent = "¡Tiempo agotado!";
-            alert('El tiempo del examen ha finalizado según el horario del servidor.');
-            submitExam();
+            showAlert("¡Tiempo Agotado!", "El tiempo del examen ha finalizado según el horario del servidor.", 0)
+            .then(() => {
+                submitExam();
+            });
             return;
         }
 
@@ -326,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setupNavBar();
         setupAnswerEvents();
         setupZoom();
-        initCamera(); // Iniciar cámara
+        initCamera(); 
     }
 
     // ==========================================
@@ -349,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // --- NUEVA LÓGICA DE CLIC BOTÓN SIGUIENTE / FINALIZAR ---
+        // --- LÓGICA DE CLIC BOTÓN SIGUIENTE / FINALIZAR ---
         nextBtn.addEventListener('click', () => { 
             if (currentQuestion < totalQuestions) {
                 currentQuestion++;
@@ -401,7 +374,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupAnswerEvents() {
-        // A. Evento nativo del radio button
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const questionNumber = parseInt(this.name.split('-')[1]);
@@ -425,16 +397,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // B. Evento clic en el contenedor (MEJORA UX)
         document.querySelectorAll('.answer-option').forEach(option => {
             option.addEventListener('click', function(e) {
-                // Si el clic fue directo en el input o label, dejar que el navegador actúe
                 if (e.target.type === 'radio' || e.target.tagName === 'LABEL') return;
 
                 const radio = this.querySelector('input[type="radio"]');
                 if (radio && !radio.checked) {
                     radio.checked = true;
-                    // Forzar el evento change manualmente
                     radio.dispatchEvent(new Event('change'));
                 }
             });
@@ -478,10 +447,10 @@ document.addEventListener('DOMContentLoaded', function() {
         reviewBtn.style.opacity = reviewBtn.disabled ? '0.5' : '1';
         reviewBtn.style.cursor = reviewBtn.disabled ? 'not-allowed' : 'pointer';
         
-        // --- NUEVA LÓGICA BOTÓN SIGUIENTE / FINALIZAR ---
+        // --- LÓGICA BOTÓN SIGUIENTE / FINALIZAR ---
         if (currentQuestion === totalQuestions && totalQuestions > 0) {
             nextBtn.textContent = 'FINALIZAR';
-            nextBtn.style.backgroundColor = '#27ae60'; // Color verde
+            nextBtn.style.backgroundColor = '#27ae60'; 
             nextBtn.style.color = 'white';
             nextBtn.style.borderColor = '#27ae60';
             nextBtn.disabled = false;
@@ -489,15 +458,82 @@ document.addEventListener('DOMContentLoaded', function() {
             nextBtn.style.cursor = 'pointer';
         } else {
             nextBtn.textContent = 'SIGUIENTE';
-            nextBtn.style.backgroundColor = ''; // Restaura el estilo original
+            nextBtn.style.backgroundColor = ''; 
             nextBtn.style.color = '';
             nextBtn.style.borderColor = '';
             
-            // Desactiva solo si hay un error y se pasa del total
             nextBtn.disabled = currentQuestion > totalQuestions;
             nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
             nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
         }
+    }
+
+    // ==========================================
+    // 6.5. MODALES PERSONALIZADOS (REEMPLAZAN ALERT/CONFIRM)
+    // ==========================================
+    function showConfirm(title, message) {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('custom-confirm-modal');
+            document.getElementById('confirm-modal-title').innerHTML = `<i class="fas fa-question-circle"></i> ${title}`;
+            document.getElementById('confirm-modal-message').innerHTML = message;
+            modal.style.display = 'flex'; 
+
+            const btnOk = document.getElementById('confirm-modal-ok');
+            const btnCancel = document.getElementById('confirm-modal-cancel');
+
+            const cleanup = () => {
+                btnOk.replaceWith(btnOk.cloneNode(true));
+                btnCancel.replaceWith(btnCancel.cloneNode(true));
+                modal.style.display = 'none';
+            };
+
+            document.getElementById('confirm-modal-ok').addEventListener('click', () => {
+                cleanup(); resolve(true);
+            });
+            document.getElementById('confirm-modal-cancel').addEventListener('click', () => {
+                cleanup(); resolve(false);
+            });
+        });
+    }
+
+    function showAlert(title, message, countdownSeconds = 0) {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('custom-alert-modal');
+            document.getElementById('alert-modal-title').innerHTML = title.includes("Error") || title.includes("Agotado") ? `<i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i> ${title}` : `<i class="fas fa-check-circle" style="color: #27ae60;"></i> ${title}`;
+            document.getElementById('alert-modal-message').innerHTML = message;
+            
+            const btnOk = document.getElementById('alert-modal-ok');
+            const countdownEl = document.getElementById('alert-modal-countdown');
+            modal.style.display = 'flex';
+
+            if (countdownSeconds > 0) {
+                btnOk.style.display = 'none';
+                countdownEl.style.display = 'block';
+                countdownEl.textContent = countdownSeconds;
+                
+                let secondsLeft = countdownSeconds;
+                const interval = setInterval(() => {
+                    secondsLeft--;
+                    countdownEl.textContent = secondsLeft;
+                    if (secondsLeft <= 0) {
+                        clearInterval(interval);
+                        modal.style.display = 'none';
+                        resolve(); 
+                    }
+                }, 1000);
+            } else {
+                btnOk.style.display = 'inline-flex';
+                countdownEl.style.display = 'none';
+                
+                const cleanup = () => {
+                    btnOk.replaceWith(btnOk.cloneNode(true));
+                    modal.style.display = 'none';
+                };
+                document.getElementById('alert-modal-ok').addEventListener('click', () => {
+                    cleanup(); resolve();
+                });
+            }
+        });
     }
 
     // ==========================================
@@ -523,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
             timeLeft--;
 
             if (timeLeft % 5 === 0) {
-                saveProgress(); // Autoguardado periódico
+                saveProgress(); 
             }
 
             if (timeLeft <= 0) {
@@ -531,23 +567,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateDisplay();
                 if (countdownElement) countdownElement.textContent = "¡Tiempo agotado!";
                 
-                setTimeout(() => {
-                    alert('¡Tiempo agotado! El examen se enviará automáticamente.');
+                showAlert("¡Tiempo Agotado!", "El tiempo de tu examen ha finalizado. Tus respuestas se enviarán automáticamente.", 0)
+                .then(() => {
                     submitExam();
-                }, 100);
+                });
                 return;
             }
             updateDisplay();
         }, 1000);
     }
 
-    function finishExam() {
+    async function finishExam() {
         const unanswered = totalQuestions - answeredQuestions.size;
         const msg = unanswered > 0 
-            ? `Tienes ${unanswered} pregunta(s) sin responder. ¿Seguro que deseas finalizar?` 
-            : '¿Seguro que deseas finalizar el examen?';
+            ? `Tienes <strong>${unanswered}</strong> pregunta(s) sin responder.<br><br>¿Seguro que deseas finalizar?` 
+            : '¿Seguro que deseas finalizar el examen de forma anticipada?';
         
-        if (confirm(msg)) {
+        const confirmed = await showConfirm("Finalizar Examen", msg);
+        
+        if (confirmed) {
             submitExam();
         }
     }
@@ -555,20 +593,22 @@ document.addEventListener('DOMContentLoaded', function() {
     function submitExam() {
         console.log('Enviando examen...');
         
-        // Recopilar todas las respuestas
+        document.getElementById('custom-alert-modal').style.display = 'flex';
+        document.getElementById('alert-modal-title').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Guardando`;
+        document.getElementById('alert-modal-message').innerHTML = 'Por favor espera...';
+        document.getElementById('alert-modal-ok').style.display = 'none';
+        document.getElementById('alert-modal-countdown').style.display = 'none';
+        
         const respuestas = {};
         document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-            const name = radio.name; // "question-1"
-            const questionNumber = name.split('-')[1]; // "1"
+            const name = radio.name; 
+            const questionNumber = name.split('-')[1]; 
             respuestas[questionNumber] = radio.value;
         });
 
-        // Enviar respuestas al servidor
         fetch('/api/save-exam-results', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 folio: window.examConfig.folio,
                 curso: window.examConfig.curso,
@@ -578,37 +618,47 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            document.getElementById('custom-alert-modal').style.display = 'none';
+
             if (data.success) {
                 console.log('Resultados guardados en el servidor');
-                // Limpiar localStorage después de enviar exitosamente
                 clearProgress();
                 stopCamera();
-                alert('Examen enviado correctamente. Redirigiendo al inicio...');
-                window.location.href = '/launcher';
+                
+                showAlert("¡Examen Terminado!", "Resultados enviados correctamente. Redirigiendo al inicio...", 5)
+                .then(() => {
+                    window.location.href = '/launcher';
+                });
+
             } else {
                 console.error('Error al guardar resultados:', data.message);
-                // Preguntar si quiere intentar de nuevo
-                if (confirm('Error al guardar resultados. ¿Quieres intentar enviar de nuevo?')) {
+                showConfirm("Error al Guardar", "Ocurrió un error al guardar los resultados. ¿Quieres intentar enviar de nuevo?")
+                .then((retry) => {
+                    if (retry) {
+                        submitExam();
+                    } else {
+                        clearProgress();
+                        stopCamera();
+                        showAlert("Aviso", "Examen finalizado, pero hubo problemas. Contacta a tu administrador.", 3)
+                        .then(() => { window.location.href = '/launcher'; });
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            document.getElementById('custom-alert-modal').style.display = 'none';
+            console.error('Error al enviar resultados:', error);
+            showConfirm("Error de Conexión", "No se pudo conectar con el servidor. ¿Quieres intentar enviar de nuevo?")
+            .then((retry) => {
+                if (retry) {
                     submitExam();
                 } else {
                     clearProgress();
                     stopCamera();
-                    alert('Examen enviado, pero hubo un problema al guardar los resultados. Contacta al administrador.');
-                    window.location.href = '/launcher';
+                    showAlert("Aviso", "Examen finalizado sin conexión. Contacta a tu administrador.", 3)
+                    .then(() => { window.location.href = '/launcher'; });
                 }
-            }
-        })
-        .catch(error => {
-            console.error('Error al enviar resultados:', error);
-            // Preguntar si quiere intentar de nuevo
-            if (confirm('Error de conexión. ¿Quieres intentar enviar de nuevo?')) {
-                submitExam();
-            } else {
-                clearProgress();
-                stopCamera();
-                alert('Examen enviado, pero hubo un problema de conexión. Contacta al administrador.');
-                window.location.href = '/launcher';
-            }
+            });
         });
     }
 
@@ -641,7 +691,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function toggleBathroomBreak() {
         if (onBathroomBreak) {
-            // Regreso
             onBathroomBreak = false;
             bathroomLink.textContent = 'Permiso de baño utilizado'; 
             bathroomLink.style.opacity = '0.6';
@@ -651,7 +700,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Has regresado del baño. Continúa tu examen.', 'alert-info', 3000);
             saveProgress(); 
         } else {
-            // Salida
             if (bathroomBreakUsed) {
                 showNotification('Ya has utilizado tu único permiso para ir al baño.', 'alert-warning', 4000);
                 return;
@@ -813,7 +861,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mainContainer) mainContainer.classList.remove('content-blur');
         
         console.log("Modo Admin detectado: Seguridad y bloqueos desactivados.");
-        initExam(); // Iniciamos el examen sin pasar por enableSecureMode()
+        initExam(); 
         
     } else {
         // A. Eventos de SEGURIDAD (Solo para estudiantes)
@@ -821,26 +869,19 @@ document.addEventListener('DOMContentLoaded', function() {
             startSecureBtn.addEventListener('click', enableSecureMode);
         }
 
-        // Bloqueo de teclado general (Event fallback)
         document.addEventListener('keydown', blockKeyboard, true);
-
-        // Bloqueo de click derecho (Context Menu)
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Bloqueo de copiar/pegar
         document.addEventListener('copy', e => e.preventDefault());
         document.addEventListener('cut', e => e.preventDefault());
         document.addEventListener('paste', e => e.preventDefault());
         document.addEventListener('selectstart', e => e.preventDefault());
 
-        // Detección de cambio de pestaña
         document.addEventListener('visibilitychange', handleVisibilityChange);
 
-        // Detección de pérdida de foco (Anti-Captura / Alt+Tab)
         window.addEventListener('blur', handleFocusLoss);
         window.addEventListener('focus', handleFocusGain);
 
-        // Monitor de Pantalla Completa
         document.addEventListener('fullscreenchange', checkFullScreen);
         document.addEventListener('webkitfullscreenchange', checkFullScreen);
     }
