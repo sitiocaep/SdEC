@@ -27,33 +27,39 @@
         </div>
 
         <div class="content-area">
-            <div class="content-section" style="max-width: 1400px;"> <h1>RESULTADOS - <span id="materia-title">{{ materia }}</span></h1>
+            <div class="content-section" style="max-width: 1400px;">
+                
+                <h1>RESULTADOS - <span id="materia-title">{{ materia }}</span></h1>
 
                 <div class="selection-container results-split-layout">
                     
                     <div class="summary-panel option-card">
-                        <h3 class="panel-title">Resumen de Examen</h3>
+                        <h3 class="panel-title">Filtros de Revisión</h3>
                         
                         <div class="chart-container">
                             <canvas id="resultsChart"></canvas>
                         </div>
                         
                         <div class="stats-list">
-                            <div class="stat-item correct">
+                            <div class="stat-item filter-btn total active-filter" data-filter="all">
+                                <span>Total de preguntas</span>
+                                <strong id="count-total">0</strong>
+                            </div>
+                            <div class="stat-item filter-btn correct" data-filter="correcta">
                                 <span>Correctas</span>
                                 <strong id="count-correct">0</strong>
                             </div>
-                            <div class="stat-item incorrect">
+                            <div class="stat-item filter-btn incorrect" data-filter="incorrecta">
                                 <span>Incorrectas</span>
                                 <strong id="count-incorrect">0</strong>
                             </div>
-                            <div class="stat-item unanswered">
+                            <div class="stat-item filter-btn unanswered" data-filter="sin_responder">
                                 <span>Sin responder</span>
                                 <strong id="count-unanswered">0</strong>
                             </div>
                         </div>
 
-                        <div class="score-circle">
+                        <div class="score-circle" style="margin-top: 10px;">
                             <span class="score-label">CALIFICACIÓN</span>
                             <span id="score-number">0.0</span>
                         </div>

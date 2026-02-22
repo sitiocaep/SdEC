@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const materia = window.resultsConfig.materia;
     const chartCtx = document.getElementById('resultsChart').getContext('2d');
     
-    // Variable global para almacenar las preguntas y poder navegar
     let globalQuestions = [];
+    let currentFilter = 'all'; // Filtro actual (all, correcta, incorrecta, sin_responder)
 
     // --- Cargar Datos ---
     fetch(`/api/get-exam-results?materia=${encodeURIComponent(materia)}`)
@@ -13,9 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             if (!data.success) throw new Error(data.message);
+            // Guardamos las preguntas con su índice original para no perder la referencia al filtrar
+            globalQuestions = data.details.map((q, idx) => ({ ...q, originalIndex: idx }));
+            
             renderSummary(data.summary);
             renderChart(data.summary);
-            renderNavigation(data.details); // Renderiza la barra de botones
+            setupFilters();
+            renderNavigation(); // Renderiza la barra inicial (Todas)
         })
         .catch(err => {
             console.error(err);
@@ -28,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Renderizado del Resumen ---
     function renderSummary(summary) {
         document.getElementById('score-number').textContent = summary.calificacion;
+        document.getElementById('count-total').textContent = summary.total;
         document.getElementById('count-correct').textContent = summary.correctas;
         document.getElementById('count-incorrect').textContent = summary.incorrectas;
         document.getElementById('count-unanswered').textContent = summary.sin_responder;
@@ -49,23 +54,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false } // Oculto leyenda para un look más limpio como tu boceto
+                    legend: { display: false } 
                 },
-                cutout: '65%' // Qué tan grueso es el anillo
+                cutout: '65%' 
             }
         });
     }
 
-    // --- Renderizado de la barra de navegación ---
-    function renderNavigation(details) {
-        globalQuestions = details;
+    // --- Configurar los clics de los Filtros ---
+    function setupFilters() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Quitar clase activa a todos
+                filterBtns.forEach(b => b.classList.remove('active-filter'));
+                // Poner clase activa al clickeado
+                this.classList.add('active-filter');
+                
+                // Actualizar la variable de filtro
+                currentFilter = this.getAttribute('data-filter');
+                
+                // Re-renderizar la botonera derecha
+                renderNavigation();
+            });
+        });
+    }
+
+    // --- Renderizado de la barra de navegación (Aplica Filtros) ---
+    function renderNavigation() {
         const navContainer = document.getElementById('questions-nav');
         navContainer.innerHTML = ''; 
         
-        details.forEach((item, index) => {
+        // Filtrar las preguntas según el botón clickeado en la izquierda
+        const filteredQuestions = globalQuestions.filter(q => currentFilter === 'all' || q.status === currentFilter);
+
+        // Si no hay preguntas en este filtro
+        if (filteredQuestions.length === 0) {
+            navContainer.innerHTML = '<div style="color:#7f8c8d; padding:10px; width: 100%; text-align: center;">No hay preguntas en esta categoría.</div>';
+            document.getElementById('single-question-container').innerHTML = '';
+            return;
+        }
+
+        // Crear los botones
+        filteredQuestions.forEach((item) => {
             const btn = document.createElement('div');
             
-            // Asignar clase de estado (correct, incorrect, unanswered)
             let statusClass = 'unanswered';
             if(item.status === 'correcta') statusClass = 'correct';
             if(item.status === 'incorrecta') statusClass = 'incorrect';
@@ -73,29 +106,33 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.className = `nav-item ${statusClass}`;
             btn.textContent = item.numero;
             
-            // Evento click para mostrar la pregunta
-            btn.onclick = () => showQuestion(index);
+            // Usamos el originalIndex para que siempre muestre la pregunta correcta
+            btn.onclick = () => showQuestion(item.originalIndex);
+            
+            // Identificador en el DOM para poder pintar la clase active más adelante
+            btn.setAttribute('data-target-index', item.originalIndex);
             
             navContainer.appendChild(btn);
         });
 
-        // Mostrar automáticamente la pregunta 1 al cargar
-        if(details.length > 0) {
-            showQuestion(0);
-        }
+        // Mostrar automáticamente la PRIMERA pregunta de la lista filtrada
+        showQuestion(filteredQuestions[0].originalIndex);
     }
 
     // --- Mostrar una pregunta individual ---
-    function showQuestion(index) {
+    function showQuestion(originalIndex) {
         // 1. Actualizar el estado visual del botón activo en la barra
         const navButtons = document.querySelectorAll('.nav-item');
-        navButtons.forEach((btn, i) => {
-            if(i === index) btn.classList.add('active');
-            else btn.classList.remove('active');
+        navButtons.forEach(btn => {
+            if(parseInt(btn.getAttribute('data-target-index')) === originalIndex) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         });
 
         // 2. Obtener los datos de la pregunta
-        const item = globalQuestions[index];
+        const item = globalQuestions[originalIndex];
         const container = document.getElementById('single-question-container');
 
         // 3. Generar el estado de la pregunta (icono y color)

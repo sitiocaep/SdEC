@@ -128,21 +128,22 @@ body {
     display: flex;
     flex-direction: row;
     gap: 30px;
-    align-items: stretch; /* Para que ambas columnas tengan la misma altura si es posible */
+    align-items: stretch;
 }
 
-/* PANEL IZQUIERDO (Resumen) */
+/* PANEL IZQUIERDO (Resumen y Filtros) */
 .summary-panel {
     width: 35%;
     min-width: 320px;
-    align-items: center; /* Centrar todo su contenido */
-    gap: 25px;
+    align-items: center; 
+    gap: 20px;
 }
 
 .chart-container {
-    width: 220px;
-    height: 220px;
+    width: 200px;
+    height: 200px;
     position: relative;
+    margin-bottom: 10px;
 }
 
 .stats-list {
@@ -152,6 +153,7 @@ body {
     width: 100%;
 }
 
+/* ESTILOS DE LOS BOTONES DE FILTRO */
 .stat-item {
     display: flex;
     justify-content: space-between;
@@ -159,13 +161,31 @@ body {
     font-size: 15px;
     padding: 12px 20px;
     border-radius: 8px;
-    border: 1px solid #eee;
+    border: 2px solid transparent; /* Preparado para el borde del filtro activo */
     font-weight: 600;
+    cursor: pointer; /* Mano de clic */
+    transition: all 0.2s;
 }
 
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Filtro Total */
+.stat-item.total { background-color: rgba(52, 152, 219, 0.08); border-color: rgba(52, 152, 219, 0.2); color: #2980b9;}
+.stat-item.total.active-filter { border-color: #2980b9; background-color: rgba(52, 152, 219, 0.15); box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2); }
+
+/* Filtros Estatus */
 .stat-item.correct { background-color: rgba(39, 174, 96, 0.08); border-color: rgba(39, 174, 96, 0.2); color: #27ae60;}
+.stat-item.correct.active-filter { border-color: #27ae60; background-color: rgba(39, 174, 96, 0.15); box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2); }
+
 .stat-item.incorrect { background-color: rgba(231, 76, 60, 0.08); border-color: rgba(231, 76, 60, 0.2); color: #e74c3c;}
+.stat-item.incorrect.active-filter { border-color: #e74c3c; background-color: rgba(231, 76, 60, 0.15); box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2); }
+
 .stat-item.unanswered { background-color: rgba(149, 165, 166, 0.08); border-color: rgba(149, 165, 166, 0.2); color: #7f8c8d;}
+.stat-item.unanswered.active-filter { border-color: #7f8c8d; background-color: rgba(149, 165, 166, 0.15); box-shadow: 0 4px 8px rgba(149, 165, 166, 0.2); }
+
 
 .score-circle {
     display: flex;
@@ -173,21 +193,21 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 20px;
+    padding: 15px;
     background-color: #f8f9fa;
     border-radius: 8px;
     border: 2px solid #e9ecef;
 }
 
 .score-label {
-    font-size: 14px;
+    font-size: 13px;
     color: #7f8c8d;
     font-weight: 700;
     margin-bottom: 5px;
 }
 
 #score-number {
-    font-size: 48px;
+    font-size: 42px;
     font-weight: 800;
     color: #2c3e50;
     line-height: 1;
@@ -228,7 +248,6 @@ body {
 
 .nav-item:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-/* Colores de botones según estatus */
 .nav-item.correct { border-bottom: 3px solid #27ae60; }
 .nav-item.incorrect { border-bottom: 3px solid #e74c3c; }
 .nav-item.unanswered { border-bottom: 3px solid #f39c12; }
