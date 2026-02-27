@@ -260,15 +260,14 @@ body {
 .exam-logo-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Asegura que la imagen cubra todo el cuadro sin deformarse */
+    object-fit: cover; 
     display: block;
-    border-radius: 6px; /* Mantiene el radio de borde del contenedor padre */
+    border-radius: 6px; 
 }
 
-/* Ajuste opcional: Si el logo es transparente y quieres quitar el fondo azul oscuro del contenedor padre cuando hay imagen */
 .exam-logo-box:has(.exam-logo-img) {
-    background-color: transparent; /* O white, dependiendo de tu imagen */
-    box-shadow: none; /* Opcional: quita la sombra si la imagen ya tiene */
+    background-color: transparent; 
+    box-shadow: none; 
 }
 
 /* Lista de detalles (Derecha) */
@@ -444,11 +443,60 @@ body {
     to { transform: translateX(100%); opacity: 0; }
 }
 
+/* ==========================================================================
+   MODALES PERSONALIZADOS (ESTILO ESCUELAS)
+   ========================================================================== */
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 2147483647; 
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeInModal 0.3s ease-out;
+}
+
+.modal-content h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.modal-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-success { background-color: #27ae60; color: white; font-size: 16px; padding: 10px 20px; }
+.btn-success:hover { background-color: #219653; }
+.btn-cancel { background-color: #e74c3c; color: white; font-size: 16px; padding: 10px 20px;}
+.btn-cancel:hover { background-color: #c0392b; }
+
+@keyframes fadeInModal { 
+    from { opacity: 0; transform: scale(0.9); } 
+    to { opacity: 1; transform: scale(1); } 
+}
+
 /* ---------------------------------------------------- */
 /* --- MEDIA QUERIES (RESPONSIVIDAD DETALLADA) --- */
 /* ---------------------------------------------------- */
 
-/* 1. Tablets y Móviles Grandes (max 768px) */
 @media (max-width: 768px) {
     body {
         height: auto;
@@ -458,7 +506,6 @@ body {
         min-height: 100vh;
     }
 
-    /* Barra superior en columna */
     .top-bar {
         flex-direction: column;
         gap: 12px;
@@ -481,14 +528,12 @@ body {
         font-size: 20px;
     }
 
-    /* Tarjeta: Cuerpo en columna */
     .exam-card-body-new {
         flex-direction: column;
         padding: 20px;
         gap: 15px;
     }
 
-    /* Filas de detalle en columna */
     .detail-row {
         flex-direction: column;
         align-items: flex-start;
@@ -500,12 +545,11 @@ body {
     }
 
     .detail-pill {
-        width: 100%; /* Ocupa todo el ancho */
+        width: 100%;
         padding: 10px;
         font-size: 14px;
     }
     
-    /* Botones de acción en columna */
     .exam-actions-footer {
         flex-direction: column;
         gap: 10px;
@@ -521,20 +565,18 @@ body {
     }
 }
 
-/* 2. Móviles Estándar (max 480px) */
 @media (max-width: 480px) {
     .top-bar {
         padding: 8px 10px;
     }
     
-    /* Botones de navegación se ajustan al 50% */
     .nav-buttons, .action-buttons {
         flex-wrap: wrap;
         gap: 5px;
     }
     
     .btn-action, .nav-btn {
-        flex: 1 1 calc(50% - 5px); /* Ocupan la mitad cada uno */
+        flex: 1 1 calc(50% - 5px);
         min-width: 120px;
         font-size: 12px;
         padding: 7px 8px;
@@ -559,7 +601,6 @@ body {
         padding: 0 10px 20px;
     }
     
-    /* Cabecera de tarjeta compacta */
     .exam-card-header-new {
         padding: 12px 15px;
     }
@@ -573,7 +614,7 @@ body {
     }
     
     .exam-logo-box {
-        height: 80px; /* Aún más compacto */
+        height: 80px;
         font-size: 14px;
     }
     
@@ -598,9 +639,7 @@ body {
     }
 }
 
-/* 3. Dispositivos Muy Pequeños (max 360px) */
 @media (max-width: 360px) {
-    /* Botones ocupan todo el ancho */
     .btn-action, .nav-btn {
         flex: 1 1 100%;
         min-width: 0;
@@ -615,7 +654,6 @@ body {
         padding: 12px;
     }
     
-    /* Ajuste fino de tarjeta */
     .exam-card-header-new {
         flex-direction: column;
         gap: 10px;

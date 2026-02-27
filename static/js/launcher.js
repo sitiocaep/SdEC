@@ -365,3 +365,35 @@ document.addEventListener('DOMContentLoaded', function() {
         document.head.appendChild(style);
     }
 });
+
+// ==========================================
+// FUNCIÓN GLOBAL DE CONFIRMACIÓN PARA LOGOUT
+// ==========================================
+window.showConfirm = function(title, message) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('custom-confirm-modal');
+        document.getElementById('confirm-modal-title').innerHTML = `<i class="fas fa-sign-out-alt"></i> ${title}`;
+        document.getElementById('confirm-modal-message').innerHTML = message;
+        modal.style.display = 'flex'; 
+
+        const btnOk = document.getElementById('confirm-modal-ok');
+        const btnCancel = document.getElementById('confirm-modal-cancel');
+
+        // Función para limpiar los event listeners clonando los nodos
+        const cleanup = () => {
+            btnOk.replaceWith(btnOk.cloneNode(true));
+            btnCancel.replaceWith(btnCancel.cloneNode(true));
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('confirm-modal-ok').addEventListener('click', () => {
+            cleanup(); 
+            resolve(true);
+        });
+        
+        document.getElementById('confirm-modal-cancel').addEventListener('click', () => {
+            cleanup(); 
+            resolve(false);
+        });
+    });
+};
