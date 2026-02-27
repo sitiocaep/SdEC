@@ -146,7 +146,7 @@ def init_csv():
 def convert_docx_to_pdf(docx_path, pdf_path):
     """
     Convierte un archivo DOCX a PDF usando LibreOffice en modo headless.
-    Requiere que LibreOffice esté instalado y accesible en el PATH.
+    Se utiliza un perfil de usuario temporal para evitar colisiones en servidores.
     """
     try:
         # Asegurar que las rutas sean absolutas
@@ -154,24 +154,39 @@ def convert_docx_to_pdf(docx_path, pdf_path):
         pdf_abs = os.path.abspath(pdf_path)
         out_dir = os.path.dirname(pdf_abs)
 
-        # Comando para LibreOffice
-        cmd = [
-            'libreoffice',
-            '--headless',
-            '--convert-to', 'pdf',
-            '--outdir', out_dir,
-            docx_abs
-        ]
+        # Crear un directorio temporal ÚNICO para el perfil de esta ejecución
+        with tempfile.TemporaryDirectory() as tmp_profile:
+            cmd = [
+                'libreoffice',
+                f'-env:UserInstallation=file://{tmp_profile}',  # ¡La clave para que no se trabe en el servidor!
+                '--headless',
+                '--nologo',
+                '--nodefault',
+                '--nofirststartwizard',
+                '--convert-to', 'pdf',
+                '--outdir', out_dir,
+                docx_abs
+            ]
 
-        # Ejecutar el comando
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        print(f"Conversión exitosa: {docx_path} -> {pdf_path}")
-        return True
+            # Ejecutar el comando
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            
+        # Verificar si realmente se creó el archivo físico
+        if os.path.exists(pdf_abs):
+            print(f"Conversión exitosa: {docx_path} -> {pdf_path}")
+            return True
+        else:
+            print(f"Error: LibreOffice terminó pero no generó el PDF. Log: {result.stdout}")
+            return False
+
     except subprocess.CalledProcessError as e:
         print(f"Error en la conversión con LibreOffice: {e.stderr}")
         return False
     except FileNotFoundError:
         print("LibreOffice no está instalado o no está en el PATH.")
+        return False
+    except Exception as e:
+        print(f"Error inesperado al convertir PDF: {e}")
         return False
 
 def generate_random_password(length=10):
