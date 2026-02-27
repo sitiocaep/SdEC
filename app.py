@@ -1051,7 +1051,7 @@ def admin():
     stats = get_user_stats()
     
     # --- NUEVA LÓGICA: Obtener información de los archivos ---
-    ALLOWED_CSVS = ['cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
+    ALLOWED_CSVS = ['users.csv', 'cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
     files_info = []
     
     for f in ALLOWED_CSVS:
@@ -1076,7 +1076,7 @@ def preview_file(filename):
     if not session.get('logged_in') or not is_admin_user():
         return jsonify({'success': False, 'message': 'No autorizado'}), 403
         
-    ALLOWED_CSVS = ['cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
+    ALLOWED_CSVS = ['users.csv', 'cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
     if filename not in ALLOWED_CSVS:
         return jsonify({'success': False, 'message': 'Archivo no permitido'})
         
@@ -1193,7 +1193,7 @@ def update_user(folio):
 # --- RUTAS DE GESTIÓN DE ARCHIVOS CSV ---
 
 # Lista de archivos permitidos por seguridad (para evitar que descarguen app.py o certificados)
-ALLOWED_CSVS = ['cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
+ALLOWED_CSVS = ['users.csv', 'cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
 
 @app.route('/api/admin/export-file/<filename>')
 def export_specific_file(filename):
