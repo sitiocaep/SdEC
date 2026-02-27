@@ -1800,7 +1800,7 @@ if __name__ == '__main__':
         print("Recarga en tiempo real ACTIVADA. Solo para programar.")
         app.run(host='0.0.0.0', port=8000, debug=True, ssl_context=ctx)
         
-    # ==========================================
+# ==========================================
     # MODO EXAMEN (Para los usuarios)
     # Ejecutar con: python3 app.py
     # ==========================================
@@ -1809,9 +1809,11 @@ if __name__ == '__main__':
         print("Workers ACTIVADOS. Recarga desactivada para máximo rendimiento.")
         cmd = [
             sys.executable, '-m', 'gunicorn',
-            '-w', '20',                
+            '-w', '3',                # ¡REDUCIDO DE 20 A 3 PARA NO SATURAR LA RAM!
             '-b', '0.0.0.0:8000',     
             '--timeout', '120',       
+            '--access-logfile', '-',  # Nos permite ver las peticiones
+            '--error-logfile', '-',   # Nos permite leer los errores de LibreOffice
             'app:app'                 
         ]
         
