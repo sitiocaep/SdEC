@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/launcher.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body data-is-admin="{{ 'true' if is_admin else 'false' }}">
     <div class="exam-container">
         <div class="top-bar">
             <div class="nav-buttons">

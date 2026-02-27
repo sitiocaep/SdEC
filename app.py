@@ -876,7 +876,8 @@ def api_courses():
 @app.route('/launcher')
 def launcher():
     if not session.get('logged_in'): return redirect(url_for('index'))
-    return render_template('launcher.html', user=session['user'], fullname=session.get('fullname'), curso=session.get('curso'))
+    is_admin = is_admin_user()
+    return render_template('launcher.html', user=session['user'], fullname=session.get('fullname'), curso=session.get('curso'), is_admin=is_admin)
 
 @app.route('/perfil')
 def perfil():

@@ -193,6 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let statusText = exam.status;
         let colorClass = 'status-not-started'; // Default
 
+        // Obtener bandera de si es Admin desde el HTML
+        const isAdmin = document.body.getAttribute('data-is-admin') === 'true';
+
         // LÓGICA 1: ¿YA SE PRESENTÓ?
         if (exam.taken) {
             statusText = "Finalizado";
@@ -208,13 +211,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     const resStr = `${exam.results_date.trim()}T${exam.results_time.trim()}`;
                     const resDateTime = new Date(resStr);
                     
-                    // --- AQUÍ ESTÁ EL CAMBIO DE FORMATO ---
-                    // Se usa " - " para separar también la hora
                     const dateFormatted = formatDatePretty(exam.results_date);
                     const timeFormatted = exam.results_time.substring(0, 5); // HH:MM
                     
                     resultDateText = `${dateFormatted} - ${timeFormatted}`;
-                    // -------------------------------------
 
                     if (!isNaN(resDateTime.getTime())) {
                         if (today >= resDateTime) {
@@ -227,9 +227,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if(viewResultsBtn) {
                 viewResultsBtn.style.display = 'flex';
                 
-                if (resultsAvailable) {
-                    // Muestra botón normal de ver resultados
-                    viewResultsBtn.textContent = "Ver Resultados";
+                // Si ya es fecha de resultados O es Administrador
+                if (resultsAvailable || isAdmin) {
+                    viewResultsBtn.textContent = (isAdmin && !resultsAvailable) ? "Ver Resultados (Admin)" : "Ver Resultados";
                     viewResultsBtn.classList.remove('disabled');
                     
                     // Redirección
@@ -239,11 +239,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     
                 } else {
-                    // Muestra botón informativo con fecha y hora separadas uniformemente
                     viewResultsBtn.textContent = `Fecha de resultados: ${resultDateText}`;
                     viewResultsBtn.classList.add('disabled');
                     viewResultsBtn.style.cursor = 'default';
-                    viewResultsBtn.style.backgroundColor = '#f39c12'; // Color ambar informativo
+                    viewResultsBtn.style.backgroundColor = '#f39c12';
                     viewResultsBtn.onclick = (e) => { e.preventDefault(); };
                 }
             }
@@ -261,7 +260,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     startExamBtn.classList.remove('disabled');
                 }
             } else if (exam.status === 'Finalizado') {
-                // Se acabó el tiempo y no lo hizo
                 statusText = "Finalizado";
                 colorClass = "status-finished";
                 
@@ -269,10 +267,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     notPresentedBtn.style.display = 'flex';
                 }
             } else {
-                // Aún no empieza
                 statusText = "Aún no empieza";
                 colorClass = "status-not-started";
-                // Ningún botón se muestra
+            }
+            
+            // --- NUEVO: SI ES ADMIN, SIEMPRE MOSTRAR BOTÓN DE RESULTADOS ---
+            if (isAdmin && viewResultsBtn) {
+                viewResultsBtn.style.display = 'flex';
+                viewResultsBtn.textContent = "Ver Resultados (Admin)";
+                viewResultsBtn.classList.remove('disabled');
+                viewResultsBtn.style.cursor = 'pointer';
+                viewResultsBtn.style.backgroundColor = ''; // Limpiar color naranja si lo tuviera
+                
+                viewResultsBtn.onclick = () => { 
+                    const materiaParam = encodeURIComponent(exam.name || exam.code);
+                    window.location.href = `/resultados?materia=${materiaParam}`; 
+                };
             }
         }
 
@@ -282,7 +292,6 @@ document.addEventListener('DOMContentLoaded', function() {
             examStatusPill.className = 'detail-pill ' + colorClass;
         }
         
-        // Sincronizar colores de Fecha y Hora con el status
         if(examDatePill) examDatePill.className = 'detail-pill ' + colorClass;
         if(examTimePill) examTimePill.className = 'detail-pill ' + colorClass;
     }
