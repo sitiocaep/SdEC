@@ -1525,11 +1525,35 @@ def examen():
         return redirect(url_for('test', next=url_for('examen', materia=materia)))
 
     try:
-        df_c = pd.read_csv(COURSES_CSV, encoding='utf-8', engine='python')
-        row = df_c[(df_c['curso'] == curso) & (df_c['materia'] == materia)].iloc[0]
+        # --- CÓDIGO CORREGIDO PARA LECTURA ROBUSTA DEL CSV ---
+        try:
+            df_c = pd.read_csv(COURSES_CSV, encoding='utf-8-sig', engine='python')
+        except:
+            df_c = pd.read_csv(COURSES_CSV, encoding='latin-1', engine='python')
+            
+        # Normalizar nombres de columnas a minúsculas y sin espacios
+        df_c.columns = df_c.columns.str.strip().str.lower()
+        
+        # Normalizar variables para búsqueda
+        curso_norm = str(curso).strip().upper()
+        materia_norm = str(materia).strip().upper()
+        
+        # Filtrar normalizando también el contenido del CSV
+        mask = (df_c['curso'].astype(str).str.strip().str.upper() == curso_norm) & \
+               (df_c['materia'].astype(str).str.strip().str.upper() == materia_norm)
+               
+        df_filtrado = df_c[mask]
+        
+        if df_filtrado.empty:
+            print(f"Examen no encontrado: curso={curso}, materia={materia}")
+            return redirect(url_for('launcher'))
+            
+        row = df_filtrado.iloc[0]
 
-        fecha_str = str(row['fecha_disponible']).strip()
-        final_str = str(row['horario_final']).strip()
+        # Extraer variables con get() seguro por si cambian de nombre
+        fecha_str = str(row.get('fecha_disponible', '')).strip()
+        final_str = str(row.get('horario_final', '')).strip()
+        inicio_str = str(row.get('horario_inicio', '')).strip()
         
         try:
             exam_date = datetime.strptime(fecha_str, '%Y-%m-%d').date()
@@ -1550,20 +1574,31 @@ def examen():
             
         details = {
             'name': f"{curso} - {materia}",
-            'date': str(row['fecha_disponible']),
-            'start_time': row['horario_inicio'],
-            'end_time': row['horario_final'],
+            'date': fecha_str,
+            'start_time': inicio_str,
+            'end_time': final_str,
             'total_seconds': int(remaining_seconds) 
         }
 
         df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
-        q_df = df_p[(df_p['Curso'] == curso) & (df_p['Materia'] == materia)].sort_values(by='Pregunta_número')
+        
+        # Normalizamos también la lectura de preguntas por seguridad
+        df_p.columns = df_p.columns.str.strip()
+        q_df = df_p[
+            (df_p['Curso'].astype(str).str.strip().str.upper() == curso_norm) & 
+            (df_p['Materia'].astype(str).str.strip().str.upper() == materia_norm)
+        ].sort_values(by='Pregunta_número')
+        
         questions = q_df.to_dict('records')
         is_admin = is_admin_user()
 
         return render_template('examen.html', fullname=session.get('fullname'), questions=questions, exam_details=details, is_admin=is_admin)
+        
     except Exception as e:
         print(f"Error cargando examen: {e}")
+        # Si tienes modo debug en terminal, esto te mostrará exactamente qué falló
+        import traceback
+        traceback.print_exc()
         return redirect(url_for('launcher'))
 
 @app.route('/api/save-exam-results', methods=['POST'])
