@@ -16,6 +16,8 @@ import base64
 import locale
 import re
 import io
+import json 
+from filelock import FileLock
 from gunicorn.app.base import BaseApplication
 import subprocess
 import signal
@@ -40,6 +42,10 @@ COURSES_CSV = 'cursos.csv'
 QUESTIONS_CSV = 'preguntas.csv'
 PUNTAJES_CSV = 'puntajes.csv'
 RESULTADOS_CSV = 'resultados.csv'
+
+# Archivos de sesión
+SESSIONS_FILE = 'active_sessions.json' 
+LOCK_FILE = 'active_sessions.lock'
 
 # --- CARPETAS ---
 PLANTILLAS_DIR = 'plantillas'
@@ -82,8 +88,62 @@ SELECCION_DIR_MAP = {
     'LICENCIATURA 2026': 'licenciatura_documento_a'
 }
 
-# Diccionario para controlar sesiones activas
-active_sessions = {}
+# --- MANEJO DE SESIONES MULTI-WORKER SEGURO ---
+
+def is_user_logged_in(email): 
+    try:
+        # Bloquea el archivo hasta 5 segundos si otro worker lo está usando
+        with FileLock(LOCK_FILE, timeout=5):
+            if not os.path.exists(SESSIONS_FILE): return False
+            with open(SESSIONS_FILE, 'r') as f:
+                sessions = json.load(f)
+            return email in sessions
+    except:
+        return False
+
+def get_user_session_id(email):
+    try:
+        with FileLock(LOCK_FILE, timeout=5):
+            if not os.path.exists(SESSIONS_FILE): return None
+            with open(SESSIONS_FILE, 'r') as f:
+                sessions = json.load(f)
+            return sessions.get(email, {}).get('session_id')
+    except:
+        return None
+
+def add_active_session(email, session_id): 
+    try:
+        with FileLock(LOCK_FILE, timeout=5):
+            sessions = {}
+            if os.path.exists(SESSIONS_FILE):
+                with open(SESSIONS_FILE, 'r') as f:
+                    try: sessions = json.load(f)
+                    except: pass
+            
+            sessions[email] = {
+                'session_id': session_id, 
+                'login_time': get_now_mexico().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            with open(SESSIONS_FILE, 'w') as f:
+                json.dump(sessions, f)
+    except Exception as e:
+        print(f"Error guardando sesión: {e}")
+
+def remove_active_session(email): 
+    try:
+        with FileLock(LOCK_FILE, timeout=5):
+            if not os.path.exists(SESSIONS_FILE): return
+            with open(SESSIONS_FILE, 'r') as f:
+                try: sessions = json.load(f)
+                except: sessions = {}
+            
+            if email in sessions: 
+                del sessions[email]
+                with open(SESSIONS_FILE, 'w') as f:
+                    json.dump(sessions, f)
+    except Exception as e:
+        print(f"Error removiendo sesión: {e}")
 
 def init_csv():
     """Inicializa archivos CSV y carpetas necesarias."""
@@ -123,7 +183,6 @@ def init_csv():
         except Exception as e:
             print(f"Error al verificar/actualizar users.csv: {e}")
     
-    # Inicializar resultados.csv si no existe
     if not os.path.exists(RESULTADOS_CSV):
         with open(RESULTADOS_CSV, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
@@ -131,6 +190,10 @@ def init_csv():
                      'Respuesta_a', 'Respuesta_b', 'Respuesta_c', 'Respuesta_d',
                      'Respuesta_seleccionada', 'Respuesta_correcta']
             writer.writerow(header)
+    
+    if not os.path.exists(SESSIONS_FILE):
+        with open(SESSIONS_FILE, 'w') as f:
+            json.dump({}, f)
     
     if not os.path.exists(PLANTILLAS_DIR): os.makedirs(PLANTILLAS_DIR)
     if not os.path.exists(REGISTROS_DIR): os.makedirs(REGISTROS_DIR)
@@ -255,11 +318,6 @@ def get_user_by_username(username):
                 if row['username'] == username: return row
     except: pass
     return None
-
-def is_user_logged_in(email): return email in active_sessions
-def add_active_session(email, session_id): active_sessions[email] = {'session_id': session_id, 'login_time': get_now_mexico().strftime("%Y-%m-%d %H:%M:%S")}
-def remove_active_session(email): 
-    if email in active_sessions: del active_sessions[email]
 
 def generate_self_signed_cert():
     cert_file, key_file = 'cert.pem', 'key.pem'
@@ -1383,7 +1441,8 @@ def escuelas():
     if not session.get('logged_in'): return redirect(url_for('index'))
     
     email = session.get('user')
-    if email in active_sessions and active_sessions[email]['session_id'] != session.get('session_id'):
+    valid_session_id = get_user_session_id(email)
+    if valid_session_id and valid_session_id != session.get('session_id'):
         session.clear(); return redirect(url_for('index'))
 
     user_data = get_user_by_email(email)
@@ -1497,7 +1556,8 @@ def api_ordenar_automatico():
 def test():
     if not session.get('logged_in'): return redirect(url_for('index'))
     email = session.get('user')
-    if email in active_sessions and active_sessions[email]['session_id'] != session.get('session_id'):
+    valid_session_id = get_user_session_id(email)
+    if valid_session_id and valid_session_id != session.get('session_id'):
         session.clear()
         return redirect(url_for('index'))
     next_url = request.args.get('next')
@@ -1514,7 +1574,8 @@ def mark_devices_verified():
 def examen():
     if not session.get('logged_in'): return redirect(url_for('index'))
     email = session.get('user')
-    if email in active_sessions and active_sessions[email]['session_id'] != session.get('session_id'):
+    valid_session_id = get_user_session_id(email)
+    if valid_session_id and valid_session_id != session.get('session_id'):
         session.clear(); return redirect(url_for('index'))
     
     curso = session.get('curso')
@@ -1525,20 +1586,16 @@ def examen():
         return redirect(url_for('test', next=url_for('examen', materia=materia)))
 
     try:
-        # --- CÓDIGO CORREGIDO PARA LECTURA ROBUSTA DEL CSV ---
         try:
             df_c = pd.read_csv(COURSES_CSV, encoding='utf-8-sig', engine='python')
         except:
             df_c = pd.read_csv(COURSES_CSV, encoding='latin-1', engine='python')
             
-        # Normalizar nombres de columnas a minúsculas y sin espacios
         df_c.columns = df_c.columns.str.strip().str.lower()
         
-        # Normalizar variables para búsqueda
         curso_norm = str(curso).strip().upper()
         materia_norm = str(materia).strip().upper()
         
-        # Filtrar normalizando también el contenido del CSV
         mask = (df_c['curso'].astype(str).str.strip().str.upper() == curso_norm) & \
                (df_c['materia'].astype(str).str.strip().str.upper() == materia_norm)
                
@@ -1550,7 +1607,6 @@ def examen():
             
         row = df_filtrado.iloc[0]
 
-        # Extraer variables con get() seguro por si cambian de nombre
         fecha_str = str(row.get('fecha_disponible', '')).strip()
         final_str = str(row.get('horario_final', '')).strip()
         inicio_str = str(row.get('horario_inicio', '')).strip()
@@ -1582,7 +1638,6 @@ def examen():
 
         df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
         
-        # Normalizamos también la lectura de preguntas por seguridad
         df_p.columns = df_p.columns.str.strip()
         q_df = df_p[
             (df_p['Curso'].astype(str).str.strip().str.upper() == curso_norm) & 
@@ -1596,7 +1651,6 @@ def examen():
         
     except Exception as e:
         print(f"Error cargando examen: {e}")
-        # Si tienes modo debug en terminal, esto te mostrará exactamente qué falló
         import traceback
         traceback.print_exc()
         return redirect(url_for('launcher'))
@@ -1637,8 +1691,6 @@ def resultados():
     
     is_admin = is_admin_user()
     
-    # Si no hay materia en la URL y no es admin, lo sacamos.
-    # Si es admin, lo dejamos entrar al dashboard vacío para que busque.
     if not materia_actual and not is_admin: 
         return redirect(url_for('launcher'))
         
@@ -1657,7 +1709,6 @@ def resultados():
             col_curso = next((c for c in df_c.columns if c == 'curso'), None)
             col_mat = next((c for c in df_c.columns if c == 'materia'), None)
 
-            # Agrupar materias por curso
             if col_curso and col_mat:
                 for curso in df_c[col_curso].dropna().unique():
                     c_str = str(curso).strip()
@@ -1667,7 +1718,6 @@ def resultados():
                     materias = df_c[df_c[col_curso] == curso][col_mat].dropna().unique().tolist()
                     cursos_dict[c_str]['materias'] = [str(m).strip() for m in materias]
             
-            # Agrupar usuarios por curso
             for u in all_users:
                 c_str = str(u.get('curso', '')).strip()
                 if c_str in cursos_dict:
