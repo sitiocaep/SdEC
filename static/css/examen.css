@@ -269,22 +269,27 @@ body {
     background-color: #e9ecef;
 }
 
+/* Pregunta actual (activa): Prioridad máxima, fondo azul sólido para ubicarte rápido */
 .nav-item.active {
-    background-color: #4a90e2;
-    color: white;
-    border-color: #4a90e2;
+    background-color: #4a90e2 !important;
+    color: white !important;
+    border: 2px solid #4a90e2 !important;
 }
 
+/* Pregunta contestada: Fondo blanco, texto y contorno verde */
 .nav-item.answered {
-    background-color: #27ae60;
-    color: white;
-    border-color: #27ae60;
+    background-color: #ffffff;
+    color: #27ae60;
+    border: 2px solid #27ae60;
+    font-weight: bold;
 }
 
+/* Pregunta para revisar: Fondo blanco, texto y contorno naranja */
 .nav-item.review {
-    background-color: #f39c12;
-    color: white;
-    border-color: #f39c12;
+    background-color: #ffffff;
+    color: #f39c12;
+    border: 2px solid #f39c12;
+    font-weight: bold;
 }
 
 .finish-nav-item {
@@ -432,6 +437,32 @@ body {
     border-top: 1px solid #e9ecef;
     flex-wrap: wrap;
     gap: 10px;
+}
+
+/* Estilos específicos para los botones inferiores de navegación */
+.question-navigation .nav-btn {
+    background-color: #7f8c8d; /* Gris elegante */
+    color: #ffffff; /* Letras blancas */
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre el ícono y el texto */
+}
+
+.question-navigation .nav-btn:hover {
+    background-color: #95a5a6; /* Gris un poco más claro al pasar el mouse */
+}
+
+/* Cuando el botón está deshabilitado */
+.question-navigation .nav-btn:disabled {
+    background-color: #bdc3c7;
+    color: #ecf0f1;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 .question-status.review {

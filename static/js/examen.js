@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
             answers: answers,
             currentQuestion: currentQuestion,
             bathroomBreakUsed: bathroomBreakUsed,
+            reviewQuestions: Array.from(reviewQuestions), 
             timestamp: new Date().getTime()
         };
 
@@ -218,6 +219,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
+            // --- NUEVO: Restaurar preguntas marcadas para revisión ---
+            if (data.reviewQuestions && Array.isArray(data.reviewQuestions)) {
+                data.reviewQuestions.forEach(qNum => {
+                    reviewQuestions.add(qNum); // Lo volvemos a agregar al Set
+                    const statusElement = document.getElementById(`question-status-${qNum}`);
+                    const navElement = document.querySelector(`.nav-item[data-question="${qNum}"]`);
+                    
+                    if (statusElement) {
+                        statusElement.textContent = 'Para revisión';
+                        statusElement.classList.add('review');
+                    }
+                    if (navElement) {
+                        navElement.classList.add('review');
+                        navElement.classList.remove('answered');
+                    }
+                });
+            }
+
             const answers = data.answers || {};
             let restoredCount = 0;
 
@@ -241,12 +260,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         const statusElement = document.getElementById(`question-status-${qNum}`);
                         const navElement = document.querySelector(`.nav-item[data-question="${qNum}"]`);
                         
-                        if (statusElement) {
-                            statusElement.textContent = 'Respondida (Restaurada)';
-                            statusElement.classList.add('answered');
-                        }
-                        if (navElement) {
-                            navElement.classList.add('answered');
+                        // Solo aplicamos el estilo verde de "Respondida" si NO está marcada para revisión
+                        // Esto respeta si el alumno respondió y luego le dio a "Revisar"
+                        if (!reviewQuestions.has(qNum)) {
+                            if (statusElement) {
+                                statusElement.textContent = 'Respondida (Restaurada)';
+                                statusElement.classList.add('answered');
+                            }
+                            if (navElement) {
+                                navElement.classList.add('answered');
+                            }
                         }
                     }
                     restoredCount++;
@@ -465,6 +488,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateNavigationButtons() {
+        // Si estamos en las instrucciones (pregunta 0), ocultamos "Anterior" y "Revisar"
+        if (currentQuestion === 0) {
+            prevBtn.style.display = 'none';
+            reviewBtn.style.display = 'none';
+        } else {
+            // Si estamos en cualquier otra pregunta, los volvemos a mostrar
+            prevBtn.style.display = ''; 
+            reviewBtn.style.display = '';
+        }
+
         prevBtn.disabled = currentQuestion === 0;
         prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
         prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
@@ -474,18 +507,18 @@ document.addEventListener('DOMContentLoaded', function() {
         reviewBtn.style.cursor = reviewBtn.disabled ? 'not-allowed' : 'pointer';
         
         if (currentQuestion === totalQuestions && totalQuestions > 0) {
-            nextBtn.textContent = 'FINALIZAR';
+            // Se agrega el ícono de "check" para el botón finalizar
+            nextBtn.innerHTML = '<i class="fas fa-check-circle"></i> FINALIZAR';
             nextBtn.style.backgroundColor = '#27ae60'; 
             nextBtn.style.color = 'white';
-            nextBtn.style.borderColor = '#27ae60';
             nextBtn.disabled = false;
             nextBtn.style.opacity = '1';
             nextBtn.style.cursor = 'pointer';
         } else {
-            nextBtn.textContent = 'SIGUIENTE';
-            nextBtn.style.backgroundColor = ''; 
-            nextBtn.style.color = '';
-            nextBtn.style.borderColor = '';
+            // Se restaura el ícono de la flecha para "Siguiente"
+            nextBtn.innerHTML = 'SIGUIENTE <i class="fas fa-chevron-right"></i>';
+            nextBtn.style.backgroundColor = ''; // Regresa al gris del CSS
+            nextBtn.style.color = ''; // Regresa al blanco del CSS
             
             nextBtn.disabled = currentQuestion > totalQuestions;
             nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
