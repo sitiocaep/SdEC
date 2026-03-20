@@ -31,7 +31,7 @@
 
     <div class="exam-container" id="main-container">
         <div class="top-bar">
-            <div class="nav-buttons">
+            <div class="nav-buttons" style="display: flex; align-items: center; gap: 15px;">
                 <div class="zoom-controls">
                     <button class="nav-btn" id="zoom-out" title="Disminuir Zoom">
                         <i class="fas fa-search-minus"></i>
@@ -40,6 +40,7 @@
                         <i class="fas fa-search-plus"></i>
                     </button>
                 </div>
+                <h3 class="exam-title-right" style="margin: 0; color: #2c3e50; font-size: 1.2rem; font-weight: 600;">{{ exam_details.name | default('Examen') }}</h3>
             </div>
 
             <div class="action-buttons">
@@ -55,35 +56,76 @@
                 
                 <div class="exam-header">
                     <div class="camera-time-container">
-                        <div class="camera-preview-large">
-                            <div class="camera-feed-large" id="camera-feed-large">
-                                <div class="camera-feed" id="camera-feed">
-                                    <div class="camera-placeholder-large">
-                                        <i class="fas fa-camera"></i>
-                                        <p>Vista previa</p>
-                                    </div>
+                        
+                        <div style="display: flex; align-items: stretch; gap: 15px;">
+                            
+                            <div class="status-icons-container" style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0;">
+                                <style>
+                                    /* Estilos para los indicadores ajustables */
+                                    .status-icon {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        width: 50px;
+                                        flex: 1; /* Esto estira el ícono para llenar el espacio vertical equitativamente */
+                                        background-color: #e74c3c; /* ROJO por defecto */
+                                        color: #fff;
+                                        border-radius: 8px;
+                                        transition: background-color 0.3s ease;
+                                        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+                                        cursor: help;
+                                    }
+                                    .status-icon i {
+                                        font-size: 1.3rem;
+                                    }
+                                    /* VERDE: Cuando tienen la clase 'active' */
+                                    .status-icon.active {
+                                        background-color: #2ecc71;
+                                    }
+                                </style>
+                                
+                                <div class="status-icon active" id="internet-status" title="Estado de Internet">
+                                    <i class="fas fa-wifi"></i>
                                 </div>
-                                <div class="volume-meter">
-                                    <div class="volume-bar">
-                                        <div class="volume-level" id="volume-level"></div>
-                                    </div>
-                                    <div class="volume-percentage" id="volume-text">0%</div>
+                                <div class="status-icon" id="camera-status" title="Estado de Cámara">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <div class="status-icon" id="mic-status" title="Estado de Micrófono">
+                                    <i class="fas fa-microphone"></i>
                                 </div>
                             </div>
-                            <div class="camera-status">
-                                <i class="fas fa-circle" id="camera-status-icon"></i>
-                                <span id="camera-status-text">Cámara activa</span>
-                            </div>
+
+                            <div class="camera-preview-large" style="margin: 0; flex: 1;">
+                                <div class="camera-feed-large" id="camera-feed-large">
+                                    <div class="camera-feed" id="camera-feed">
+                                        <div class="camera-placeholder-large">
+                                            <i class="fas fa-camera"></i>
+                                            <p>Vista previa</p>
+                                        </div>
+                                    </div>
+                                    <div class="volume-meter">
+                                        <div class="volume-bar">
+                                            <div class="volume-level" id="volume-level"></div>
+                                        </div>
+                                        <div class="volume-percentage" id="volume-text">0%</div>
+                                    </div>
+                                </div>
+                                </div>
+
                         </div>
                     </div>
 
                     <div class="exam-links">
-                        <h3 class="exam-title-right">{{ exam_details.name | default('Examen') }}</h3>
-
                         <div class="time-info-large">
-                            <p><strong>Hora de inicio:</strong> <span id="start-time">{{ exam_details.start_time | default('N/A') }}</span></p>
-                            <p><strong>Hora de término:</strong> <span id="end-time">{{ exam_details.end_time | default('N/A') }}</span></p>
-                            <p><strong>Tiempo restante:</strong> <span id="countdown">Cargando...</span></p>
+                            <p style="margin-bottom: 10px; color: #555;">
+                                <strong>Hora de inicio:</strong> <span id="start-time">{{ exam_details.start_time | default('N/A') }}</span>
+                                <span style="margin-left: 30px;">
+                                    <strong>Hora de término:</strong> <span id="end-time">{{ exam_details.end_time | default('N/A') }}</span>
+                                </span>
+                            </p>
+                            <p style="font-size: 2em; margin-top: 15px; color: #2c3e50;">
+                                <strong>Tiempo restante:</strong> <span id="countdown" style="color: #e74c3c;">Cargando...</span>
+                            </p>
                             <p id="bathroom-countdown"></p>
                         </div>
                         
@@ -160,25 +202,26 @@
                         </div>
 
                         <div class="question-content">
-                            <div class="question-text">
+                            
+                            <div class="question-text" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
                                 
                                 <p style="margin-bottom: 15px;">
                                     <strong>{{ q.Pregunta_número | default(loop.index) }}.</strong> {{ q.Pregunta }}
                                 </p>
 
-                                {% if q.Parrfafo %}
+                                {% if q.Parrfafo and q.Parrfafo|string|trim != '' and q.Parrfafo|string|lower != 'nan' %}
                                 <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
                                     {{ q.Parrfafo }}
                                 </p>
                                 {% endif %}
                                 
-                                {% if q.Img_Parrafo %}
+                                {% if q.Img_Parrafo and q.Img_Parrafo|string|trim != '' and q.Img_Parrafo|string|lower != 'nan' %}
                                 <div style="text-align: center; margin-bottom: 15px;">
-                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Parrafo) }}" alt="Imagen de apoyo" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; display: inline-block;">
+                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Parrafo|string|trim) }}" alt="Imagen de apoyo" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; display: inline-block; background-color: white;">
                                 </div>
                                 {% endif %}
                                 
-                                {% if q.Pregunta_Parrafo %}
+                                {% if q.Pregunta_Parrafo and q.Pregunta_Parrafo|string|trim != '' and q.Pregunta_Parrafo|string|lower != 'nan' %}
                                 <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
                                     {{ q.Pregunta_Parrafo }}
                                 </p>
@@ -187,53 +230,63 @@
                             </div>
 
                             <div class="answers-container">
-                                <div class="answer-option">
-                                    <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A">
-                                    <label for="q{{ loop.index }}-a" style="display: block; width: 100%;">
-                                        <strong>A)</strong> {{ q.Respuesta_a }}
-                                        {% if q.Img_Respuesta_a %}
-                                        <div style="margin-top: 10px; text-align: center;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_a) }}" alt="Opción A" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                    <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
+                                    <label for="q{{ loop.index }}-a" style="display: block; width: 100%; cursor: pointer; margin: 0;">
+                                        <div style="line-height: 1.5; color: #333;">
+                                            <strong>A)</strong> {{ q.Respuesta_a }}
+                                        </div>
+                                        {% if q.Img_Respuesta_a and q.Img_Respuesta_a|string|trim != '' and q.Img_Respuesta_a|string|lower != 'nan' %}
+                                        <div style="margin-top: 10px; text-align: left;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_a|string|trim) }}" alt="Opción A" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
                                         </div>
                                         {% endif %}
                                     </label>
                                 </div>
 
-                                <div class="answer-option">
-                                    <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B">
-                                    <label for="q{{ loop.index }}-b" style="display: block; width: 100%;">
-                                        <strong>B)</strong> {{ q.Respuesta_b }}
-                                        {% if q.Img_Respuesta_b %}
-                                        <div style="margin-top: 10px; text-align: center;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_b) }}" alt="Opción B" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                    <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
+                                    <label for="q{{ loop.index }}-b" style="display: block; width: 100%; cursor: pointer; margin: 0;">
+                                        <div style="line-height: 1.5; color: #333;">
+                                            <strong>B)</strong> {{ q.Respuesta_b }}
+                                        </div>
+                                        {% if q.Img_Respuesta_b and q.Img_Respuesta_b|string|trim != '' and q.Img_Respuesta_b|string|lower != 'nan' %}
+                                        <div style="margin-top: 10px; text-align: left;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_b|string|trim) }}" alt="Opción B" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
                                         </div>
                                         {% endif %}
                                     </label>
                                 </div>
 
-                                <div class="answer-option">
-                                    <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C">
-                                    <label for="q{{ loop.index }}-c" style="display: block; width: 100%;">
-                                        <strong>C)</strong> {{ q.Respuesta_c }}
-                                        {% if q.Img_Respuesta_c %}
-                                        <div style="margin-top: 10px; text-align: center;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_c) }}" alt="Opción C" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                    <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
+                                    <label for="q{{ loop.index }}-c" style="display: block; width: 100%; cursor: pointer; margin: 0;">
+                                        <div style="line-height: 1.5; color: #333;">
+                                            <strong>C)</strong> {{ q.Respuesta_c }}
+                                        </div>
+                                        {% if q.Img_Respuesta_c and q.Img_Respuesta_c|string|trim != '' and q.Img_Respuesta_c|string|lower != 'nan' %}
+                                        <div style="margin-top: 10px; text-align: left;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_c|string|trim) }}" alt="Opción C" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
                                         </div>
                                         {% endif %}
                                     </label>
                                 </div>
 
-                                <div class="answer-option">
-                                    <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D">
-                                    <label for="q{{ loop.index }}-d" style="display: block; width: 100%;">
-                                        <strong>D)</strong> {{ q.Respuesta_d }}
-                                        {% if q.Img_Respuesta_d %}
-                                        <div style="margin-top: 10px; text-align: center;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_d) }}" alt="Opción D" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                    <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
+                                    <label for="q{{ loop.index }}-d" style="display: block; width: 100%; cursor: pointer; margin: 0;">
+                                        <div style="line-height: 1.5; color: #333;">
+                                            <strong>D)</strong> {{ q.Respuesta_d }}
+                                        </div>
+                                        {% if q.Img_Respuesta_d and q.Img_Respuesta_d|string|trim != '' and q.Img_Respuesta_d|string|lower != 'nan' %}
+                                        <div style="margin-top: 10px; text-align: left;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_d|string|trim) }}" alt="Opción D" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
                                         </div>
                                         {% endif %}
                                     </label>
                                 </div>
+
                             </div>
                         </div>
                     </div>

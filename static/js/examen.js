@@ -19,8 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const cameraFeed = document.getElementById('camera-feed');
     const volumeLevel = document.getElementById('volume-level');
     const volumeText = document.getElementById('volume-text');
-    const cameraStatusIcon = document.getElementById('camera-status-icon');
-    const cameraStatusText = document.getElementById('camera-status-text');
+    const internetStatusIcon = document.getElementById('internet-status');
+    const cameraStatusIcon = document.getElementById('camera-status');
+    const micStatusIcon = document.getElementById('mic-status');
     const cameraProblemLink = document.getElementById('camera-problem-link');
     const restartCameraLink = document.getElementById('restart-camera-link');
     const bathroomLink = document.getElementById('bathroom-link');
@@ -57,8 +58,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let volumeAnimationId = null;
 
     // ==========================================
-    // 3. SISTEMA DE SEGURIDAD (MODO KIOSCO HÍBRIDO)
+    // 3. SISTEMA DE SEGURIDAD Y CONEXIÓN
     // ==========================================
+
+    // Monitoreo de conexión a Internet
+    window.addEventListener('online', () => {
+        if (internetStatusIcon) internetStatusIcon.classList.add('active');
+        showNotification('Conexión a internet restaurada.', 'alert-success', 3000);
+    });
+    
+    window.addEventListener('offline', () => {
+        if (internetStatusIcon) internetStatusIcon.classList.remove('active');
+        showNotification('Se perdió la conexión a internet. Tus respuestas están a salvo localmente.', 'alert-danger', 5000);
+    });
+
+    // Validar internet inicial
+    if (!navigator.onLine && internetStatusIcon) {
+        internetStatusIcon.classList.remove('active');
+    }
 
     async function enableSecureMode() {
         const elem = document.documentElement;
@@ -219,10 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // --- NUEVO: Restaurar preguntas marcadas para revisión ---
+            // --- Restaurar preguntas marcadas para revisión ---
             if (data.reviewQuestions && Array.isArray(data.reviewQuestions)) {
                 data.reviewQuestions.forEach(qNum => {
-                    reviewQuestions.add(qNum); // Lo volvemos a agregar al Set
+                    reviewQuestions.add(qNum); 
                     const statusElement = document.getElementById(`question-status-${qNum}`);
                     const navElement = document.querySelector(`.nav-item[data-question="${qNum}"]`);
                     
@@ -260,8 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         const statusElement = document.getElementById(`question-status-${qNum}`);
                         const navElement = document.querySelector(`.nav-item[data-question="${qNum}"]`);
                         
-                        // Solo aplicamos el estilo verde de "Respondida" si NO está marcada para revisión
-                        // Esto respeta si el alumno respondió y luego le dio a "Revisar"
                         if (!reviewQuestions.has(qNum)) {
                             if (statusElement) {
                                 statusElement.textContent = 'Respondida (Restaurada)';
@@ -395,7 +410,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- NUEVO SISTEMA ROBUSTO DE SELECCIÓN DE RESPUESTAS ---
     function setupAnswerEvents() {
         // A. Manejador para cuando cambia un radio
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -438,7 +452,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     navElement.classList.remove('review');
                 }
                 
-                // 4. Forzar el guardado inmediato en caché
                 saveProgress(); 
             });
         });
@@ -449,10 +462,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const radio = this.querySelector('input[type="radio"]');
                 if (!radio) return;
 
-                // Si no estaba marcada, la marcamos manualmente y disparamos el cambio
                 if (!radio.checked) {
                     radio.checked = true;
-                    // Esto gatilla el EventListener de arriba, asegurando el resaltado y el guardado
                     radio.dispatchEvent(new Event('change'));
                 }
             });
@@ -488,12 +499,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateNavigationButtons() {
-        // Si estamos en las instrucciones (pregunta 0), ocultamos "Anterior" y "Revisar"
         if (currentQuestion === 0) {
             prevBtn.style.display = 'none';
             reviewBtn.style.display = 'none';
         } else {
-            // Si estamos en cualquier otra pregunta, los volvemos a mostrar
             prevBtn.style.display = ''; 
             reviewBtn.style.display = '';
         }
@@ -507,7 +516,6 @@ document.addEventListener('DOMContentLoaded', function() {
         reviewBtn.style.cursor = reviewBtn.disabled ? 'not-allowed' : 'pointer';
         
         if (currentQuestion === totalQuestions && totalQuestions > 0) {
-            // Se agrega el ícono de "check" para el botón finalizar
             nextBtn.innerHTML = '<i class="fas fa-check-circle"></i> FINALIZAR';
             nextBtn.style.backgroundColor = '#27ae60'; 
             nextBtn.style.color = 'white';
@@ -515,10 +523,9 @@ document.addEventListener('DOMContentLoaded', function() {
             nextBtn.style.opacity = '1';
             nextBtn.style.cursor = 'pointer';
         } else {
-            // Se restaura el ícono de la flecha para "Siguiente"
             nextBtn.innerHTML = 'SIGUIENTE <i class="fas fa-chevron-right"></i>';
-            nextBtn.style.backgroundColor = ''; // Regresa al gris del CSS
-            nextBtn.style.color = ''; // Regresa al blanco del CSS
+            nextBtn.style.backgroundColor = ''; 
+            nextBtn.style.color = ''; 
             
             nextBtn.disabled = currentQuestion > totalQuestions;
             nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
@@ -527,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 6.5. MODALES PERSONALIZADOS (REEMPLAZAN ALERT/CONFIRM)
+    // 6.5. MODALES PERSONALIZADOS
     // ==========================================
     function showConfirm(title, message) {
         return new Promise((resolve) => {
@@ -636,7 +643,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function finishExam() {
-        // Guardado forzoso de última hora antes de revisar
         saveProgress();
 
         const unanswered = totalQuestions - answeredQuestions.size;
@@ -660,7 +666,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('alert-modal-ok').style.display = 'none';
         document.getElementById('alert-modal-countdown').style.display = 'none';
         
-        // Recopilamos directamente del DOM actual
         const respuestas = {};
         document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
             const name = radio.name; 
@@ -804,11 +809,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setupAudioAnalysis(stream); 
             
-            if (cameraStatusIcon) cameraStatusIcon.className = 'fas fa-circle green';
-            if (cameraStatusText) { 
-                cameraStatusText.textContent = 'Cámara y micrófono activos'; 
-                cameraStatusText.style.color = '#27ae60'; 
-            }
+            // Éxito: activar iconos (se ponen en verde)
+            if (cameraStatusIcon) cameraStatusIcon.classList.add('active');
+            if (micStatusIcon) micStatusIcon.classList.add('active');
             
         } catch (error) {
             console.error('Error cámara:', error);
@@ -818,12 +821,12 @@ document.addEventListener('DOMContentLoaded', function() {
             else if (error.name === 'NotFoundError') errorMessage += 'No se encontró cámara.';
             else if (error.name === 'NotReadableError') errorMessage += 'En uso por otra app.';
             
-            if (cameraFeed) cameraFeed.innerHTML = `<div class="camera-placeholder-large" style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i><p>${errorMessage}</p></div>`;
-            if (cameraStatusIcon) cameraStatusIcon.className = 'fas fa-circle red';
-            if (cameraStatusText) { 
-                cameraStatusText.textContent = 'Error en cámara'; 
-                cameraStatusText.style.color = '#e74c3c'; 
-            }
+            if (cameraFeed) cameraFeed.innerHTML = `<div class="camera-placeholder-large" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i><p>${errorMessage}</p></div>`;
+            
+            // Falla: desactivar iconos (se ponen en rojo)
+            if (cameraStatusIcon) cameraStatusIcon.classList.remove('active');
+            if (micStatusIcon) micStatusIcon.classList.remove('active');
+            
             stopAudioAnalysis(); 
         }
     }
