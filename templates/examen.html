@@ -120,7 +120,7 @@
                             <div class="instructions-content">
                                 <h3>Antes de comenzar, lee atentamente:</h3>
                                 <ol>
-                                    <li>Este examen consta de <strong>{{ questions | length }}</strong> preguntas.</li>
+                                    <li>Este examen consta de <strong>{{ questions | length }}</strong> preguntas, distribuidas en: {% for sub_materia, lista_preguntas in questions | groupby('Sub_Materia') %}<strong>{{ sub_materia }}</strong> ({{ lista_preguntas | length }}){% if not loop.last %}, {% else %}.{% endif %}{% endfor %}</li>
                                     <li>Tienes un tiempo límite para completarlo (mira el contador).</li>
                                     <li>Lee cuidadosamente cada pregunta antes de responder.</li>
                                     <li>Selecciona solo UNA respuesta por cada pregunta.</li>
@@ -153,29 +153,86 @@
 
                     {% for q in questions %}
                     <div class="question-container" data-question="{{ loop.index }}">
+                        
                         <div class="question-header">
+                            <span class="question-title">{{ q.Sub_Materia }}</span>
                             <span class="question-status" id="question-status-{{ loop.index }}"></span>
                         </div>
 
                         <div class="question-content">
-                            <p class="question-text">{{ q.Pregunta_número | default(loop.index) }}. {{ q.Pregunta }}</p>
+                            <div class="question-text">
+                                
+                                <p style="margin-bottom: 15px;">
+                                    <strong>{{ q.Pregunta_número | default(loop.index) }}.</strong> {{ q.Pregunta }}
+                                </p>
+
+                                {% if q.Parrfafo %}
+                                <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
+                                    {{ q.Parrfafo }}
+                                </p>
+                                {% endif %}
+                                
+                                {% if q.Img_Parrafo %}
+                                <div style="text-align: center; margin-bottom: 15px;">
+                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Parrafo) }}" alt="Imagen de apoyo" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; display: inline-block;">
+                                </div>
+                                {% endif %}
+                                
+                                {% if q.Pregunta_Parrafo %}
+                                <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
+                                    {{ q.Pregunta_Parrafo }}
+                                </p>
+                                {% endif %}
+                                
+                            </div>
 
                             <div class="answers-container">
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A">
-                                    <label for="q{{ loop.index }}-a"><strong>A)</strong> {{ q.Respuesta_a }}</label>
+                                    <label for="q{{ loop.index }}-a" style="display: block; width: 100%;">
+                                        <strong>A)</strong> {{ q.Respuesta_a }}
+                                        {% if q.Img_Respuesta_a %}
+                                        <div style="margin-top: 10px; text-align: center;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_a) }}" alt="Opción A" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                        </div>
+                                        {% endif %}
+                                    </label>
                                 </div>
+
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B">
-                                    <label for="q{{ loop.index }}-b"><strong>B)</strong> {{ q.Respuesta_b }}</label>
+                                    <label for="q{{ loop.index }}-b" style="display: block; width: 100%;">
+                                        <strong>B)</strong> {{ q.Respuesta_b }}
+                                        {% if q.Img_Respuesta_b %}
+                                        <div style="margin-top: 10px; text-align: center;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_b) }}" alt="Opción B" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                        </div>
+                                        {% endif %}
+                                    </label>
                                 </div>
+
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C">
-                                    <label for="q{{ loop.index }}-c"><strong>C)</strong> {{ q.Respuesta_c }}</label>
+                                    <label for="q{{ loop.index }}-c" style="display: block; width: 100%;">
+                                        <strong>C)</strong> {{ q.Respuesta_c }}
+                                        {% if q.Img_Respuesta_c %}
+                                        <div style="margin-top: 10px; text-align: center;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_c) }}" alt="Opción C" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                        </div>
+                                        {% endif %}
+                                    </label>
                                 </div>
+
                                 <div class="answer-option">
                                     <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D">
-                                    <label for="q{{ loop.index }}-d"><strong>D)</strong> {{ q.Respuesta_d }}</label>
+                                    <label for="q{{ loop.index }}-d" style="display: block; width: 100%;">
+                                        <strong>D)</strong> {{ q.Respuesta_d }}
+                                        {% if q.Img_Respuesta_d %}
+                                        <div style="margin-top: 10px; text-align: center;">
+                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_d) }}" alt="Opción D" style="max-width: 100%; max-height: 150px; height: auto; margin-top: 5px;">
+                                        </div>
+                                        {% endif %}
+                                    </label>
                                 </div>
                             </div>
                         </div>
