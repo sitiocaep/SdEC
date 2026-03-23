@@ -206,12 +206,12 @@
                             <div class="question-text" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
                                 
                                 <p style="margin-bottom: 15px;">
-                                    <strong>{{ q.Pregunta_número | default(loop.index) }}.</strong> {{ q.Pregunta }}
+                                    <strong>{{ q.Pregunta_número | default(loop.index) }}.</strong> <span class="format-text">{{ q.Pregunta }}</span>
                                 </p>
 
                                 {% if q.Parrfafo and q.Parrfafo|string|trim != '' and q.Parrfafo|string|lower != 'nan' %}
                                 <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
-                                    {{ q.Parrfafo }}
+                                    <span class="format-text">{{ q.Parrfafo }}</span>
                                 </p>
                                 {% endif %}
                                 
@@ -223,7 +223,7 @@
                                 
                                 {% if q.Pregunta_Parrafo and q.Pregunta_Parrafo|string|trim != '' and q.Pregunta_Parrafo|string|lower != 'nan' %}
                                 <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
-                                    {{ q.Pregunta_Parrafo }}
+                                    <span class="format-text">{{ q.Pregunta_Parrafo }}</span>
                                 </p>
                                 {% endif %}
                                 
@@ -235,7 +235,7 @@
                                     <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
                                     <label for="q{{ loop.index }}-a" style="display: block; width: 100%; cursor: pointer; margin: 0;">
                                         <div style="line-height: 1.5; color: #333;">
-                                            <strong>A)</strong> {{ q.Respuesta_a }}
+                                            <strong>A)</strong> <span class="format-text">{{ q.Respuesta_a }}</span>
                                         </div>
                                         {% if q.Img_Respuesta_a and q.Img_Respuesta_a|string|trim != '' and q.Img_Respuesta_a|string|lower != 'nan' %}
                                         <div style="margin-top: 10px; text-align: left;">
@@ -249,7 +249,7 @@
                                     <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
                                     <label for="q{{ loop.index }}-b" style="display: block; width: 100%; cursor: pointer; margin: 0;">
                                         <div style="line-height: 1.5; color: #333;">
-                                            <strong>B)</strong> {{ q.Respuesta_b }}
+                                            <strong>B)</strong> <span class="format-text">{{ q.Respuesta_b }}</span>
                                         </div>
                                         {% if q.Img_Respuesta_b and q.Img_Respuesta_b|string|trim != '' and q.Img_Respuesta_b|string|lower != 'nan' %}
                                         <div style="margin-top: 10px; text-align: left;">
@@ -263,7 +263,7 @@
                                     <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
                                     <label for="q{{ loop.index }}-c" style="display: block; width: 100%; cursor: pointer; margin: 0;">
                                         <div style="line-height: 1.5; color: #333;">
-                                            <strong>C)</strong> {{ q.Respuesta_c }}
+                                            <strong>C)</strong> <span class="format-text">{{ q.Respuesta_c }}</span>
                                         </div>
                                         {% if q.Img_Respuesta_c and q.Img_Respuesta_c|string|trim != '' and q.Img_Respuesta_c|string|lower != 'nan' %}
                                         <div style="margin-top: 10px; text-align: left;">
@@ -277,7 +277,7 @@
                                     <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
                                     <label for="q{{ loop.index }}-d" style="display: block; width: 100%; cursor: pointer; margin: 0;">
                                         <div style="line-height: 1.5; color: #333;">
-                                            <strong>D)</strong> {{ q.Respuesta_d }}
+                                            <strong>D)</strong> <span class="format-text">{{ q.Respuesta_d }}</span>
                                         </div>
                                         {% if q.Img_Respuesta_d and q.Img_Respuesta_d|string|trim != '' and q.Img_Respuesta_d|string|lower != 'nan' %}
                                         <div style="margin-top: 10px; text-align: left;">

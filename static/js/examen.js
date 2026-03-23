@@ -1,5 +1,41 @@
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
+
+    // ==========================================
+    // 0. FORMATEO DE TEXTO (Custom Tags)
+    // ==========================================
+    function formatExamText() {
+        // Seleccionamos todos los elementos con la clase format-text que pusimos en HTML
+        const textElements = document.querySelectorAll('.format-text');
+        
+        textElements.forEach(el => {
+            let text = el.innerHTML;
+            
+            // Reemplazar saltos de línea /n
+            text = text.replace(/\/n/g, '<br>');
+            
+            // Reemplazar negritas /b...b/
+            text = text.replace(/\/b([\s\S]*?)b\//g, '<strong>$1</strong>');
+            
+            // Reemplazar itálicas /i...i/
+            text = text.replace(/\/i([\s\S]*?)i\//g, '<em>$1</em>');
+            
+            // Reemplazar subrayado /u...u/
+            text = text.replace(/\/u([\s\S]*?)u\//g, '<u>$1</u>');
+            
+            // Reemplazar marcatextos /m...m/ 
+            text = text.replace(/\/m([\s\S]*?)m\//g, '<mark style="background-color: #f1c40f; color: #333; padding: 0 3px; border-radius: 2px;">$1</mark>');
+
+            // Reemplazar texto centrado /c...c/
+            text = text.replace(/\/c([\s\S]*?)c\//g, '<div style="text-align: center;">$1</div>');
+
+            // Asignar el nuevo HTML formateado de vuelta al elemento
+            el.innerHTML = text;
+        });
+    }
+
+    // Ejecutar el formato inmediatamente para que el usuario no vea las etiquetas
+    formatExamText();
     
     // ==========================================
     // 1. REFERENCIAS AL DOM
