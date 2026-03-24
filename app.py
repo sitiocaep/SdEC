@@ -1644,6 +1644,9 @@ def examen():
             (df_p['Materia'].astype(str).str.strip().str.upper() == materia_norm)
         ].sort_values(by='Pregunta_número')
         
+        # Filtramos los NaNs para evitar errores de renderizado en el navegador
+        q_df = q_df.fillna('')
+        
         questions = q_df.to_dict('records')
         is_admin = is_admin_user()
 
@@ -1762,6 +1765,7 @@ def get_exam_results_api():
             return jsonify({'success': False, 'message': 'Aún no hay resultados registrados en el sistema.'}), 404
 
         df = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
+        df = df.fillna('')
         
         df['folio'] = df['folio'].astype(str).str.strip()
         df['curso'] = df['curso'].astype(str).str.strip()
@@ -1776,6 +1780,22 @@ def get_exam_results_api():
         
         if df_res.empty:
             return jsonify({'success': False, 'message': 'No se encontraron resultados para este alumno en esta materia.'}), 404
+            
+        # --- NUEVO: Extraer datos enriquecidos de preguntas.csv para no afectar resultados.csv ---
+        preguntas_extra = {}
+        try:
+            df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
+            df_p.columns = df_p.columns.str.strip()
+            df_p = df_p.fillna('')
+            df_p_filt = df_p[
+                (df_p['Curso'].astype(str).str.strip().str.upper() == curso_usuario.upper()) & 
+                (df_p['Materia'].astype(str).str.strip().str.upper() == materia_solicitada.upper())
+            ]
+            for _, p_row in df_p_filt.iterrows():
+                p_num = str(p_row.get('Pregunta_número', '')).strip()
+                preguntas_extra[p_num] = p_row.to_dict()
+        except Exception as e:
+            print(f"Aviso: No se pudieron cargar datos extra de preguntas: {e}")
         
         details = []
         correctas = 0
@@ -1783,8 +1803,15 @@ def get_exam_results_api():
         sin_responder = 0
         
         for _, row in df_res.iterrows():
-            pregunta_num = row.get('Pregunta_número')
-            pregunta_txt = row.get('Pregunta', 'Pregunta sin texto')
+            pregunta_num = str(row.get('Pregunta_número')).strip()
+            
+            # Buscar si hay info extra en el CSV maestro de preguntas
+            extra = preguntas_extra.get(pregunta_num, {})
+            
+            # El texto base primero busca en resultados, si no, en extra
+            pregunta_txt = str(row.get('Pregunta', '')).strip()
+            if not pregunta_txt:
+                pregunta_txt = str(extra.get('Pregunta', 'Pregunta sin texto'))
             
             seleccion_raw = str(row.get('Respuesta_seleccionada', '')).strip()
             correcta_raw = str(row.get('Respuesta_correcta', '')).strip()
@@ -1815,11 +1842,18 @@ def get_exam_results_api():
                 'numero': pregunta_num,
                 'pregunta': pregunta_txt,
                 'opciones': {
-                    'A': row.get('Respuesta_a', ''),
-                    'B': row.get('Respuesta_b', ''),
-                    'C': row.get('Respuesta_c', ''),
-                    'D': row.get('Respuesta_d', '')
+                    'A': str(row.get('Respuesta_a', extra.get('Respuesta_a', ''))),
+                    'B': str(row.get('Respuesta_b', extra.get('Respuesta_b', ''))),
+                    'C': str(row.get('Respuesta_c', extra.get('Respuesta_c', ''))),
+                    'D': str(row.get('Respuesta_d', extra.get('Respuesta_d', '')))
                 },
+                'Parrfafo': str(extra.get('Parrfafo', '')),
+                'Img_Parrafo': str(extra.get('Img_Parrafo', '')),
+                'Pregunta_Parrafo': str(extra.get('Pregunta_Parrafo', '')),
+                'Img_Respuesta_a': str(extra.get('Img_Respuesta_a', '')),
+                'Img_Respuesta_b': str(extra.get('Img_Respuesta_b', '')),
+                'Img_Respuesta_c': str(extra.get('Img_Respuesta_c', '')),
+                'Img_Respuesta_d': str(extra.get('Img_Respuesta_d', '')),
                 'seleccionada': sel_letra,
                 'correcta': corr_letra,
                 'status': status
