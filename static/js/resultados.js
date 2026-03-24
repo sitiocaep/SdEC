@@ -201,6 +201,9 @@ document.addEventListener('DOMContentLoaded', function() {
         showQuestion(filteredQuestions[0].originalIndex);
     }
 
+    // ==========================================
+    // 4. RENDERIZADO Y FORMATO DE LA PREGUNTA
+    // ==========================================
     function showQuestion(originalIndex) {
         const navButtons = document.querySelectorAll('.nav-item');
         navButtons.forEach(btn => {
@@ -219,18 +222,58 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (item.status === 'incorrecta') statusText = '<span style="color:#e74c3c"><i class="fas fa-times-circle"></i> Respondida Incorrectamente</span>';
         else statusText = '<span style="color:#f39c12"><i class="fas fa-minus-circle"></i> No se respondió</span>';
 
+        // CONSTRUCCIÓN DEL CAJÓN DE LA PREGUNTA (Idéntico a examen.html)
         let html = `
-            <div class="q-header">
-                <span>PREGUNTA ${item.numero}</span>
-                <span>${statusText}</span>
-            </div>
-            <div class="q-text">${item.pregunta}</div>
-            <div class="options-grid">
+            <div class="question-text" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                <div class="q-header">
+                    <span>PREGUNTA ${item.numero}</span>
+                    <span>${statusText}</span>
+                </div>
+                
+                <p style="margin-bottom: 15px;">
+                    <strong>${item.numero}.</strong> <span class="format-text">${item.pregunta}</span>
+                </p>
         `;
+
+        // Párrafo de apoyo (si existe en el JSON de respuesta)
+        if (item.Parrfafo && String(item.Parrfafo).trim() !== '' && String(item.Parrfafo).toLowerCase() !== 'nan') {
+            html += `
+                <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
+                    <span class="format-text">${item.Parrfafo}</span>
+                </p>
+            `;
+        }
+
+        // Imagen de apoyo (si existe en el JSON de respuesta)
+        if (item.Img_Parrafo && String(item.Img_Parrafo).trim() !== '' && String(item.Img_Parrafo).toLowerCase() !== 'nan') {
+            html += `
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="/static/img/preguntas/${String(item.Img_Parrafo).trim()}" alt="Imagen de apoyo" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; display: inline-block; background-color: white;">
+                </div>
+            `;
+        }
+
+        // Pregunta de párrafo (si existe en el JSON de respuesta)
+        if (item.Pregunta_Parrafo && String(item.Pregunta_Parrafo).trim() !== '' && String(item.Pregunta_Parrafo).toLowerCase() !== 'nan') {
+            html += `
+                <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
+                    <span class="format-text">${item.Pregunta_Parrafo}</span>
+                </p>
+            `;
+        }
+
+        html += `</div>`; // Cierra el cajón
+
+        // CONSTRUCCIÓN DE LAS OPCIONES DE RESPUESTA
+        html += `<div class="options-grid">`;
 
         ['A', 'B', 'C', 'D'].forEach(optKey => {
             const optText = item.opciones[optKey];
             if (!optText) return; 
+
+            // Buscar la imagen correspondiente en el JSON (ej. item.Img_Respuesta_a)
+            const imgKey = 'Img_Respuesta_' + optKey.toLowerCase();
+            const optImg = item[imgKey];
 
             let rowClass = 'option-row';
             let icon = optKey;
@@ -248,14 +291,63 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             html += `
-                <div class="${rowClass}">
-                    <div class="option-icon">${icon}</div>
-                    <div>${optText}</div>
+                <div class="${rowClass}" style="display: flex; align-items: flex-start; margin-bottom: 12px; padding: 15px;">
+                    <div class="option-icon" style="margin-top: 2px;">${icon}</div>
+                    <div style="width: 100%;">
+                        <div style="line-height: 1.5;"><span class="format-text">${optText}</span></div>
+            `;
+
+            // Si hay imagen en la respuesta, colocarla debajo
+            if (optImg && String(optImg).trim() !== '' && String(optImg).toLowerCase() !== 'nan') {
+                html += `
+                        <div style="margin-top: 10px; text-align: left;">
+                            <img src="/static/img/preguntas/${String(optImg).trim()}" alt="Opción ${optKey}" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
+                        </div>
+                `;
+            }
+
+            html += `
+                    </div>
                 </div>
             `;
         });
 
         html += `</div>`; 
         container.innerHTML = html;
+
+        // INYECTAR EL FORMATEO DE ETIQUETAS A ESTA PREGUNTA
+        formatExamText(container);
     }
+
+    // ==========================================
+    // 5. FUNCIÓN DE REEMPLAZO DE ETIQUETAS
+    // ==========================================
+    function formatExamText(containerElement) {
+        const textElements = containerElement.querySelectorAll('.format-text');
+        
+        textElements.forEach(el => {
+            let text = el.innerHTML;
+            
+            // Reemplazar saltos de línea /n
+            text = text.replace(/\/n/g, '<br>');
+            
+            // Reemplazar negritas /b...b/
+            text = text.replace(/\/b([\s\S]*?)b\//g, '<strong>$1</strong>');
+            
+            // Reemplazar itálicas /i...i/
+            text = text.replace(/\/i([\s\S]*?)i\//g, '<em>$1</em>');
+            
+            // Reemplazar subrayado /u...u/
+            text = text.replace(/\/u([\s\S]*?)u\//g, '<u>$1</u>');
+            
+            // Reemplazar marcatextos /m...m/ 
+            text = text.replace(/\/m([\s\S]*?)m\//g, '<mark style="background-color: #f1c40f; color: #333; padding: 0 3px; border-radius: 2px;">$1</mark>');
+
+            // Reemplazar texto centrado /c...c/
+            text = text.replace(/\/c([\s\S]*?)c\//g, '<div style="text-align: center;">$1</div>');
+
+            el.innerHTML = text;
+        });
+    }
+
 });
