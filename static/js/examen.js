@@ -29,9 +29,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reemplazar texto centrado /c...c/
             text = text.replace(/\/c([\s\S]*?)c\//g, '<div style="text-align: center;">$1</div>');
 
+// NUEVO: Reemplazar fórmulas matemáticas /f...f/
+            text = text.replace(/\/f([\s\S]*?)f\//g, '\\($1\\)');
+
             // Asignar el nuevo HTML formateado de vuelta al elemento
             el.innerHTML = text;
         });
+
+        // CORRECCIÓN: Verificar que la función existe antes de llamarla para no romper el JS
+        if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+            window.MathJax.typesetPromise().catch((err) => console.log('Error en MathJax: ' + err.message));
+        }
     }
 
     // Ejecutar el formato inmediatamente para que el usuario no vea las etiquetas
