@@ -346,8 +346,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reemplazar texto centrado /c...c/
             text = text.replace(/\/c([\s\S]*?)c\//g, '<div style="text-align: center;">$1</div>');
 
+            // NUEVO: Reemplazar fórmulas matemáticas /f...f/
+            text = text.replace(/\/f([\s\S]*?)f\//g, '\\($1\\)');
+
             el.innerHTML = text;
         });
+
+        // NUEVO: Pedirle a MathJax que renderice las matemáticas después de inyectar el HTML
+        if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+            // Le pasamos [containerElement] en lugar de buscar en todo el documento para que cargue rapidísimo
+            window.MathJax.typesetPromise([containerElement]).catch((err) => console.log('Error en MathJax: ' + err.message));
+        }
     }
 
 });
