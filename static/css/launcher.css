@@ -30,12 +30,12 @@ body {
     border-bottom: 1px solid #ddd;
     min-height: 70px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px; /* Unified spacing */
 }
 
 .nav-buttons {
     display: flex;
-    gap: 8px;
+    gap: 8px; /* Unified spacing */
     flex-wrap: wrap;
 }
 
@@ -60,7 +60,7 @@ body {
 
 .action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px; /* Unified spacing */
     align-items: center;
     flex-wrap: wrap;
 }
