@@ -194,7 +194,6 @@ body {
     margin-bottom: 8px;
     padding: 8px 10px;
     background-color: #f8f9fa;
-    border-radius: 6px;
     border-left: 3px solid #e74c3c;
 }
 
@@ -296,8 +295,9 @@ body {
     color: white;
 }
 
-.status-icon i {
-    font-size: 18px;
+.status-icon.pending {
+    background-color: #f39c12;
+    color: white;
 }
 
 /* Vista previa de cámara */
@@ -391,16 +391,6 @@ body {
     border-radius: 4px;
 }
 
-.volume-percentage {
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    min-width: 30px;
-    text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-/* Estados de la barra de volumen */
 .volume-level.low {
     background: linear-gradient(90deg, #27ae60, #2ecc71);
 }
@@ -801,5 +791,21 @@ body {
     .device-select {
         padding: 8px 12px;
         font-size: 14px;
+    }
+}
+/* Clases para visibilidad en móvil/escritorio */
+.mobile-only {
+    display: none !important;
+}
+.desktop-only {
+    display: inline !important;
+}
+/* Media Query para dispositivos móviles (ancho de pantalla hasta 768px) */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: inline !important;
+    }
+    .desktop-only {
+        display: none !important;
     }
 }

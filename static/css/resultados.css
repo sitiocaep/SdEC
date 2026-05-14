@@ -321,6 +321,13 @@ body {
     font-weight: 600;
 }
 
+.option-row.correct-answer {
+    background-color: #e8f5e9 !important; 
+    border-color: #27ae60 !important;
+    color: #2e7d32 !important;
+    font-weight: 600;
+}
+
 .option-icon {
     width: 30px;
     text-align: center;
@@ -344,4 +351,20 @@ body {
         align-items: center;
     }
     .panel-title { width: 100%; }
+}
+/* Clases para visibilidad en móvil/escritorio */
+.mobile-only {
+    display: none !important;
+}
+.desktop-only {
+    display: inline !important;
+}
+/* Media Query para dispositivos móviles (ancho de pantalla hasta 768px) */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: inline !important;
+    }
+    .desktop-only {
+        display: none !important;
+    }
 }

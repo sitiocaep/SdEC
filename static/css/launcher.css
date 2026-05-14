@@ -674,3 +674,19 @@ body {
         padding: 0 12px;
     }
 }
+/* Clases para visibilidad en móvil/escritorio */
+.mobile-only {
+    display: none !important;
+}
+.desktop-only {
+    display: inline !important;
+}
+/* Media Query para dispositivos móviles (ancho de pantalla hasta 768px) */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: inline !important;
+    }
+    .desktop-only {
+        display: none !important;
+    }
+}

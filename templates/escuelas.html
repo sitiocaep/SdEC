@@ -20,12 +20,12 @@
                     <i class="fas fa-arrow-left"></i> Regresar
                 </a>
                 <a href="{{ url_for('escuelas') }}" class="nav-btn" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-sync-alt"></i> Actualizar
+                    <i class="fas fa-sync-alt"></i> <span class="desktop-only">Actualizar</span>
                 </a>
             </div>
             <div class="action-buttons">
                 <a href="{{ url_for('perfil') }}" class="btn-action user-display-btn">
-                    <i class="fas fa-user"></i> {{ fullname }}
+                    <i class="fas fa-user"></i> <span class="desktop-only">{{ fullname }}</span><span class="mobile-only">Mi Perfil</span>
                 </a>
                 <button id="help-btn-escuelas" class="btn-action">
                     <i class="fas fa-question-circle"></i> Ayuda
