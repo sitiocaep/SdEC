@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const examTimePill = document.getElementById('exam-time-pill');     
     
     // Botones
-    const changeExamLink = document.getElementById('change-exam');
+    const headerExamSelect = document.getElementById('header-exam-select');
+    const closeExamCardBtn = document.getElementById('close-exam-card');
     const startExamBtn = document.getElementById('start-exam-btn');
     const viewResultsBtn = document.getElementById('view-results-btn');
     const notPresentedBtn = document.getElementById('not-presented-btn');
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             examData = data;
             
-            // Poblar selector
+            // Poblar selector principal
             if(examSelect) {
                 examSelect.innerHTML = '<option value="">-- Selecciona un examen --</option>'; 
                 
@@ -55,8 +56,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+
+            // Poblar selector de la cabecera
+            if(headerExamSelect) {
+                headerExamSelect.innerHTML = '<option value="">-- Cambiar examen --</option>'; 
+                if (Object.keys(examData).length > 0) {
+                    for (const examKey in examData) {
+                        const exam = examData[examKey];
+                        const option = document.createElement('option');
+                        option.value = examKey; 
+                        const code = exam.code || examKey;
+                        option.textContent = `${code} - ${exam.name}`;
+                        headerExamSelect.appendChild(option);
+                    }
+                }
+            }
             
-            // Mostrar selector
+            // Mostrar selector principal
             if(examSelector) examSelector.style.display = 'block';
             
             // Iniciar timer para actualizar estado en tiempo real
@@ -106,18 +122,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // --- BOTÓN CAMBIAR EXAMEN ---
-    if(changeExamLink) {
-        changeExamLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            if(examInfoContainer) examInfoContainer.style.display = 'none';
-            if(examSelector) examSelector.style.display = 'block'; 
-            if(examSelect) examSelect.value = ''; // Reiniciar select
-
-            showMessage('Puedes seleccionar otro examen', 'info');
+    // --- MANEJO DEL DESPLEGABLE EN LA CABECERA ---
+    if(headerExamSelect) {
+        headerExamSelect.addEventListener('change', function() {
+            if (this.value && examSelect) {
+                // Sincronizar el valor con el select principal y disparar el evento
+                examSelect.value = this.value;
+                examSelect.dispatchEvent(new Event('change'));
+                
+                // Reiniciar el desplegable superior para que se quede en "-- Cambiar examen --"
+                this.value = ''; 
+            }
         });
     }
+
+    // --- FUNCIÓN REUTILIZABLE PARA COLAPSAR LA TARJETA ---
+    function collapseExamCard() {
+        if(examInfoContainer) examInfoContainer.style.display = 'none';
+        if(examSelector) examSelector.style.display = 'block'; 
+        if(examSelect) examSelect.value = ''; // Reiniciar select principal
+    }
+
+    // --- BOTÓN CERRAR/COLAPSAR TARJETA ("X") ---
+    if(closeExamCardBtn) {
+        closeExamCardBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            collapseExamCard();
+            // Restauramos el mensaje exactamente original
+            showMessage('Puedes seleccionar otro examen', 'info'); 
+        });
+    }
+
+    // --- CERRAR AL HACER CLIC FUERA DE LA TARJETA ---
+    document.addEventListener('click', function(e) {
+        // Solo actuar si la tarjeta de examen está visible
+        if (examInfoContainer && examInfoContainer.style.display === 'block') {
+            // Verificar que el clic NO fue dentro del contenedor de la tarjeta 
+            // y tampoco fue en el selector de exámenes principal
+            if (!examInfoContainer.contains(e.target) && examSelector && !examSelector.contains(e.target)) {
+                collapseExamCard();
+                // Colapso silencioso, sin alerta, para no interrumpir al usuario
+            }
+        }
+    });
 
     // --- LOGICA DEL BOTÓN COMENZAR EXAMEN ---
     if (startExamBtn) {
