@@ -637,25 +637,64 @@ body {
         padding: 15px;
     }
     
+    /* --- ESTRUCTURA GRID PARA EL ENCABEZADO --- */
     .exam-header {
-        flex-direction: column;
+        display: grid !important;
+        grid-template-columns: auto 1fr; 
         gap: 15px;
         align-items: center; 
     }
     
-    .camera-time-container {
-        width: 100%;
+    .exam-links {
+        display: contents; 
     }
     
-    .exam-links {
-        max-width: 100%;
+    .camera-time-container {
+        grid-column: 1;
+        grid-row: 2 / span 3; 
+        width: auto !important; 
+    }
+
+    .exam-link {
+        grid-column: 2; 
+        font-size: 12px;
+        text-align: left;
+        line-height: 1.4;
+        margin: 0;
     }
 
     .exam-title-right {
         text-align: center;
     }
+
+    /* --- FORMATO DEL TIEMPO --- */
     .time-info-large {
+        grid-column: 1 / -1; 
         text-align: center;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .time-info-large p:first-of-type {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px; 
+        margin-bottom: 8px !important;
+    }
+    
+    .time-info-large p:first-of-type span {
+        margin-left: 0 !important; 
+    }
+
+    .time-info-large p:nth-of-type(2) {
+        font-size: 24px !important; 
+        margin-top: 0 !important;
+    }
+    
+    .time-info-large p:nth-of-type(2) strong {
+        font-size: 15px; 
     }
     
     .questions-nav-bar {
@@ -680,14 +719,21 @@ body {
         padding: 20px;
     }
     
+    /* --- CORRECCIÓN DE BOTONES INFERIORES EN UNA SOLA LÍNEA (TABLET) --- */
     .question-navigation {
-        flex-direction: column;
-        align-items: center; 
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
     }
     
     .question-navigation .nav-btn {
+        flex: 1;
+        min-width: 0 !important;
         justify-content: center;
-        margin-bottom: 10px;
+        padding: 10px 5px;
+        font-size: 12px;
     }
     
     .chat-button {
@@ -746,14 +792,36 @@ body {
         justify-content: center;
     }
     
+    /* --- CORRECCIÓN DE BOTONES INFERIORES EN UNA SOLA LÍNEA (MÓVIL EN EXTREMO) --- */
+    .question-navigation .nav-btn {
+        min-width: 0 !important; /* Desactiva los 120px previos para no desbordar */
+        padding: 8px 2px;
+        font-size: 10px;
+        gap: 4px;
+    }
+    
     .content-area {
         padding: 10px;
     }
     
-    .exam-header, .questions-container {
+    .exam-header {
+        gap: 10px; 
+        padding: 15px 10px; 
+    }
+    
+    .questions-container {
         padding: 15px;
     }
     
+    .exam-link {
+        font-size: 11px; 
+    }
+    
+    .time-info-large p:first-of-type {
+        font-size: 11px; 
+        flex-wrap: wrap; 
+    }
+
     .question-text {
         font-size: 16px;
     }
