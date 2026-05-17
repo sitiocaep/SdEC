@@ -325,21 +325,19 @@ body {
 .camera-feed-container {
     position: relative;
     width: 100%;
-    /* Max-width para limitar el tamaño, un poco más ancho que alto */
     max-width: 275px; 
-    margin: 0 auto; /* Centrado */
+    margin: 0 auto; 
     background-color: #2c3e50;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     margin-bottom: 0;
-    border: 2px solid #e74c3c; /* Borde rojo idéntico al examen */
+    border: 2px solid #e74c3c; 
 }
 
 .camera-feed {
     width: 100%;
-    /* HEIGHT AUTO + ASPECT-RATIO 4:3 = RECTANGULAR ESTÁNDAR */
     height: auto;
     aspect-ratio: 4 / 3; 
     position: relative;
@@ -404,17 +402,17 @@ body {
 }
 /* --- FIN ESTILOS CÁMARA --- */
 
-/* Sección de dispositivos COMPACTA */
+/* Sección de dispositivos COMPACTA (Escritorio) */
 .devices-section {
     background-color: white;
-    padding: 10px; /* Reducido de 20px */
+    padding: 10px; 
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    padding-bottom: 5px; /* Reducido para ahorrar espacio */
+    padding-bottom: 5px; 
 }
 
 .devices-section h3 {
-    font-size: 14px; /* Reducido de 18px */
+    font-size: 14px; 
     margin-bottom: 10px;
     color: #2c3e50;
     font-weight: 600;
@@ -422,15 +420,15 @@ body {
 }
 
 .device-category {
-    margin-bottom: 8px; /* Reducido drásticamente de 20px */
+    margin-bottom: 8px; 
 }
 
 .device-category h4 {
-    font-size: 11px; /* Reducido de 16px (letra pequeña) */
-    margin-bottom: 4px; /* Reducido de 12px */
+    font-size: 11px; 
+    margin-bottom: 4px; 
     color: #555;
     font-weight: 600;
-    text-transform: uppercase; /* Ayuda a la legibilidad en tamaño pequeño */
+    text-transform: uppercase; 
     letter-spacing: 0.5px;
 }
 
@@ -440,18 +438,18 @@ body {
     border: 1px solid #e9ecef;
 }
 
-/* Selects mucho más delgados y pequeños */
+/* Selects */
 .device-select {
     width: 100%;
-    padding: 4px 8px; /* Reducido de 10px 15px */
+    padding: 10px 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: white;
-    font-size: 11px; /* Reducido de 14px */
+    font-size: 14px;
     color: #555;
     cursor: pointer;
     transition: border-color 0.2s;
-    height: 38px; /* Altura forzada pequeña */
+    height: 38px; 
 }
 
 .device-select:focus {
@@ -459,13 +457,17 @@ body {
     border-color: #4a90e2;
 }
 
-/* Ajuste para móviles: mantenerlo pequeño pero tocable */
-@media (max-width: 768px) {
-    .device-select {
-        padding: 6px 8px;
-        font-size: 12px;
-        height: 32px;
-    }
+.device-select:hover {
+    border-color: #bbb;
+}
+
+.device-select:invalid {
+    border-color: #e74c3c;
+}
+
+.required-star {
+    color: #e74c3c;
+    font-weight: bold;
 }
 
 /* Botones de prueba */
@@ -537,8 +539,25 @@ body {
     transform: scale(1.05);
 }
 
-/* Media Queries para Responsividad */
+/* Clases para visibilidad en móvil/escritorio */
+.mobile-only {
+    display: none !important;
+}
+.desktop-only {
+    display: inline !important;
+}
+
+/* ========================================== */
+/* MEDIA QUERIES PARA RESPONSIVIDAD (HASTA 768px) */
+/* ========================================== */
 @media (max-width: 768px) {
+    .mobile-only {
+        display: inline !important;
+    }
+    .desktop-only {
+        display: none !important;
+    }
+
     .top-bar {
         flex-direction: column;
         gap: 15px;
@@ -564,17 +583,104 @@ body {
         padding: 15px;
     }
     
+    .content-section {
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+        border-radius: 0 0 8px 8px;
+    }
+
     .content-section h1 {
         padding: 15px;
         font-size: 24px;
     }
     
     .two-column-layout {
-        flex-direction: column;
-        padding: 20px;
-        gap: 20px;
+        display: contents; /* Reordenamiento global con flex orders */
     }
     
+    /* ---------------------------------------------------- */
+    /* ORDEN 1: Columna de Dispositivos (Estado, Selects y Cámara) */
+    /* ---------------------------------------------------- */
+    .devices-column {
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 20px 5px 20px;
+    }
+
+    /* Indicadores de estado en una fila única adaptativa */
+    .status-icons-container {
+        flex-direction: row; 
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .status-icon {
+        flex: 1; 
+        width: auto;
+        max-width: none;
+        flex-direction: column; 
+        justify-content: center;
+        padding: 8px 2px;
+    }
+
+    /* NUEVO CAMBIO: Selectores de dispositivo divididos en 2 columnas (Audio | Video) */
+    .devices-section {
+        display: flex;
+        flex-direction: row; /* Forzar dos columnas */
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .devices-section .device-category {
+        flex: 1; /* Repartir el ancho 50% y 50% */
+        margin-bottom: 0; /* Limpiar margen inferior */
+    }
+
+    .device-select {
+        padding: 6px 8px;
+        font-size: 11px; /* Letra un poco más compacta para que quepa bien el texto */
+        height: 32px;
+    }
+
+    /* ---------------------------------------------------- */
+    /* ORDEN 2: Botones de Prueba en una Fila Única */
+    /* ---------------------------------------------------- */
+    .test-buttons {
+        order: 2; 
+        flex-direction: row; 
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 20px 20px 20px;
+        background-color: transparent;
+        border-top: none;
+        width: 100%;
+    }
+    
+    .btn-test {
+        flex: 1; 
+        width: auto;
+        max-width: none;
+        min-width: 0; 
+        padding: 8px 4px;
+        font-size: 12px; 
+        flex-direction: column; 
+        gap: 4px;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    /* ---------------------------------------------------- */
+    /* ORDEN 3: Sección de Instrucciones al Final */
+    /* ---------------------------------------------------- */
+    .instructions-column {
+        order: 3;
+        padding: 0 20px 20px 20px;
+    }
+
     .instructions-section, .devices-section, .status-indicators-panel, .camera-preview {
         padding: 15px;
     }
@@ -587,29 +693,6 @@ body {
         margin-right: 0;
         margin-bottom: 10px;
         text-align: center;
-    }
-    
-    .status-icons-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .status-icon {
-        width: 100%;
-        max-width: 200px;
-        flex-direction: row;
-        justify-content: center;
-    }
-    
-    .test-buttons {
-        flex-direction: column;
-        align-items: center;
-        padding: 15px;
-    }
-    
-    .btn-test {
-        width: 100%;
-        max-width: 300px;
     }
     
     .chat-button {
@@ -637,6 +720,7 @@ body {
     }
 }
 
+/* Media Queries para Móviles Muy Pequeños (Hasta 480px) */
 @media (max-width: 480px) {
     .top-bar {
         padding: 8px 10px;
@@ -661,15 +745,18 @@ body {
         font-size: 20px;
     }
     
-    .two-column-layout {
-        padding: 15px;
+    .devices-column, .test-buttons, .instructions-column {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Reducción sutil de espacios para pantallas ultra estrechas */
+    .devices-section {
+        gap: 6px;
+        padding: 10px 8px;
     }
     
     .instructions-section, .devices-section, .status-indicators-panel, .camera-preview {
-        padding: 12px;
-    }
-    
-    .test-buttons {
         padding: 12px;
     }
     
@@ -699,7 +786,7 @@ body {
     }
 }
 
-/* Estilos adicionales para manejo de errores y estados */
+/* Manejo de errores y alertas */
 .camera-placeholder button {
     margin-top: 10px;
     background-color: #4a90e2;
@@ -736,76 +823,5 @@ body {
     to {
         transform: translateX(0);
         opacity: 1;
-    }
-}
-
-/* Indicadores de estado más claros */
-.status-icon.active {
-    background-color: #27ae60;
-    color: white;
-}
-
-.status-icon:not(.active) {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.status-icon.pending {
-    background-color: #f39c12;
-    color: white;
-}
-
-/* Estilos para selects de dispositivos */
-.device-select {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
-    transition: border-color 0.2s;
-}
-
-.device-select:focus {
-    outline: none;
-    border-color: #4a90e2;
-}
-
-.device-select:hover {
-    border-color: #bbb;
-}
-
-.device-select:invalid {
-    border-color: #e74c3c;
-}
-
-.required-star {
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-/* Estilos responsivos para selects */
-@media (max-width: 768px) {
-    .device-select {
-        padding: 8px 12px;
-        font-size: 14px;
-    }
-}
-/* Clases para visibilidad en móvil/escritorio */
-.mobile-only {
-    display: none !important;
-}
-.desktop-only {
-    display: inline !important;
-}
-/* Media Query para dispositivos móviles (ancho de pantalla hasta 768px) */
-@media (max-width: 768px) {
-    .mobile-only {
-        display: inline !important;
-    }
-    .desktop-only {
-        display: none !important;
     }
 }
