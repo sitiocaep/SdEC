@@ -1,17 +1,17 @@
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     // --- REFERENCIAS A ELEMENTOS ---
-    const examSelect = document.getElementById('exam-select');
     const examSelector = document.getElementById('exam-selector');
+    const examCardsContainer = document.getElementById('exam-cards-container');
     const examInfoContainer = document.getElementById('exam-info-container');
     
-    // Nuevos elementos de la tarjeta estilo "Captura"
+    // Elementos de la tarjeta estilo "Captura"
     const examNameTitle = document.getElementById('exam-name-title'); 
     const examStatusPill = document.getElementById('exam-status-pill'); 
     const examDatePill = document.getElementById('exam-date-pill');     
     const examTimePill = document.getElementById('exam-time-pill');     
     
-    // Botones
+    // Botones y Selectores
     const headerExamSelect = document.getElementById('header-exam-select');
     const closeExamCardBtn = document.getElementById('close-exam-card');
     const startExamBtn = document.getElementById('start-exam-btn');
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Almacenamiento de datos
     let examData = {}; 
+    window.selectedExamKey = null;
 
     // --- FETCH DE DATOS ---
     fetch('/api/courses')
@@ -39,24 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             examData = data;
             
-            // Poblar selector principal
-            if(examSelect) {
-                examSelect.innerHTML = '<option value="">-- Selecciona un examen --</option>'; 
-                
-                if (Object.keys(examData).length === 0) {
-                    examSelect.innerHTML = '<option value="">-- No hay exámenes disponibles --</option>';
-                } else {
-                    for (const examKey in examData) {
-                        const exam = examData[examKey];
-                        const option = document.createElement('option');
-                        option.value = examKey; 
-                        const code = exam.code || examKey;
-                        option.textContent = `${code} - ${exam.name}`;
-                        examSelect.appendChild(option);
-                    }
-                }
-            }
-
             // Poblar selector de la cabecera
             if(headerExamSelect) {
                 headerExamSelect.innerHTML = '<option value="">-- Cambiar examen --</option>'; 
@@ -72,65 +55,119 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Mostrar selector principal
-            if(examSelector) examSelector.style.display = 'block';
+            // Generar las tarjetas de la pantalla principal
+            renderExamCards();
             
-            // Iniciar timer para actualizar estado en tiempo real
+            if(examSelector) examSelector.style.display = 'block';
             setInterval(updateExamStatuses, 1000);
         })
         .catch(error => {
             console.error('Error fetching exams:', error);
             showMessage('Error al cargar exámenes. Intenta recargar la página.', 'error');
-            if(examSelect) examSelect.innerHTML = '<option value="">-- Error al cargar --</option>';
+            if(examCardsContainer) examCardsContainer.innerHTML = '<p>Error al cargar los exámenes.</p>';
             if(examSelector) examSelector.style.display = 'block'; 
         });
 
-    // --- MANEJO DE SELECCIÓN DE EXAMEN ---
-    if(examSelect) {
-        examSelect.addEventListener('change', function() {
-            const selectedExam = this.value; 
+    // --- FUNCIÓN PARA DETERMINAR COLOR DE TARJETA SEGÚN ESTADO ---
+    function getCardStatusClass(exam, statusText) {
+        if (exam.taken || statusText === 'Finalizado') return 'status-card-finished';
+        if (statusText === 'Disponible') return 'status-card-available';
+        return 'status-card-pending'; // Aún no empieza
+    }
+
+    // --- RENDERIZAR TARJETAS ORDENADAS ---
+    function renderExamCards() {
+        if(!examCardsContainer) return;
+        examCardsContainer.innerHTML = '';
+        
+        const examKeys = Object.keys(examData);
+        if (examKeys.length === 0) {
+            examCardsContainer.innerHTML = '<p style="text-align:center; color:#7f8c8d; grid-column: 1/-1;">No hay exámenes disponibles en este momento.</p>';
+            return;
+        }
+
+        // Extracción limpia del HTML del logo para usarlo en las tarjetas
+        const logoRef = document.getElementById('reference-logo-box');
+        const logoHTML = logoRef ? logoRef.innerHTML.trim() : '<span>LOGO</span>';
+
+        // Convertir el objeto a Array para poder ordenarlo
+        const examsArray = examKeys.map(key => ({
+            key: key,
+            ...examData[key]
+        }));
+
+        // Ordenar el Array de fechas (del más antiguo al más reciente)
+        examsArray.sort((a, b) => {
+            const getTimestamp = (exam) => {
+                if (!exam.raw_date) return Number.MAX_SAFE_INTEGER; 
+                const timeStr = exam.raw_start ? exam.raw_start.trim() : '00:00:00';
+                const dateStr = `${exam.raw_date.trim()}T${timeStr}`;
+                const timestamp = new Date(dateStr).getTime();
+                return isNaN(timestamp) ? Number.MAX_SAFE_INTEGER : timestamp;
+            };
+            return getTimestamp(a) - getTimestamp(b);
+        });
+
+        // Dibujar las tarjetas ya ordenadas
+        examsArray.forEach(exam => {
+            const examKey = exam.key;
+            const newStatusInfo = calculateExamStatus(exam);
+            const statusText = exam.taken ? 'Finalizado' : newStatusInfo.status;
             
-            if (selectedExam && examData[selectedExam]) {
-                const exam = examData[selectedExam];
-                
-                // 1. Actualizar Título
-                if(examNameTitle) examNameTitle.textContent = exam.name || selectedExam;
-                
-                // 2. Actualizar UI (Colores y Botones)
-                updateStatusUI(exam);
-
-                // 3. Actualizar Pastilla de Fecha
-                if(examDatePill) {
-                    examDatePill.textContent = formatDatePretty(exam.raw_date);
-                }
-
-                // 4. Actualizar Pastilla de Horario
-                if(examTimePill) {
-                    const start = exam.raw_start ? exam.raw_start.substring(0, 5) : "--:--";
-                    const end = exam.raw_end ? exam.raw_end.substring(0, 5) : "--:--";
-                    examTimePill.textContent = `${start} - ${end}`;
-                }
-                
-                // 5. Cambiar visibilidad de contenedores
-                if(examSelector) examSelector.style.display = 'none';
-                if(examInfoContainer) examInfoContainer.style.display = 'block';
-
-                showMessage(`Examen seleccionado: ${exam.name}`, 'success');
-            } else {
-                if(examInfoContainer) examInfoContainer.style.display = 'none';
-            }
+            const statusClass = getCardStatusClass(exam, statusText);
+            
+            let pillClass = 'status-not-started';
+            if (exam.taken || statusText === 'Finalizado') pillClass = 'status-finished';
+            else if (statusText === 'Disponible') pillClass = 'pill-green';
+            
+            const card = document.createElement('div');
+            card.className = `exam-preview-card ${statusClass}`;
+            card.setAttribute('data-key', examKey);
+            
+            card.innerHTML = `
+                <div class="card-logo-container">
+                    ${logoHTML}
+                </div>
+                <div class="card-details">
+                    <div class="card-title-row">
+                        <h4 class="card-title">${exam.name || examKey}</h4>
+                        <span class="card-status-badge ${pillClass}">${statusText}</span>
+                    </div>
+                    <p class="card-detail-text">${formatDatePretty(exam.raw_date)}</p>
+                    <p class="card-detail-text">${formatTime(exam.raw_start)} - ${formatTime(exam.raw_end)}</p>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-select-card" onclick="selectExam('${examKey}')">Seleccionar Examen</button>
+                </div>
+            `;
+            examCardsContainer.appendChild(card);
         });
     }
-    
+
+    // --- FUNCIÓN GLOBAL PARA SELECCIONAR UN EXAMEN ---
+    window.selectExam = function(examKey) {
+        const exam = examData[examKey];
+        if (!exam) return;
+        
+        window.selectedExamKey = examKey;
+
+        if(examNameTitle) examNameTitle.textContent = exam.name || examKey;
+        updateStatusUI(exam);
+        if(examDatePill) examDatePill.textContent = formatDatePretty(exam.raw_date);
+        if(examTimePill) examTimePill.textContent = `${formatTime(exam.raw_start)} - ${formatTime(exam.raw_end)}`;
+        
+        if(examSelector) examSelector.style.display = 'none';
+        if(examInfoContainer) examInfoContainer.style.display = 'block';
+
+        showMessage(`Examen seleccionado: ${exam.name}`, 'success');
+        examInfoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
     // --- MANEJO DEL DESPLEGABLE EN LA CABECERA ---
     if(headerExamSelect) {
         headerExamSelect.addEventListener('change', function() {
-            if (this.value && examSelect) {
-                // Sincronizar el valor con el select principal y disparar el evento
-                examSelect.value = this.value;
-                examSelect.dispatchEvent(new Event('change'));
-                
-                // Reiniciar el desplegable superior para que se quede en "-- Cambiar examen --"
+            if (this.value) {
+                selectExam(this.value);
                 this.value = ''; 
             }
         });
@@ -140,37 +177,31 @@ document.addEventListener('DOMContentLoaded', function() {
     function collapseExamCard() {
         if(examInfoContainer) examInfoContainer.style.display = 'none';
         if(examSelector) examSelector.style.display = 'block'; 
-        if(examSelect) examSelect.value = ''; // Reiniciar select principal
+        window.selectedExamKey = null;
     }
 
-    // --- BOTÓN CERRAR/COLAPSAR TARJETA ("X") ---
     if(closeExamCardBtn) {
         closeExamCardBtn.addEventListener('click', function(e) {
             e.preventDefault();
             collapseExamCard();
-            // Restauramos el mensaje exactamente original
             showMessage('Puedes seleccionar otro examen', 'info'); 
         });
     }
 
-    // --- CERRAR AL HACER CLIC FUERA DE LA TARJETA ---
     document.addEventListener('click', function(e) {
-        // Solo actuar si la tarjeta de examen está visible
         if (examInfoContainer && examInfoContainer.style.display === 'block') {
-            // Verificar que el clic NO fue dentro del contenedor de la tarjeta 
-            // y tampoco fue en el selector de exámenes principal
-            if (!examInfoContainer.contains(e.target) && examSelector && !examSelector.contains(e.target)) {
-                collapseExamCard();
-                // Colapso silencioso, sin alerta, para no interrumpir al usuario
+            if (!examInfoContainer.contains(e.target)) {
+                if (!e.target.closest('.btn-select-card')) {
+                    collapseExamCard();
+                }
             }
         }
     });
 
-    // --- LOGICA DEL BOTÓN COMENZAR EXAMEN ---
     if (startExamBtn) {
         startExamBtn.addEventListener('click', function() {
             if (!this.disabled && this.style.display !== 'none') {
-                const examKey = examSelect.value;
+                const examKey = window.selectedExamKey;
                 if (!examKey) return;
 
                 const examUrl = `/examen?materia=${encodeURIComponent(examKey)}`;
@@ -180,7 +211,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- FUNCIONES DE UTILIDAD Y FORMATO ---
+    function formatTime(timeStr) {
+        return timeStr ? timeStr.substring(0, 5) : "--:--";
+    }
 
     function formatDatePretty(dateString) {
         if (!dateString) return "---";
@@ -205,7 +238,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const today = new Date();
             const examDateStr = exam.raw_date.trim(); 
-            
             const startStr = `${examDateStr}T${exam.raw_start.trim()}`;
             const endStr = `${examDateStr}T${exam.raw_end.trim()}`;
             
@@ -229,26 +261,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- LÓGICA PRINCIPAL DE ESTADOS ---
     function updateStatusUI(exam) {
-        // Reset botones
         if(startExamBtn) { startExamBtn.style.display = 'none'; startExamBtn.disabled = true; }
         if(viewResultsBtn) { viewResultsBtn.style.display = 'none'; viewResultsBtn.textContent = 'Ver resultados'; viewResultsBtn.onclick = null; viewResultsBtn.classList.remove('disabled'); viewResultsBtn.style.cursor = 'pointer'; viewResultsBtn.style.backgroundColor = ''; }
         if(notPresentedBtn) { notPresentedBtn.style.display = 'none'; }
 
-        // Definir clases y texto para status pill
         let statusText = exam.status;
-        let colorClass = 'status-not-started'; // Default
+        let colorClass = 'status-not-started'; 
 
-        // Obtener bandera de si es Admin desde el HTML
         const isAdmin = document.body.getAttribute('data-is-admin') === 'true';
 
-        // LÓGICA 1: ¿YA SE PRESENTÓ?
         if (exam.taken) {
             statusText = "Finalizado";
             colorClass = "status-finished";
 
-            // Verificar fecha de resultados
             const today = new Date();
             let resultsAvailable = false;
             let resultDateText = "Próximamente";
@@ -257,34 +283,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     const resStr = `${exam.results_date.trim()}T${exam.results_time.trim()}`;
                     const resDateTime = new Date(resStr);
-                    
                     const dateFormatted = formatDatePretty(exam.results_date);
-                    const timeFormatted = exam.results_time.substring(0, 5); // HH:MM
-                    
+                    const timeFormatted = exam.results_time.substring(0, 5); 
                     resultDateText = `${dateFormatted} - ${timeFormatted}`;
 
-                    if (!isNaN(resDateTime.getTime())) {
-                        if (today >= resDateTime) {
-                            resultsAvailable = true;
-                        }
+                    if (!isNaN(resDateTime.getTime()) && today >= resDateTime) {
+                        resultsAvailable = true;
                     }
                 } catch(e) { console.error("Error parsing result date", e); }
             }
 
             if(viewResultsBtn) {
                 viewResultsBtn.style.display = 'flex';
-                
-                // Si ya es fecha de resultados O es Administrador
                 if (resultsAvailable || isAdmin) {
                     viewResultsBtn.textContent = (isAdmin && !resultsAvailable) ? "Ver Resultados (Admin)" : "Ver Resultados";
                     viewResultsBtn.classList.remove('disabled');
-                    
-                    // Redirección
                     viewResultsBtn.onclick = () => { 
-                        const materiaParam = encodeURIComponent(exam.name || exam.code);
-                        window.location.href = `/resultados?materia=${materiaParam}`; 
+                        window.location.href = `/resultados?materia=${encodeURIComponent(exam.name || exam.code)}`; 
                     };
-                    
                 } else {
                     viewResultsBtn.textContent = `Fecha de resultados: ${resultDateText}`;
                     viewResultsBtn.classList.add('disabled');
@@ -295,12 +311,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
         } else {
-            // LÓGICA 2: NO SE HA PRESENTADO
-            
             if (exam.status === 'Disponible') {
                 statusText = "Disponible";
                 colorClass = "pill-green";
-                
                 if(startExamBtn) {
                     startExamBtn.style.display = 'flex';
                     startExamBtn.disabled = false;
@@ -309,67 +322,67 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (exam.status === 'Finalizado') {
                 statusText = "Finalizado";
                 colorClass = "status-finished";
-                
-                if(notPresentedBtn) {
-                    notPresentedBtn.style.display = 'flex';
-                }
+                if(notPresentedBtn) { notPresentedBtn.style.display = 'flex'; }
             } else {
                 statusText = "Aún no empieza";
                 colorClass = "status-not-started";
             }
             
-            // --- NUEVO: SI ES ADMIN, SIEMPRE MOSTRAR BOTÓN DE RESULTADOS ---
             if (isAdmin && viewResultsBtn) {
                 viewResultsBtn.style.display = 'flex';
                 viewResultsBtn.textContent = "Ver Resultados (Admin)";
                 viewResultsBtn.classList.remove('disabled');
                 viewResultsBtn.style.cursor = 'pointer';
-                viewResultsBtn.style.backgroundColor = ''; // Limpiar color naranja si lo tuviera
-                
+                viewResultsBtn.style.backgroundColor = ''; 
                 viewResultsBtn.onclick = () => { 
-                    const materiaParam = encodeURIComponent(exam.name || exam.code);
-                    window.location.href = `/resultados?materia=${materiaParam}`; 
+                    window.location.href = `/resultados?materia=${encodeURIComponent(exam.name || exam.code)}`; 
                 };
             }
         }
 
-        // Actualizar UI del Pill
         if (examStatusPill) {
             examStatusPill.textContent = statusText;
             examStatusPill.className = 'detail-pill ' + colorClass;
         }
-        
         if(examDatePill) examDatePill.className = 'detail-pill ' + colorClass;
         if(examTimePill) examTimePill.className = 'detail-pill ' + colorClass;
     }
 
-    // Loop que corre cada segundo para verificar horas
     function updateExamStatuses() {
         if (!examData) return;
 
-        let hasChanged = false;
-        const selectedExamKey = examSelect ? examSelect.value : null;
-
         for (const examKey in examData) {
             const exam = examData[examKey];
-            const oldStatus = exam.status;
-            
             const newStatusInfo = calculateExamStatus(exam);
-            
             exam.status = newStatusInfo.status;
             exam.available = newStatusInfo.available;
 
-            if (oldStatus !== exam.status) hasChanged = true;
+            const previewCard = document.querySelector(`.exam-preview-card[data-key="${examKey}"]`);
+            if (previewCard) {
+                const statusText = exam.taken ? "Finalizado" : exam.status;
+                const statusBadge = previewCard.querySelector('.card-status-badge');
+                
+                if (statusBadge) {
+                    statusBadge.textContent = statusText;
+                    let newPillClass = 'status-not-started';
+                    if (exam.taken || statusText === 'Finalizado') newPillClass = 'status-finished';
+                    else if (statusText === 'Disponible') newPillClass = 'pill-green';
+                    
+                    statusBadge.className = `card-status-badge ${newPillClass}`;
+                }
+                
+                const newClass = `exam-preview-card ${getCardStatusClass(exam, statusText)}`;
+                if (previewCard.className !== newClass) {
+                    previewCard.className = newClass;
+                }
+            }
         }
 
-        // Si el estado del examen seleccionado cambió, actualizar UI
-        if (selectedExamKey && examData[selectedExamKey]) {
-            const exam = examData[selectedExamKey];
-            updateStatusUI(exam);
+        if (window.selectedExamKey && examData[window.selectedExamKey]) {
+            updateStatusUI(examData[window.selectedExamKey]);
         }
     }
 
-    // --- SISTEMA DE MENSAJES FLOTANTES ---
     function showMessage(message, type) {
         const existingMessage = document.querySelector('.message-alert');
         if (existingMessage) existingMessage.remove();
@@ -401,7 +414,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Inyección de estilos de animación
     if (!document.querySelector('#message-styles')) {
         const style = document.createElement('style');
         style.id = 'message-styles';
@@ -413,9 +425,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ==========================================
-// FUNCIÓN GLOBAL DE CONFIRMACIÓN PARA LOGOUT
-// ==========================================
 window.showConfirm = function(title, message) {
     return new Promise((resolve) => {
         const modal = document.getElementById('custom-confirm-modal');
@@ -426,7 +435,6 @@ window.showConfirm = function(title, message) {
         const btnOk = document.getElementById('confirm-modal-ok');
         const btnCancel = document.getElementById('confirm-modal-cancel');
 
-        // Función para limpiar los event listeners clonando los nodos
         const cleanup = () => {
             btnOk.replaceWith(btnOk.cloneNode(true));
             btnCancel.replaceWith(btnCancel.cloneNode(true));
@@ -434,13 +442,11 @@ window.showConfirm = function(title, message) {
         };
 
         document.getElementById('confirm-modal-ok').addEventListener('click', () => {
-            cleanup(); 
-            resolve(true);
+            cleanup(); resolve(true);
         });
         
         document.getElementById('confirm-modal-cancel').addEventListener('click', () => {
-            cleanup(); 
-            resolve(false);
+            cleanup(); resolve(false);
         });
     });
 };
