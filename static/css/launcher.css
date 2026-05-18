@@ -76,7 +76,7 @@
 }
 
 /* ==========================================================================
-   GRILLA DE TARJETAS DE EXÁMENES (ANCHO COMPLETO Y CENTRADAS)
+   GRILLA DE TARJETAS DE EXÁMENES (CENTRADAS CON FLEXBOX)
    ========================================================================== */
 
 .exam-details {
@@ -94,13 +94,12 @@
     margin-bottom: 20px;
 }
 
-/* Grilla centrada */
+/* Contenedor Flexbox para centrado perfecto */
 .exam-cards-grid {
-    display: grid;
-    /* auto-fit con tamaño fijo asegura que las tarjetas tengan siempre el mismo ancho y se centren en la pantalla */
-    grid-template-columns: repeat(auto-fit, 170px);
-    justify-content: center; 
-    grid-auto-rows: 1fr; 
+    display: flex;
+    flex-wrap: wrap; /* Permite que bajen de línea si no caben */
+    justify-content: center; /* Centra absolutamente todas las tarjetas */
+    align-items: stretch; /* Obliga a que todas en la misma fila tengan igual altura */
     gap: 15px;
     margin-bottom: 30px;
     width: 100%;
@@ -114,7 +113,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%; 
+    width: 160px; /* Ancho fijo para que no se estiren */
+    flex-grow: 0; /* Evita que se ensanchen si son pocas tarjetas */
     box-sizing: border-box;
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -546,6 +546,11 @@
         font-size: 20px;
     }
 
+    /* Reducimos ligeramente el tamaño en tablets para seguir centrando fluido */
+    .exam-preview-card {
+        width: 140px; 
+    }
+
     /* VISTA DETALLADA ORIGINAL EN MÓVIL */
     .exam-card-body-new {
         flex-direction: column;
@@ -604,9 +609,9 @@
     .update-section { padding: 15px; }
     .exam-details { padding: 0 10px 20px; }
     
-    /* En celulares muy pequeños forzamos tarjetas a 145px para que quepan 2 */
-    .exam-cards-grid {
-        grid-template-columns: repeat(auto-fit, 145px);
+    /* En celulares forzamos el ancho a 145px para que quepan idealmente 2 tarjetas centradas */
+    .exam-preview-card {
+        width: 145px; 
     }
 
     /* Ajustes específicos para forzar 1 línea en la cabecera de la vista detallada */
@@ -664,7 +669,6 @@
         font-size: 14px;
     }
     
-    /* ALERTA CORREGIDA */
     .message-alert {
         top: 10px !important;
         right: 10px !important;
@@ -684,6 +688,10 @@
     .update-section { padding: 12px; }
     .header-exam-dropdown { max-width: 100px;  }
     
+    .exam-preview-card {
+        width: 135px; /* Ligeramente más chicas para pantallas extremadamente estrechas */
+    }
+
     /* Regresando el logo de la vista detallada a su CSS original en pantalla súper pequeña */
     .exam-logo-box { height: 70px; }
     
