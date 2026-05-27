@@ -80,8 +80,8 @@
                                         align-items: center;
                                         justify-content: center;
                                         width: 50px;
-                                        flex: 1; /* Esto estira el ícono para llenar el espacio vertical equitativamente */
-                                        background-color: #e74c3c; /* ROJO por defecto */
+                                        flex: 1;
+                                        background-color: #e74c3c;
                                         color: #fff;
                                         border-radius: 8px;
                                         transition: background-color 0.3s ease;
@@ -91,9 +91,12 @@
                                     .status-icon i {
                                         font-size: 1.3rem;
                                     }
-                                    /* VERDE: Cuando tienen la clase 'active' */
                                     .status-icon.active {
                                         background-color: #2ecc71;
+                                    }
+                                    /* Hover para el área de bloqueo de pregunta */
+                                    .locked-question-placeholder:hover {
+                                        background-color: #e9ecef !important;
                                     }
                                 </style>
                                 
@@ -189,6 +192,7 @@
                                     <ul>
                                         <li>Si se va el internet, tus respuestas se guardan automáticamente. No cierres la ventana.</li>
                                         <li>Usa el permiso de baño solo si es estrictamente necesario (una sola vez).</li>
+                                        <li><strong>Navegación Segura:</strong> Da un clic para revelar una respuesta (esto ocultará la pregunta). Da un segundo clic para seleccionarla definitivamente.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -216,87 +220,126 @@
 
                         <div class="question-content">
                             
-                            <div class="question-text" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
-                                
-                                <p style="margin-bottom: 15px;">
-                                    <strong>{{ q.Pregunta_número | default(loop.index) }}.</strong> <span class="format-text">{{ q.Pregunta }}</span>
-                                </p>
+                            <div class="question-toggle-block">
+                                <div class="question-text real-question-text" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px; display: block;">
+                                    <p style="margin-bottom: 15px;">
+                                        <strong>{{ q.Pregunta_número | default(loop.index) }}.</strong> <span class="format-text">{{ q.Pregunta }}</span>
+                                    </p>
 
-                                {% if q.Parrfafo and q.Parrfafo|string|trim != '' and q.Parrfafo|string|lower != 'nan' %}
-                                <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
-                                    <span class="format-text">{{ q.Parrfafo }}</span>
-                                </p>
-                                {% endif %}
-                                
-                                {% if q.Img_Parrafo and q.Img_Parrafo|string|trim != '' and q.Img_Parrafo|string|lower != 'nan' %}
-                                <div style="text-align: center; margin-bottom: 15px;">
-                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Parrafo|string|trim) }}" alt="Imagen de apoyo" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; display: inline-block; background-color: white;">
+                                    {% if q.Parrfafo and q.Parrfafo|string|trim != '' and q.Parrfafo|string|lower != 'nan' %}
+                                    <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
+                                        <span class="format-text">{{ q.Parrfafo }}</span>
+                                    </p>
+                                    {% endif %}
+                                    
+                                    {% if q.Img_Parrafo and q.Img_Parrafo|string|trim != '' and q.Img_Parrafo|string|lower != 'nan' %}
+                                    <div style="text-align: center; margin-bottom: 15px;">
+                                        <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Parrafo|string|trim) }}" alt="Imagen de apoyo" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; display: inline-block; background-color: white;">
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if q.Pregunta_Parrafo and q.Pregunta_Parrafo|string|trim != '' and q.Pregunta_Parrafo|string|lower != 'nan' %}
+                                    <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
+                                        <span class="format-text">{{ q.Pregunta_Parrafo }}</span>
+                                    </p>
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                
-                                {% if q.Pregunta_Parrafo and q.Pregunta_Parrafo|string|trim != '' and q.Pregunta_Parrafo|string|lower != 'nan' %}
-                                <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
-                                    <span class="format-text">{{ q.Pregunta_Parrafo }}</span>
-                                </p>
-                                {% endif %}
-                                
+
+                                <div class="locked-question-placeholder" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px; display: none; cursor: pointer; transition: background-color 0.2s;">
+                                    <div style="color: #4a90e2; font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                                        <span style="color: #333;"><strong>{{ q.Pregunta_número | default(loop.index) }}.</strong></span>
+                                        <i class="fas fa-lock"></i> <span style="text-decoration: underline;">Ver pregunta</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="answers-container">
                                 
-                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px; cursor: pointer;">
                                     <input type="radio" id="q{{ loop.index }}-a" name="question-{{ loop.index }}" value="A" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
-                                    <label for="q{{ loop.index }}-a" style="display: block; width: 100%; cursor: pointer; margin: 0;">
-                                        <div style="line-height: 1.5; color: #333;">
-                                            <strong>A)</strong> <span class="format-text">{{ q.Respuesta_a }}</span>
+                                    <label for="q{{ loop.index }}-a" style="display: flex; width: 100%; cursor: pointer; margin: 0;">
+                                        <strong style="margin-right: 8px; color: #333; line-height: 1.5;">A)</strong>
+                                        <div style="flex: 1;">
+                                            <div class="real-answer-content" style="display: none;">
+                                                <div style="line-height: 1.5; color: #333;">
+                                                    <span class="format-text">{{ q.Respuesta_a }}</span>
+                                                </div>
+                                                {% if q.Img_Respuesta_a and q.Img_Respuesta_a|string|trim != '' and q.Img_Respuesta_a|string|lower != 'nan' %}
+                                                <div style="margin-top: 10px; text-align: left;">
+                                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_a|string|trim) }}" alt="Opción A" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="locked-answer-placeholder" style="display: inline-flex; align-items: center; gap: 6px; color: #4a90e2; text-decoration: underline; line-height: 1.5; font-weight: bold;">
+                                                <i class="fas fa-lock"></i> Ver respuesta
+                                            </div>
                                         </div>
-                                        {% if q.Img_Respuesta_a and q.Img_Respuesta_a|string|trim != '' and q.Img_Respuesta_a|string|lower != 'nan' %}
-                                        <div style="margin-top: 10px; text-align: left;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_a|string|trim) }}" alt="Opción A" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
-                                        </div>
-                                        {% endif %}
                                     </label>
                                 </div>
 
-                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px; cursor: pointer;">
                                     <input type="radio" id="q{{ loop.index }}-b" name="question-{{ loop.index }}" value="B" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
-                                    <label for="q{{ loop.index }}-b" style="display: block; width: 100%; cursor: pointer; margin: 0;">
-                                        <div style="line-height: 1.5; color: #333;">
-                                            <strong>B)</strong> <span class="format-text">{{ q.Respuesta_b }}</span>
+                                    <label for="q{{ loop.index }}-b" style="display: flex; width: 100%; cursor: pointer; margin: 0;">
+                                        <strong style="margin-right: 8px; color: #333; line-height: 1.5;">B)</strong>
+                                        <div style="flex: 1;">
+                                            <div class="real-answer-content" style="display: none;">
+                                                <div style="line-height: 1.5; color: #333;">
+                                                    <span class="format-text">{{ q.Respuesta_b }}</span>
+                                                </div>
+                                                {% if q.Img_Respuesta_b and q.Img_Respuesta_b|string|trim != '' and q.Img_Respuesta_b|string|lower != 'nan' %}
+                                                <div style="margin-top: 10px; text-align: left;">
+                                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_b|string|trim) }}" alt="Opción B" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="locked-answer-placeholder" style="display: inline-flex; align-items: center; gap: 6px; color: #4a90e2; text-decoration: underline; line-height: 1.5; font-weight: bold;">
+                                                <i class="fas fa-lock"></i> Ver respuesta
+                                            </div>
                                         </div>
-                                        {% if q.Img_Respuesta_b and q.Img_Respuesta_b|string|trim != '' and q.Img_Respuesta_b|string|lower != 'nan' %}
-                                        <div style="margin-top: 10px; text-align: left;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_b|string|trim) }}" alt="Opción B" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
-                                        </div>
-                                        {% endif %}
                                     </label>
                                 </div>
 
-                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px; cursor: pointer;">
                                     <input type="radio" id="q{{ loop.index }}-c" name="question-{{ loop.index }}" value="C" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
-                                    <label for="q{{ loop.index }}-c" style="display: block; width: 100%; cursor: pointer; margin: 0;">
-                                        <div style="line-height: 1.5; color: #333;">
-                                            <strong>C)</strong> <span class="format-text">{{ q.Respuesta_c }}</span>
+                                    <label for="q{{ loop.index }}-c" style="display: flex; width: 100%; cursor: pointer; margin: 0;">
+                                        <strong style="margin-right: 8px; color: #333; line-height: 1.5;">C)</strong>
+                                        <div style="flex: 1;">
+                                            <div class="real-answer-content" style="display: none;">
+                                                <div style="line-height: 1.5; color: #333;">
+                                                    <span class="format-text">{{ q.Respuesta_c }}</span>
+                                                </div>
+                                                {% if q.Img_Respuesta_c and q.Img_Respuesta_c|string|trim != '' and q.Img_Respuesta_c|string|lower != 'nan' %}
+                                                <div style="margin-top: 10px; text-align: left;">
+                                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_c|string|trim) }}" alt="Opción C" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="locked-answer-placeholder" style="display: inline-flex; align-items: center; gap: 6px; color: #4a90e2; text-decoration: underline; line-height: 1.5; font-weight: bold;">
+                                                <i class="fas fa-lock"></i> Ver respuesta
+                                            </div>
                                         </div>
-                                        {% if q.Img_Respuesta_c and q.Img_Respuesta_c|string|trim != '' and q.Img_Respuesta_c|string|lower != 'nan' %}
-                                        <div style="margin-top: 10px; text-align: left;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_c|string|trim) }}" alt="Opción C" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
-                                        </div>
-                                        {% endif %}
                                     </label>
                                 </div>
 
-                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                                <div class="answer-option" style="display: flex; align-items: flex-start; margin-bottom: 15px; cursor: pointer;">
                                     <input type="radio" id="q{{ loop.index }}-d" name="question-{{ loop.index }}" value="D" style="margin-top: 5px; margin-right: 12px; transform: scale(1.2); cursor: pointer;">
-                                    <label for="q{{ loop.index }}-d" style="display: block; width: 100%; cursor: pointer; margin: 0;">
-                                        <div style="line-height: 1.5; color: #333;">
-                                            <strong>D)</strong> <span class="format-text">{{ q.Respuesta_d }}</span>
+                                    <label for="q{{ loop.index }}-d" style="display: flex; width: 100%; cursor: pointer; margin: 0;">
+                                        <strong style="margin-right: 8px; color: #333; line-height: 1.5;">D)</strong>
+                                        <div style="flex: 1;">
+                                            <div class="real-answer-content" style="display: none;">
+                                                <div style="line-height: 1.5; color: #333;">
+                                                    <span class="format-text">{{ q.Respuesta_d }}</span>
+                                                </div>
+                                                {% if q.Img_Respuesta_d and q.Img_Respuesta_d|string|trim != '' and q.Img_Respuesta_d|string|lower != 'nan' %}
+                                                <div style="margin-top: 10px; text-align: left;">
+                                                    <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_d|string|trim) }}" alt="Opción D" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="locked-answer-placeholder" style="display: inline-flex; align-items: center; gap: 6px; color: #4a90e2; text-decoration: underline; line-height: 1.5; font-weight: bold;">
+                                                <i class="fas fa-lock"></i> Ver respuesta
+                                            </div>
                                         </div>
-                                        {% if q.Img_Respuesta_d and q.Img_Respuesta_d|string|trim != '' and q.Img_Respuesta_d|string|lower != 'nan' %}
-                                        <div style="margin-top: 10px; text-align: left;">
-                                            <img src="{{ url_for('static', filename='img/preguntas/' ~ q.Img_Respuesta_d|string|trim) }}" alt="Opción D" style="max-width: 100%; max-height: 150px; height: auto; border-radius: 4px; border: 1px solid #ddd; padding: 3px;">
-                                        </div>
-                                        {% endif %}
                                     </label>
                                 </div>
 

@@ -5,44 +5,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // 0. FORMATEO DE TEXTO (Custom Tags)
     // ==========================================
     function formatExamText() {
-        // Seleccionamos todos los elementos con la clase format-text que pusimos en HTML
         const textElements = document.querySelectorAll('.format-text');
         
         textElements.forEach(el => {
             let text = el.innerHTML;
             
-            // Reemplazar saltos de línea /n
             text = text.replace(/\/n/g, '<br>');
-            
-            // Reemplazar negritas /b...b/
             text = text.replace(/\/b([\s\S]*?)b\//g, '<strong>$1</strong>');
-            
-            // Reemplazar itálicas /i...i/
             text = text.replace(/\/i([\s\S]*?)i\//g, '<em>$1</em>');
-            
-            // Reemplazar subrayado /u...u/
             text = text.replace(/\/u([\s\S]*?)u\//g, '<u>$1</u>');
-            
-            // Reemplazar marcatextos /m...m/ 
             text = text.replace(/\/m([\s\S]*?)m\//g, '<mark style="background-color: #f1c40f; color: #333; padding: 0 3px; border-radius: 2px;">$1</mark>');
-
-            // Reemplazar texto centrado /c...c/
             text = text.replace(/\/c([\s\S]*?)c\//g, '<div style="text-align: center;">$1</div>');
-
-// NUEVO: Reemplazar fórmulas matemáticas /f...f/
             text = text.replace(/\/f([\s\S]*?)f\//g, '\\($1\\)');
 
-            // Asignar el nuevo HTML formateado de vuelta al elemento
             el.innerHTML = text;
         });
 
-        // CORRECCIÓN: Verificar que la función existe antes de llamarla para no romper el JS
         if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
             window.MathJax.typesetPromise().catch((err) => console.log('Error en MathJax: ' + err.message));
         }
     }
 
-    // Ejecutar el formato inmediatamente para que el usuario no vea las etiquetas
     formatExamText();
     
     // ==========================================
@@ -59,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const questionContainers = document.querySelectorAll('.question-container');
     const examContainer = document.querySelector('.exam-container');
     
-    // Referencias de Cámara y UI extra
     const cameraFeed = document.getElementById('camera-feed');
     const volumeLevel = document.getElementById('volume-level');
     const volumeText = document.getElementById('volume-text');
@@ -71,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const bathroomLink = document.getElementById('bathroom-link');
     const bathroomCountdownElement = document.getElementById('bathroom-countdown');
 
-    // Referencias de SEGURIDAD
     const securityOverlay = document.getElementById('security-overlay');
     const startSecureBtn = document.getElementById('btn-start-secure');
     const mainContainer = document.getElementById('main-container');
@@ -83,18 +64,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalQuestions = window.examConfig.totalQuestions || 0;
     let currentQuestion = 0;
     let currentZoom = 1.0;
-    // IMPORTANTE: timeLeft se inicializa SIEMPRE con lo que manda el servidor (app.py)
     let timeLeft = window.examConfig.totalSeconds; 
     let answeredQuestions = new Set();
     let reviewQuestions = new Set();
     
-    // Variables de Baño
     let bathroomCountdownInterval = null;
     let bathroomTimeLeft = 300; 
     let onBathroomBreak = false;
     let bathroomBreakUsed = false;
 
-    // Variables de Cámara/Micrófono
     let stream = null;
     let audioContext = null;
     let analyser = null;
@@ -104,8 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // 3. SISTEMA DE SEGURIDAD Y CONEXIÓN
     // ==========================================
-
-    // Monitoreo de conexión a Internet
     window.addEventListener('online', () => {
         if (internetStatusIcon) internetStatusIcon.classList.add('active');
         showNotification('Conexión a internet restaurada.', 'alert-success', 3000);
@@ -116,14 +92,12 @@ document.addEventListener('DOMContentLoaded', function() {
         showNotification('Se perdió la conexión a internet. Tus respuestas están a salvo localmente.', 'alert-danger', 5000);
     });
 
-    // Validar internet inicial
     if (!navigator.onLine && internetStatusIcon) {
         internetStatusIcon.classList.remove('active');
     }
 
     async function enableSecureMode() {
         const elem = document.documentElement;
-        
         window.isSwitchingToFullscreen = true;
 
         try {
@@ -138,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if ('keyboard' in navigator && 'lock' in navigator.keyboard) {
                 try {
                     await navigator.keyboard.lock(['Escape', 'AltLeft', 'AltRight', 'Tab', 'MetaLeft', 'MetaRight']);
-                    console.log('Teclado bloqueado (Modo Seguro Activo)');
                 } catch (e) {
                     console.warn('No se pudo bloquear teclado:', e);
                 }
@@ -162,9 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function blockKeyboard(e) {
-        if (e.key === 'Escape') {
-            return; 
-        }
+        if (e.key === 'Escape') return; 
 
         if (e.key.startsWith('F') || e.ctrlKey || e.altKey || e.metaKey) {
             e.preventDefault();
@@ -188,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleFocusLoss() {
         if (window.isSwitchingToFullscreen) return;
-
         blackoutCurtain.style.display = 'block';
         if (mainContainer) mainContainer.classList.add('content-blur');
     }
@@ -201,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkFullScreen() {
         if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-            
             securityOverlay.style.display = 'flex';
             
             if ('keyboard' in navigator && 'unlock' in navigator.keyboard) {
@@ -216,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     INCIDENCIA REGISTRADA
                 </div>
                 <p>Debes regresar inmediatamente a la pantalla completa para continuar.</p>
-                
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
                     <button class="btn-secure-start" id="btn-resume-secure">REGRESAR AL EXAMEN</button>
                     <button class="btn-action logout" id="btn-exit-exam-escape" style="background-color: #555; padding: 15px 30px;">FINALIZAR AHORA</button>
@@ -280,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // --- Restaurar preguntas marcadas para revisión ---
             if (data.reviewQuestions && Array.isArray(data.reviewQuestions)) {
                 data.reviewQuestions.forEach(qNum => {
                     reviewQuestions.add(qNum); 
@@ -306,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (radio) {
                     radio.checked = true;
                     
-                    // --- APLICACIÓN DE ESTILOS A RESPUESTAS RESTAURADAS ---
                     const parentOption = radio.closest('.answer-option');
                     if (parentOption) {
                         parentOption.classList.add('selected-option');
@@ -330,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 navElement.classList.add('answered');
                             }
                         }
+                        // La lógica de visualización se maneja ahora exclusivamente en showQuestion()
                     }
                     restoredCount++;
                 }
@@ -391,7 +358,29 @@ document.addEventListener('DOMContentLoaded', function() {
     function showQuestion(questionNumber) {
         questionContainers.forEach(container => container.classList.remove('active'));
         const currentQuestionElement = document.querySelector(`.question-container[data-question="${questionNumber}"]`);
-        if (currentQuestionElement) currentQuestionElement.classList.add('active');
+        
+        if (currentQuestionElement) {
+            currentQuestionElement.classList.add('active');
+
+            // Resetear visibilidad: Forzar a mostrar siempre la pregunta y bloquear las respuestas al cambiar
+            const realQuestion = currentQuestionElement.querySelector('.real-question-text');
+            const lockedQuestion = currentQuestionElement.querySelector('.locked-question-placeholder');
+            if (realQuestion && lockedQuestion) {
+                realQuestion.style.display = 'block';
+                lockedQuestion.style.display = 'none';
+            }
+
+            const answersContainer = currentQuestionElement.querySelector('.answers-container');
+            if (answersContainer) {
+                answersContainer.querySelectorAll('.answer-option').forEach(opt => {
+                    const realContent = opt.querySelector('.real-answer-content');
+                    const lockedPlaceholder = opt.querySelector('.locked-answer-placeholder');
+                    if (realContent) realContent.style.display = 'none';
+                    if (lockedPlaceholder) lockedPlaceholder.style.display = 'inline-flex';
+                });
+            }
+        }
+        
         updateNavBar(questionNumber);
         updateNavigationButtons();
     }
@@ -455,13 +444,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupAnswerEvents() {
-        // A. Manejador para cuando cambia un radio
+        // A. Manejador para el cambio nativo de los botones de opción radio
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const questionNumber = parseInt(this.name.split('-')[1]);
                 if (isNaN(questionNumber)) return;
                 
-                // 1. Limpiar visualmente todas las opciones de ESTA pregunta
                 const container = this.closest('.answers-container');
                 if (container) {
                     container.querySelectorAll('.answer-option').forEach(opt => {
@@ -472,7 +460,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
                 
-                // 2. Colorear la opción que se acaba de seleccionar
                 const selectedOption = this.closest('.answer-option');
                 if (selectedOption && this.checked) {
                     selectedOption.classList.add('selected-option');
@@ -481,7 +468,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectedOption.style.boxShadow = '0 2px 5px rgba(74, 144, 226, 0.15)';
                 }
                 
-                // 3. Actualizar la barra superior y estatus
                 answeredQuestions.add(questionNumber);
                 const statusElement = document.getElementById(`question-status-${questionNumber}`);
                 const navElement = document.querySelector(`.nav-item[data-question="${questionNumber}"]`);
@@ -500,15 +486,77 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // B. Manejador para cuando se hace clic en cualquier parte de la caja
+        // B. Mecanismo de Bloqueo/Desbloqueo al hacer clic en un contenedor de respuesta
         document.querySelectorAll('.answer-option').forEach(option => {
             option.addEventListener('click', function(e) {
-                const radio = this.querySelector('input[type="radio"]');
-                if (!radio) return;
+                const lockedPlaceholder = this.querySelector('.locked-answer-placeholder');
+                const isLocked = lockedPlaceholder && window.getComputedStyle(lockedPlaceholder).display !== 'none';
 
-                if (!radio.checked) {
-                    radio.checked = true;
-                    radio.dispatchEvent(new Event('change'));
+                if (isLocked) {
+                    // Primer clic: Bloqueamos el comportamiento por defecto (no seleccionar radio)
+                    e.preventDefault();
+
+                    // Bloquear la pregunta
+                    const qContainer = this.closest('.question-container');
+                    if (qContainer) {
+                        const realQuestion = qContainer.querySelector('.real-question-text');
+                        const lockedQuestion = qContainer.querySelector('.locked-question-placeholder');
+                        if (realQuestion && lockedQuestion) {
+                            realQuestion.style.display = 'none';
+                            lockedQuestion.style.display = 'block';
+                        }
+                    }
+
+                    // Desbloquear esta opción y bloquear las demás
+                    const container = this.closest('.answers-container');
+                    if (container) {
+                        container.querySelectorAll('.answer-option').forEach(opt => {
+                            const realContent = opt.querySelector('.real-answer-content');
+                            const lockedPh = opt.querySelector('.locked-answer-placeholder');
+                            
+                            if (opt === this) {
+                                if (realContent) realContent.style.display = 'block';
+                                if (lockedPh) lockedPh.style.display = 'none';
+                            } else {
+                                if (realContent) realContent.style.display = 'none';
+                                if (lockedPh) lockedPh.style.display = 'inline-flex';
+                            }
+                        });
+                    }
+                } else {
+                    // Ya está desbloqueada (segundo clic). Permitir seleccionar.
+                    if (e.target.tagName.toLowerCase() !== 'input') {
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (radio && !radio.checked) {
+                            radio.checked = true;
+                            radio.dispatchEvent(new Event('change'));
+                        }
+                    }
+                }
+            });
+        });
+
+        // C. Evento inverso para restaurar la pregunta (haciendo clic en toda el área de la pregunta bloqueada)
+        document.querySelectorAll('.locked-question-placeholder').forEach(block => {
+            block.addEventListener('click', function(e) {
+                e.preventDefault();
+                const qContainer = this.closest('.question-container');
+                if (!qContainer) return;
+
+                const realQuestion = qContainer.querySelector('.real-question-text');
+                if (realQuestion) {
+                    realQuestion.style.display = 'block';
+                    this.style.display = 'none';
+                }
+
+                const answersContainer = qContainer.querySelector('.answers-container');
+                if (answersContainer) {
+                    answersContainer.querySelectorAll('.answer-option').forEach(opt => {
+                        const realContent = opt.querySelector('.real-answer-content');
+                        const lockedPlaceholder = opt.querySelector('.locked-answer-placeholder');
+                        if (realContent) realContent.style.display = 'none';
+                        if (lockedPlaceholder) lockedPlaceholder.style.display = 'inline-flex';
+                    });
                 }
             });
         });
@@ -732,7 +780,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('custom-alert-modal').style.display = 'none';
 
             if (data.success) {
-                console.log('Resultados guardados en el servidor');
                 clearProgress();
                 stopCamera();
                 
@@ -853,7 +900,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setupAudioAnalysis(stream); 
             
-            // Éxito: activar iconos (se ponen en verde)
             if (cameraStatusIcon) cameraStatusIcon.classList.add('active');
             if (micStatusIcon) micStatusIcon.classList.add('active');
             
@@ -867,7 +913,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (cameraFeed) cameraFeed.innerHTML = `<div class="camera-placeholder-large" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i><p>${errorMessage}</p></div>`;
             
-            // Falla: desactivar iconos (se ponen en rojo)
             if (cameraStatusIcon) cameraStatusIcon.classList.remove('active');
             if (micStatusIcon) micStatusIcon.classList.remove('active');
             
@@ -962,7 +1007,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // 10. EJECUCIÓN Y EVENTOS GLOBALES
     // ==========================================
-
     if (window.examConfig.isAdmin) {
         if (securityOverlay) securityOverlay.style.display = 'none';
         if (blackoutCurtain) blackoutCurtain.style.display = 'none';
