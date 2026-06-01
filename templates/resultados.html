@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/resultados.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['\\(', '\\)']]
             },
             svg: {
-                fontCache: 'global' // Optimiza el rendimiento reciclando los símbolos SVG repetidos
+                fontCache: 'global'
             }
         };
     </script>
@@ -82,41 +81,66 @@
                     </div>
                     {% endif %}
 
-                    <div class="results-split-layout">
+                    <div class="results-layout-vertical" style="display: flex; flex-direction: column; gap: 20px;">
                         
-                        <div class="summary-panel option-card">
-                            <h3 class="panel-title">Filtros de Revisión</h3>
+                        <div class="dashboard-summary option-card" id="dashboard-summary">
                             
-                            <div class="chart-container">
-                                <canvas id="resultsChart"></canvas>
-                            </div>
-                            
-                            <div class="stats-list">
-                                <div class="stat-item filter-btn total active-filter" data-filter="all">
-                                    <span>Total de preguntas</span>
-                                    <strong id="count-total">0</strong>
+                            <div class="top-stats-row" style="padding-bottom: 10px;">
+                                <div class="top-stat">
+                                    <span class="stat-title">Aciertos</span>
+                                    <span class="stat-value" id="top-aciertos">0/0</span>
                                 </div>
-                                <div class="stat-item filter-btn correct" data-filter="correcta">
-                                    <span>Correctas</span>
-                                    <strong id="count-correct">0</strong>
+                                <div class="top-stat">
+                                    <span class="stat-title">Tiempo</span>
+                                    <span class="stat-value">{{ tiempo | default('0h 0m 0s') }}</span>
                                 </div>
-                                <div class="stat-item filter-btn incorrect" data-filter="incorrecta">
-                                    <span>Incorrectas</span>
-                                    <strong id="count-incorrect">0</strong>
-                                </div>
-                                <div class="stat-item filter-btn unanswered" data-filter="sin_responder">
-                                    <span>Sin responder</span>
-                                    <strong id="count-unanswered">0</strong>
+                                <div class="top-stat">
+                                    <span class="stat-title" id="position-title">Posición</span>
+                                    <span class="stat-value" id="position-value">{{ posicion | default('-') }}</span>
                                 </div>
                             </div>
 
-                            <div class="score-circle" style="margin-top: 10px;">
-                                <span class="score-label">CALIFICACIÓN</span>
-                                <span id="score-number">0.0</span>
+                            <div id="top-breakdown-container" style="display: none; width: 100%; margin-bottom: 10px;"></div>
+
+                            <div class="analysis-bar">
+                                <i class="fas fa-chart-line" style="margin-right: 8px;"></i> 
+                                <span id="analysis-text">Calculando el rendimiento de tu examen...</span>
+                            </div>
+
+                            <div class="stats-cards-row">
+                                <div class="stat-card filter-btn correct" data-filter="correcta">
+                                    <span class="card-title">Correctas</span>
+                                    <span class="card-value" id="count-correct">0</span>
+                                </div>
+                                <div class="stat-card filter-btn incorrect" data-filter="incorrecta">
+                                    <span class="card-title">Incorrectas</span>
+                                    <span class="card-value" id="count-incorrect">0</span>
+                                </div>
+                                <div class="stat-card filter-btn unanswered" data-filter="sin_responder">
+                                    <span class="card-title">Sin Contestar</span>
+                                    <span class="card-value" id="count-unanswered">0</span>
+                                </div>
+                                <div class="stat-card filter-btn total active-filter" data-filter="all">
+                                    <span class="card-title">Respuestas</span>
+                                    <span class="card-value" id="count-total">0</span> 
+                                </div>
+                                <div class="stat-card score-card">
+                                    <span class="card-title">TOTAL (Calif)</span>
+                                    <span class="card-value" id="score-number">0.0</span>
+                                </div>
+                            </div>
+
+                            <div class="dashboard-actions">
+                                <button id="btn-all-results" class="btn-dashboard outline"><i class="fas fa-globe"></i> Ver todos los resultados</button>
+                                <button id="btn-change-exam" class="btn-dashboard outline"><i class="fas fa-exchange-alt"></i> Cambiar examen</button>
+                                <button id="btn-retry" class="btn-dashboard outline"><i class="fas fa-redo"></i> Intentar nuevamente</button>
+                                
+                                <a href="{{ url_for('launcher') }}" class="btn-dashboard outline"><i class="fas fa-edit"></i> Realizar otro examen</a>
+                                <button id="btn-show-details" class="btn-dashboard fill"><i class="fas fa-search-plus"></i> Revisión detallada</button>
                             </div>
                         </div>
 
-                        <div class="details-panel option-card">
+                        <div class="details-panel option-card" id="details-panel-container" style="display: none; width: 100%;">
                             <h3 class="panel-title">Revisión de Preguntas</h3>
                             
                             <div id="questions-nav" class="questions-nav-bar">
@@ -134,7 +158,6 @@
     </div>
 
     <script>
-        // Exportamos las variables de backend al frontend
         window.resultsConfig = {
             materia: "{{ materia }}",
             isAdmin: {{ 'true' if is_admin else 'false' }},

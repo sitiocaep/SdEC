@@ -1,13 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
     let materiaActual = window.resultsConfig.materia;
-    const chartCtx = document.getElementById('resultsChart').getContext('2d');
-    
-    let currentChart = null; 
     let globalQuestions = [];
     let currentFilter = 'all';
 
     // ==========================================
-    // 1. LÓGICA DE MENÚ EN CASCADA (ADMIN)
+    // 1. BASE DE DATOS EN MEMORIA RAM
+    // ==========================================
+    let masterExamCache = null; 
+
+    // ==========================================
+    // 2. DESCARGA MASIVA INICIAL (BULK LOAD)
+    // ==========================================
+    function loadAllData() {
+        const navContainer = document.getElementById('questions-nav');
+        
+        navContainer.innerHTML = '<div class="loading-spinner" style="width:100%; text-align:center;"><i class="fas fa-database fa-spin" style="margin-right:8px;"></i> Descargando resultados en memoria, por favor espera...</div>';
+        
+        fetch('/api/get-all-results-bulk')
+            .then(res => res.json())
+            .then(resData => {
+                if(resData.success) {
+                    masterExamCache = resData.data;
+                    navContainer.innerHTML = '<div style="padding: 15px; color: #7f8c8d; font-weight: 500; text-align:center;">Base de datos cargada. Selecciona un examen para ver los detalles.</div>';
+                    
+                    if (!window.resultsConfig.isAdmin && materiaActual) {
+                        renderFromCache('', '', materiaActual);
+                    }
+                } else {
+                    throw new Error(resData.message || "Error al descargar la base de datos.");
+                }
+            })
+            .catch(err => {
+                console.error("Error en Bulk Load:", err);
+                navContainer.innerHTML = `<div style="color:#e74c3c; text-align:center; font-weight:bold; padding:20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Error de conexión con el servidor. Intenta recargar la página.
+                </div>`;
+            });
+    }
+
+    loadAllData(); 
+
+    // ==========================================
+    // 3. LÓGICA DE MENÚ EN CASCADA (ADMIN)
     // ==========================================
     if (window.resultsConfig.isAdmin && window.resultsConfig.adminData) {
         const adminData = window.resultsConfig.adminData;
@@ -15,12 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const materiaSel = document.getElementById('admin-materia-select');
         const userSel = document.getElementById('admin-user-select');
 
-        // Llenar primer filtro: Cursos
         Object.keys(adminData).forEach(curso => {
             cursoSel.add(new Option(curso, curso));
         });
 
-        // Evento: Al cambiar Curso
         cursoSel.addEventListener('change', function() {
             materiaSel.innerHTML = '<option value="">-- Selecciona Materia --</option>';
             userSel.innerHTML = '<option value="">-- Selecciona Usuario --</option>';
@@ -36,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Evento: Al cambiar Materia
         materiaSel.addEventListener('change', function() {
             userSel.innerHTML = '<option value="">-- Selecciona Usuario --</option>';
             userSel.disabled = true;
@@ -50,79 +81,260 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Evento: Al cambiar Usuario (AUTO-BÚSQUEDA)
         userSel.addEventListener('change', function() {
             const folio = this.value;
-            if (!folio) return; // Si selecciona la opción por defecto vacía, no hace nada
+            if (!folio) return; 
 
             const curso = cursoSel.value;
             materiaActual = materiaSel.value; 
 
-            // Actualizar Título de la página
             const titleEl = document.getElementById('materia-title');
             if (titleEl) titleEl.textContent = materiaActual;
             
-            // Reiniciar estado de filtros visuales
             currentFilter = 'all';
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
             document.querySelector('.filter-btn.total').classList.add('active-filter');
 
-            // Cargar los resultados automáticamente
-            loadResults(folio, curso, materiaActual);
+            renderFromCache(folio, curso, materiaActual);
         });
     }
 
     // ==========================================
-    // 2. DISPARADOR INICIAL
+    // 4. LÓGICA DE LOS BOTONES DE ACCIÓN
     // ==========================================
-    if (materiaActual) {
-        // Si el usuario normal entra, o el admin recarga la página
-        loadResults('', '', materiaActual);
-    } else {
-        // Si el admin entra desde el menú, la gráfica arranca vacía
-        document.getElementById('questions-nav').innerHTML = '<div style="padding: 15px; color: #7f8c8d; font-weight: 500;">Utiliza los filtros superiores para seleccionar un examen.</div>';
+    const btnShowDetails = document.getElementById('btn-show-details');
+    const detailsPanel = document.getElementById('details-panel-container');
+
+    // Funcionalidad de Interruptor (Abrir / Cerrar) para Revisión Detallada
+    if (btnShowDetails && detailsPanel) {
+        btnShowDetails.addEventListener('click', function() {
+            if (detailsPanel.style.display === 'none') {
+                detailsPanel.style.display = 'flex'; 
+                setTimeout(() => {
+                    detailsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+                this.innerHTML = '<i class="fas fa-search-minus"></i> Ocultar revisión';
+            } else {
+                detailsPanel.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada';
+            }
+        });
+    }
+
+    const btnChangeExam = document.getElementById('btn-change-exam');
+    if (btnChangeExam) {
+        btnChangeExam.addEventListener('click', function() {
+            window.location.href = '/launcher';
+        });
+    }
+
+    const btnRetry = document.getElementById('btn-retry');
+    if (btnRetry) {
+        btnRetry.addEventListener('click', function() {
+            // Reservado para futura lógica
+        });
+    }
+
+    // BOTÓN: VER TODOS LOS RESULTADOS (GLOBAL)
+    const btnAllResults = document.getElementById('btn-all-results');
+    if (btnAllResults) {
+        btnAllResults.addEventListener('click', function() {
+            if (!masterExamCache) return;
+
+            let targetData = window.resultsConfig.isAdmin 
+                ? masterExamCache[document.getElementById('admin-user-select').value] 
+                : masterExamCache;
+
+            if (!targetData || Object.keys(targetData).length === 0) {
+                alert("No hay suficientes resultados registrados para mostrar un reporte global.");
+                return;
+            }
+
+            let globalSummary = { total: 0, correctas: 0, incorrectas: 0, sin_responder: 0, calificacion: 0 };
+            
+            // Construir Desglose en el contenedor superior (Tarjetas clickeables)
+            let breakdownHtml = `
+                <div style="border-top: 2px dashed #e2e8f0; padding-top: 15px; margin-top: 15px; border-bottom: 2px solid #f1f3f5; padding-bottom: 20px;">
+                    <h4 style="color: #7f8c8d; font-size: 13px; text-transform: uppercase; text-align: center; margin-bottom: 12px; letter-spacing: 1px;">
+                        Selecciona una materia para revisar sus preguntas
+                    </h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            `;
+
+            Object.keys(targetData).forEach(materiaKey => {
+                const matData = targetData[materiaKey];
+                if (matData && matData.details) {
+                    
+                    globalSummary.total += matData.summary.total;
+                    globalSummary.correctas += matData.summary.correctas;
+                    globalSummary.incorrectas += matData.summary.incorrectas;
+                    globalSummary.sin_responder += matData.summary.sin_responder;
+
+                    let cardColor = matData.summary.calificacion >= 6 ? '#27ae60' : '#e74c3c';
+                    
+                    // Tarjeta interactiva de la materia
+                    breakdownHtml += `
+                        <div class="global-subject-card" data-materia="${materiaKey}" style="cursor: pointer; flex: 1; min-width: 130px; background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;">
+                            <div style="font-size: 11px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; margin-bottom: 5px;">${materiaKey}</div>
+                            <div style="font-size: 18px; font-weight: 800; color: #2c3e50;">${matData.summary.correctas} <span style="font-size: 12px; color: #bdc3c7; font-weight: 600;">/ ${matData.summary.total}</span></div>
+                            <div style="font-size: 11px; font-weight: 600; color: ${cardColor}; margin-top: 4px;">Calf: ${matData.summary.calificacion}</div>
+                            <div style="margin-top: 8px; font-size: 10px; color: #4a90e2; font-weight: 700;"><i class="fas fa-search"></i> Explorar</div>
+                        </div>
+                    `;
+                }
+            });
+
+            breakdownHtml += `</div></div>`;
+            
+            const breakdownContainer = document.getElementById('top-breakdown-container');
+            breakdownContainer.innerHTML = breakdownHtml;
+            breakdownContainer.style.display = 'block';
+
+            // Agregar eventos Hover y Click a las tarjetas
+            document.querySelectorAll('.global-subject-card').forEach(card => {
+                card.addEventListener('mouseover', function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
+                    this.style.borderColor = '#4a90e2';
+                });
+                card.addEventListener('mouseout', function() {
+                    this.style.transform = 'none';
+                    this.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)';
+                    this.style.borderColor = '#e9ecef';
+                });
+                card.addEventListener('click', function() {
+                    const matKey = this.getAttribute('data-materia');
+                    loadGlobalSubjectDetails(matKey);
+                });
+            });
+
+            globalSummary.calificacion = globalSummary.total > 0 
+                ? ((globalSummary.correctas / globalSummary.total) * 10).toFixed(1) 
+                : 0.0;
+
+            const titleEl = document.getElementById('materia-title');
+            if (titleEl) titleEl.textContent = "RENDIMIENTO GLOBAL";
+            materiaActual = "GLOBAL"; 
+
+            // Actualizar etiqueta de posición a GLOBAL
+            const positionTitle = document.getElementById('position-title');
+            if (positionTitle) positionTitle.textContent = "Posición Global";
+
+            renderSummary(globalSummary);
+            
+            // Ocultar y deshabilitar el botón de revisión hasta que toquen una tarjeta
+            if (detailsPanel) detailsPanel.style.display = 'none';
+            if (btnShowDetails) {
+                btnShowDetails.disabled = true;
+                btnShowDetails.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada';
+            }
+        });
     }
 
     // ==========================================
-    // 3. CARGA DE DATOS Y RENDERIZADO
+    // FUNCIÓN: CARGAR DETALLES AL TOCAR TARJETA DE MATERIA
     // ==========================================
-    function loadResults(folio = '', curso = '', reqMateria = '') {
-        const matToFetch = reqMateria || materiaActual;
-        if (!matToFetch) return; 
+    function loadGlobalSubjectDetails(matKey) {
+        let targetData = window.resultsConfig.isAdmin 
+            ? masterExamCache[document.getElementById('admin-user-select').value] 
+            : masterExamCache;
 
-        document.getElementById('questions-nav').innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Cargando examen...</div>';
-        document.getElementById('single-question-container').innerHTML = '';
+        let subjectData = targetData[matKey];
+        if(!subjectData) return;
 
-        let url = `/api/get-exam-results?materia=${encodeURIComponent(matToFetch)}`;
-        if (folio) {
-            url += `&folio=${encodeURIComponent(folio)}&curso=${encodeURIComponent(curso)}`;
+        // 1. Ocultar el desglose de tarjetas para enfocarnos en la materia elegida
+        const breakdownContainer = document.getElementById('top-breakdown-container');
+        if (breakdownContainer) {
+            breakdownContainer.style.display = 'none';
         }
 
-        fetch(url)
-            .then(res => {
-                if (!res.ok) throw new Error("No se encontraron resultados para este alumno en esta materia.");
-                return res.json();
-            })
-            .then(data => {
-                if (!data.success) throw new Error(data.message);
-                
-                globalQuestions = data.details.map((q, idx) => ({ ...q, originalIndex: idx }));
-                
-                renderSummary(data.summary);
-                renderChart(data.summary);
-                setupFilters();
-                renderNavigation(); 
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById('questions-nav').innerHTML = '';
-                document.getElementById('single-question-container').innerHTML = `<div style="text-align:center; color:#e74c3c; padding:30px; font-weight: bold; font-size: 16px;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> ${err.message}
+        // 2. Actualizar el título principal a la materia
+        const titleEl = document.getElementById('materia-title');
+        if (titleEl) titleEl.textContent = matKey;
+
+        // Regresar el título de "Posición" a su estado original
+        const positionTitle = document.getElementById('position-title');
+        if (positionTitle) positionTitle.textContent = "Posición";
+
+        // Registrar el estado actual
+        materiaActual = matKey; 
+
+        // 3. Ajustar estadísticas (Aciertos y Score) a la materia seleccionada
+        renderSummary(subjectData.summary);
+
+        // 4. Cargar EXCLUSIVAMENTE las preguntas de esta materia
+        globalQuestions = subjectData.details.map((q, idx) => ({ ...q, materia_origen: matKey, originalIndex: idx }));
+
+        // 5. Reiniciar Filtros a "Total"
+        currentFilter = 'all';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+        const totalFilterBtn = document.querySelector('.filter-btn.total');
+        if(totalFilterBtn) totalFilterBtn.classList.add('active-filter');
+
+        renderNavigation();
+
+        // 6. Habilitar el botón de revisión PERO NO abrirlo automáticamente
+        if (btnShowDetails) {
+            btnShowDetails.disabled = false;
+            if (detailsPanel) detailsPanel.style.display = 'none'; // Aseguramos que se mantenga oculto
+            btnShowDetails.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada'; // Texto de abrir
+        }
+    }
+
+    // ==========================================
+    // 5. RENDERIZADO DESDE MEMORIA RAM (Individual Clásico)
+    // ==========================================
+    function renderFromCache(folio = '', curso = '', reqMateria = '') {
+        const matToFetch = reqMateria || materiaActual;
+        
+        if (!matToFetch || !masterExamCache) return; 
+
+        document.getElementById('single-question-container').innerHTML = '';
+        
+        // Limpiar y ocultar el desglose global si se seleccionó individualmente
+        const breakdownContainer = document.getElementById('top-breakdown-container');
+        if (breakdownContainer) {
+            breakdownContainer.innerHTML = '';
+            breakdownContainer.style.display = 'none';
+        }
+        
+        const positionTitle = document.getElementById('position-title');
+        if (positionTitle) positionTitle.textContent = "Posición";
+
+        let dataToRender = null;
+
+        if (window.resultsConfig.isAdmin) {
+            if (masterExamCache[folio] && masterExamCache[folio][matToFetch]) {
+                dataToRender = masterExamCache[folio][matToFetch];
+            }
+        } else {
+            if (masterExamCache[matToFetch]) {
+                dataToRender = masterExamCache[matToFetch];
+            }
+        }
+
+        if (dataToRender && dataToRender.details) {
+            globalQuestions = dataToRender.details.map((q, idx) => ({ ...q, materia_origen: matToFetch, originalIndex: idx }));
+            renderSummary(dataToRender.summary);
+            setupFilters();
+            renderNavigation(); 
+            
+            // Estado base de la revisión
+            if(btnShowDetails) {
+                btnShowDetails.disabled = false;
+                if(detailsPanel) detailsPanel.style.display = 'none';
+                btnShowDetails.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada';
+            }
+        } else {
+            document.getElementById('questions-nav').innerHTML = '';
+            document.getElementById('single-question-container').innerHTML = `
+                <div style="text-align:center; color:#e74c3c; padding:30px; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> 
+                    No hay resultados registrados para este examen.
                 </div>`;
-                
-                renderSummary({calificacion: 0, total: 0, correctas: 0, incorrectas: 0, sin_responder: 0});
-                if (currentChart) currentChart.destroy();
-            });
+            renderSummary({calificacion: 0, total: 0, correctas: 0, incorrectas: 0, sin_responder: 0});
+            if(btnShowDetails) btnShowDetails.disabled = true;
+        }
     }
 
     function renderSummary(summary) {
@@ -131,28 +343,21 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('count-correct').textContent = summary.correctas;
         document.getElementById('count-incorrect').textContent = summary.incorrectas;
         document.getElementById('count-unanswered').textContent = summary.sin_responder;
-    }
+        document.getElementById('top-aciertos').textContent = `${summary.correctas} / ${summary.total}`;
 
-    function renderChart(summary) {
-        if (currentChart) currentChart.destroy();
-
-        currentChart = new Chart(chartCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Correctas', 'Incorrectas', 'Sin Responder'],
-                datasets: [{
-                    data: [summary.correctas, summary.incorrectas, summary.sin_responder],
-                    backgroundColor: ['#27ae60', '#e74c3c', '#95a5a6'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                cutout: '65%' 
+        const analisisTextEl = document.getElementById('analysis-text');
+        if (summary.total > 0) {
+            const porcentaje = (summary.correctas / summary.total) * 100;
+            if (porcentaje >= 85) {
+                analisisTextEl.innerHTML = "<strong>¡Excelente trabajo!</strong> Has demostrado un sólido dominio de los temas.";
+            } else if (porcentaje >= 60) {
+                analisisTextEl.innerHTML = "<strong>Buen desempeño</strong>, pero te sugerimos revisar las preguntas incorrectas para reforzar.";
+            } else {
+                analisisTextEl.innerHTML = "<strong>Requiere refuerzo.</strong> Usa la revisión detallada para analizar los temas de mayor dificultad.";
             }
-        });
+        } else {
+            analisisTextEl.innerHTML = "Sin datos para analizar.";
+        }
     }
 
     function setupFilters() {
@@ -162,6 +367,15 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.parentNode.replaceChild(newBtn, btn);
             
             newBtn.addEventListener('click', function() {
+                // Alerta si toca filtros en modo Global sin haber seleccionado materia
+                if (btnShowDetails.disabled) {
+                    alert("Por favor, selecciona primero una materia del desglose superior para ver su revisión.");
+                    return;
+                }
+
+                if (detailsPanel.style.display === 'none') {
+                    btnShowDetails.click();
+                }
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
                 this.classList.add('active-filter');
                 currentFilter = this.getAttribute('data-filter');
@@ -177,32 +391,80 @@ document.addEventListener('DOMContentLoaded', function() {
         const filteredQuestions = globalQuestions.filter(q => currentFilter === 'all' || q.status === currentFilter);
 
         if (filteredQuestions.length === 0) {
+            navContainer.style.display = 'flex';
             navContainer.innerHTML = '<div style="color:#7f8c8d; padding:15px; width: 100%; text-align: center; font-weight: 600;">No hay preguntas en esta categoría.</div>';
             document.getElementById('single-question-container').innerHTML = '';
             return;
         }
 
-        filteredQuestions.forEach((item) => {
-            const btn = document.createElement('div');
+        if (materiaActual === 'GLOBAL') {
+            navContainer.style.display = 'block'; 
             
-            let statusClass = 'unanswered';
-            if(item.status === 'correcta') statusClass = 'correct';
-            if(item.status === 'incorrecta') statusClass = 'incorrect';
+            const grouped = {};
+            filteredQuestions.forEach(q => {
+                if (!grouped[q.materia_origen]) grouped[q.materia_origen] = [];
+                grouped[q.materia_origen].push(q);
+            });
 
-            btn.className = `nav-item ${statusClass}`;
-            btn.textContent = item.numero;
-            btn.onclick = () => showQuestion(item.originalIndex);
-            btn.setAttribute('data-target-index', item.originalIndex);
-            
-            navContainer.appendChild(btn);
-        });
+            Object.keys(grouped).forEach(matKey => {
+                const header = document.createElement('div');
+                header.style.backgroundColor = '#f1f5f9';
+                header.style.color = '#334155';
+                header.style.padding = '8px 15px';
+                header.style.marginBottom = '10px';
+                header.style.marginTop = '10px';
+                header.style.borderRadius = '6px';
+                header.style.fontWeight = '700';
+                header.style.fontSize = '14px';
+                header.style.textTransform = 'uppercase';
+                header.style.borderLeft = '4px solid #4a90e2';
+                header.innerHTML = `<i class="fas fa-bookmark" style="margin-right: 6px; color: #4a90e2;"></i> ${matKey}`;
+                navContainer.appendChild(header);
 
-        // Autoseleccionar la primera pregunta visible
-        showQuestion(filteredQuestions[0].originalIndex);
+                const btnContainer = document.createElement('div');
+                btnContainer.style.display = 'flex';
+                btnContainer.style.flexWrap = 'wrap';
+                btnContainer.style.gap = '8px';
+                btnContainer.style.marginBottom = '20px';
+
+                grouped[matKey].forEach(item => {
+                    const btn = document.createElement('div');
+                    let statusClass = 'unanswered';
+                    if(item.status === 'correcta') statusClass = 'correct';
+                    if(item.status === 'incorrecta') statusClass = 'incorrect';
+
+                    btn.className = `nav-item ${statusClass}`;
+                    btn.textContent = item.numero;
+                    btn.onclick = () => showQuestion(item.originalIndex);
+                    btn.setAttribute('data-target-index', item.originalIndex);
+                    btnContainer.appendChild(btn);
+                });
+                navContainer.appendChild(btnContainer);
+            });
+        } else {
+            navContainer.style.display = 'flex'; 
+            filteredQuestions.forEach((item) => {
+                const btn = document.createElement('div');
+                let statusClass = 'unanswered';
+                if(item.status === 'correcta') statusClass = 'correct';
+                if(item.status === 'incorrecta') statusClass = 'incorrect';
+
+                btn.className = `nav-item ${statusClass}`;
+                btn.textContent = item.numero;
+                btn.onclick = () => showQuestion(item.originalIndex);
+                btn.setAttribute('data-target-index', item.originalIndex);
+                
+                navContainer.appendChild(btn);
+            });
+        }
+
+        if (filteredQuestions.length > 0) {
+            showQuestion(filteredQuestions[0].originalIndex);
+        }
     }
 
     // ==========================================
-    // 4. RENDERIZADO Y FORMATO DE LA PREGUNTA
+    // 7. RENDERIZADO Y FORMATO DE LA PREGUNTA
     // ==========================================
     function showQuestion(originalIndex) {
         const navButtons = document.querySelectorAll('.nav-item');
@@ -222,20 +484,22 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (item.status === 'incorrecta') statusText = '<span style="color:#e74c3c"><i class="fas fa-times-circle"></i> Respondida Incorrectamente</span>';
         else statusText = '<span style="color:#f39c12"><i class="fas fa-minus-circle"></i> No se respondió</span>';
 
-        // CONSTRUCCIÓN DEL CAJÓN DE LA PREGUNTA (Idéntico a examen.html)
+        let headerMateriaContext = '';
+        if (materiaActual === 'GLOBAL' && item.materia_origen) {
+            headerMateriaContext = `<span style="color: #4a90e2; font-weight: 800;"> - ${item.materia_origen.toUpperCase()}</span>`;
+        }
+
         let html = `
             <div class="question-text" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
                 <div class="q-header">
-                    <span>PREGUNTA ${item.numero}</span>
+                    <span>PREGUNTA ${item.numero} ${headerMateriaContext}</span>
                     <span>${statusText}</span>
                 </div>
-                
                 <p style="margin-bottom: 15px;">
                     <strong>${item.numero}.</strong> <span class="format-text">${item.pregunta}</span>
                 </p>
         `;
 
-        // Párrafo de apoyo (si existe en el JSON de respuesta)
         if (item.Parrfafo && String(item.Parrfafo).trim() !== '' && String(item.Parrfafo).toLowerCase() !== 'nan') {
             html += `
                 <p style="text-align: justify; margin-bottom: 15px; font-weight: normal; font-size: 0.95em; color: #444;">
@@ -244,7 +508,6 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
 
-        // Imagen de apoyo (si existe en el JSON de respuesta)
         if (item.Img_Parrafo && String(item.Img_Parrafo).trim() !== '' && String(item.Img_Parrafo).toLowerCase() !== 'nan') {
             html += `
                 <div style="text-align: center; margin-bottom: 15px;">
@@ -253,7 +516,6 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
 
-        // Pregunta de párrafo (si existe en el JSON de respuesta)
         if (item.Pregunta_Parrafo && String(item.Pregunta_Parrafo).trim() !== '' && String(item.Pregunta_Parrafo).toLowerCase() !== 'nan') {
             html += `
                 <p style="margin-bottom: 0; font-weight: normal; color: #2c3e50;">
@@ -262,16 +524,12 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
 
-        html += `</div>`; // Cierra el cajón
-
-        // CONSTRUCCIÓN DE LAS OPCIONES DE RESPUESTA
-        html += `<div class="options-grid">`;
+        html += `</div><div class="options-grid">`;
 
         ['A', 'B', 'C', 'D'].forEach(optKey => {
             const optText = item.opciones[optKey];
             if (!optText) return; 
 
-            // Buscar la imagen correspondiente en el JSON (ej. item.Img_Respuesta_a)
             const imgKey = 'Img_Respuesta_' + optKey.toLowerCase();
             const optImg = item[imgKey];
 
@@ -297,7 +555,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div style="line-height: 1.5;"><span class="format-text">${optText}</span></div>
             `;
 
-            // Si hay imagen en la respuesta, colocarla debajo
             if (optImg && String(optImg).trim() !== '' && String(optImg).toLowerCase() !== 'nan') {
                 html += `
                         <div style="margin-top: 10px; text-align: left;">
@@ -306,57 +563,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
 
-            html += `
-                    </div>
-                </div>
-            `;
+            html += `</div></div>`;
         });
 
         html += `</div>`; 
         container.innerHTML = html;
-
-        // INYECTAR EL FORMATEO DE ETIQUETAS A ESTA PREGUNTA
         formatExamText(container);
     }
 
     // ==========================================
-    // 5. FUNCIÓN DE REEMPLAZO DE ETIQUETAS
+    // 8. FUNCIÓN DE REEMPLAZO DE ETIQUETAS
     // ==========================================
     function formatExamText(containerElement) {
         const textElements = containerElement.querySelectorAll('.format-text');
-        
         textElements.forEach(el => {
             let text = el.innerHTML;
-            
-            // Reemplazar saltos de línea /n
             text = text.replace(/\/n/g, '<br>');
-            
-            // Reemplazar negritas /b...b/
             text = text.replace(/\/b([\s\S]*?)b\//g, '<strong>$1</strong>');
-            
-            // Reemplazar itálicas /i...i/
             text = text.replace(/\/i([\s\S]*?)i\//g, '<em>$1</em>');
-            
-            // Reemplazar subrayado /u...u/
             text = text.replace(/\/u([\s\S]*?)u\//g, '<u>$1</u>');
-            
-            // Reemplazar marcatextos /m...m/ 
             text = text.replace(/\/m([\s\S]*?)m\//g, '<mark style="background-color: #f1c40f; color: #333; padding: 0 3px; border-radius: 2px;">$1</mark>');
-
-            // Reemplazar texto centrado /c...c/
             text = text.replace(/\/c([\s\S]*?)c\//g, '<div style="text-align: center;">$1</div>');
-
-            // NUEVO: Reemplazar fórmulas matemáticas /f...f/
             text = text.replace(/\/f([\s\S]*?)f\//g, '\\($1\\)');
-
             el.innerHTML = text;
         });
 
-        // NUEVO: Pedirle a MathJax que renderice las matemáticas después de inyectar el HTML
         if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-            // Le pasamos [containerElement] en lugar de buscar en todo el documento para que cargue rapidísimo
             window.MathJax.typesetPromise([containerElement]).catch((err) => console.log('Error en MathJax: ' + err.message));
         }
     }
-
 });

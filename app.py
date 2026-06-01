@@ -1881,6 +1881,145 @@ def get_exam_results_api():
         print(f"Error procesando resultados: {e}")
         return jsonify({'success': False, 'message': f'Error interno: {str(e)}'}), 500
 
+@app.route('/api/get-all-results-bulk')
+def get_all_results_bulk():
+    if not session.get('logged_in'):
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+
+    is_admin = is_admin_user()
+    user_folio = str(session.get('folio'))
+
+    try:
+        if not os.path.exists(RESULTADOS_CSV):
+            return jsonify({'success': True, 'data': {}})
+
+        df_res = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
+        df_res = df_res.fillna('')
+        df_res['folio'] = df_res['folio'].astype(str).str.strip()
+        df_res['curso'] = df_res['curso'].astype(str).str.strip()
+        df_res['materia'] = df_res['materia'].astype(str).str.strip()
+
+        # Si no es admin, filtramos solo la información de este usuario
+        if not is_admin:
+            df_res = df_res[df_res['folio'] == user_folio]
+
+        if df_res.empty:
+            return jsonify({'success': True, 'data': {}})
+
+        # Extraer datos enriquecidos de preguntas.csv para los detalles visuales
+        preguntas_extra = {}
+        try:
+            df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
+            df_p.columns = df_p.columns.str.strip()
+            df_p = df_p.fillna('')
+            for _, p_row in df_p.iterrows():
+                c = str(p_row.get('Curso', '')).strip().upper()
+                m = str(p_row.get('Materia', '')).strip().upper()
+                num = str(p_row.get('Pregunta_número', '')).strip()
+                key = f"{c}_{m}_{num}"
+                preguntas_extra[key] = p_row.to_dict()
+        except Exception as e:
+            print(f"Aviso: No se pudieron cargar datos extra de preguntas: {e}")
+
+        bulk_data = {}
+        
+        # Agrupamos por usuario, curso y materia
+        grouped = df_res.groupby(['folio', 'curso', 'materia'])
+
+        for (f_val, c_val, m_val), group in grouped:
+            details = []
+            correctas = 0
+            incorrectas = 0
+            sin_responder = 0
+
+            for _, row in group.iterrows():
+                pregunta_num = str(row.get('Pregunta_número')).strip()
+                q_key = f"{c_val.upper()}_{m_val.upper()}_{pregunta_num}"
+                extra = preguntas_extra.get(q_key, {})
+
+                # Función auxiliar para priorizar datos de resultados.csv o hacer fallback a preguntas.csv
+                def get_val(r, e, key):
+                    v = str(r.get(key, '')).strip()
+                    return v if v else str(e.get(key, '')).strip()
+
+                pregunta_txt = get_val(row, extra, 'Pregunta')
+                if not pregunta_txt: pregunta_txt = "Pregunta sin texto"
+                
+                seleccion_raw = str(row.get('Respuesta_seleccionada', '')).strip()
+                correcta_raw = str(row.get('Respuesta_correcta', '')).strip()
+
+                def normalizar_opcion(texto):
+                    texto = texto.lower()
+                    if 'respuesta_a' in texto or texto == 'a': return 'A'
+                    if 'respuesta_b' in texto or texto == 'b': return 'B'
+                    if 'respuesta_c' in texto or texto == 'c': return 'C'
+                    if 'respuesta_d' in texto or texto == 'd': return 'D'
+                    return ''
+
+                sel_letra = normalizar_opcion(seleccion_raw)
+                corr_letra = normalizar_opcion(correcta_raw)
+                
+                status = 'incorrecta'
+                if not sel_letra:
+                    status = 'sin_responder'
+                    sin_responder += 1
+                elif sel_letra == corr_letra:
+                    status = 'correcta'
+                    correctas += 1
+                else:
+                    status = 'incorrecta'
+                    incorrectas += 1
+
+                details.append({
+                    'numero': pregunta_num,
+                    'pregunta': pregunta_txt,
+                    'opciones': {
+                        'A': get_val(row, extra, 'Respuesta_a'),
+                        'B': get_val(row, extra, 'Respuesta_b'),
+                        'C': get_val(row, extra, 'Respuesta_c'),
+                        'D': get_val(row, extra, 'Respuesta_d')
+                    },
+                    'Parrfafo': str(extra.get('Parrfafo', '')),
+                    'Img_Parrafo': str(extra.get('Img_Parrafo', '')),
+                    'Pregunta_Parrafo': str(extra.get('Pregunta_Parrafo', '')),
+                    'Img_Respuesta_a': str(extra.get('Img_Respuesta_a', '')),
+                    'Img_Respuesta_b': str(extra.get('Img_Respuesta_b', '')),
+                    'Img_Respuesta_c': str(extra.get('Img_Respuesta_c', '')),
+                    'Img_Respuesta_d': str(extra.get('Img_Respuesta_d', '')),
+                    'seleccionada': sel_letra,
+                    'correcta': corr_letra,
+                    'status': status
+                })
+            
+            try:
+                details.sort(key=lambda x: int(x['numero']) if str(x['numero']).isdigit() else 0)
+            except: pass
+
+            total_preguntas = len(details)
+            calificacion = (correctas / total_preguntas * 10) if total_preguntas > 0 else 0
+
+            summary = {
+                'total': total_preguntas,
+                'correctas': correctas,
+                'incorrectas': incorrectas,
+                'sin_responder': sin_responder,
+                'calificacion': round(calificacion, 1)
+            }
+
+            # Si es admin, agrupa por folio. Si es usuario, asigna directo a la materia.
+            if is_admin:
+                if f_val not in bulk_data:
+                    bulk_data[f_val] = {}
+                bulk_data[f_val][m_val] = {'summary': summary, 'details': details}
+            else:
+                bulk_data[m_val] = {'summary': summary, 'details': details}
+
+        return jsonify({'success': True, 'data': bulk_data})
+
+    except Exception as e:
+        print(f"Error procesando bulk load: {e}")
+        return jsonify({'success': False, 'message': f'Error interno: {str(e)}'}), 500
+
 @app.route('/logout')
 def logout():
     remove_active_session(session.get('user'))
