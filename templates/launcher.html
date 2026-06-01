@@ -11,18 +11,30 @@
 <body data-is-admin="{{ 'true' if is_admin else 'false' }}">
     <div class="exam-container">
         <div class="top-bar">
-            <div class="nav-buttons">
-                <button class="nav-btn" onclick="location.reload();">
-                    <i class="fas fa-sync-alt"></i>
-                    Actualizar
-                </button>
+            <!-- NUEVO CONTENEDOR: Agrupa botones izquierdos y el Título -->
+            <div class="nav-left-section">
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="location.reload();">
+                        <i class="fas fa-sync-alt"></i>
+                        <span class="desktop-only">Actualizar</span>
+                    </button>
+                    
+                    {% if is_admin %}
+                    <button class="nav-btn" onclick="window.location.href='/resultados';" style="margin-left: 5px;">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="desktop-only">Resultados</span>
+                    </button>
+                    {% endif %}
+                </div>
+                
+                <h1 class="navbar-title">C.A.E.P. EXAMEN {{ curso | default('SIMULADOR') }}</h1>
             </div>
             
             <div class="action-buttons">
                 <a href="{{ url_for('test') }}" class="btn-action" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-camera"></i>
                     <i class="fas fa-microphone"></i>
-                    Comprobar dispositivos
+                    <span class="desktop-only">Comprobar dispositivos</span>
                 </a>
                 
                 <a href="{{ url_for('perfil') }}" class="btn-action" style="background-color: #2c3e50; cursor: pointer; text-decoration: none;">
@@ -33,15 +45,15 @@
                 
                 <button class="btn-action logout" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
-                    Salir
+                    <span class="desktop-only">Salir</span>
                 </button>
             </div>
         </div>
 
         <div class="content-area">
             <div class="content-section">
-                <h1>C.A.E.P. EXAMEN {{ curso | default('SIMULADOR') }}</h1>
                 
+                <!-- La sección de actualización ahora es independiente -->
                 <div class="update-section">
                     <p class="important-text"><strong>IMPORTANTE, recuerda que está prohibido el uso de:</strong></p>
                     
@@ -54,65 +66,20 @@
                 <div class="separator"></div>
                 
                 <div class="exam-details">
-                    <div class="exam-selector" id="exam-selector" style="display: none;">
+                    <div class="exam-selector" id="exam-selector">
                         <h2 class="section-title">Exámenes</h2>
-                        <div id="exam-cards-container" class="exam-cards-grid">
-                            </div>
-                    </div>
-                    
-                    <div id="exam-info-container" class="exam-info-container" style="display: none;">
-                        <div class="exam-card-new">
-                            <div class="exam-card-header-new">
-                                <h3 id="exam-name-title">Nombre de Examen</h3>
-                                
-                                <div class="header-actions">
-                                    <select id="header-exam-select" class="header-exam-dropdown">
-                                        <option value="">-- Cambiar examen --</option>
-                                    </select>
-                                    <button id="close-exam-card" class="btn-close-card" title="Cerrar tarjeta">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div class="exam-card-body-new">
-                                <div class="exam-logo-box" id="reference-logo-box">
-                                    {% if 'ECOEMS' in curso %}
-                                        <img src="{{ url_for('static', filename='img/logo_ecoems.png') }}" alt="Logo ECOEMS" class="exam-logo-img">
-                                    {% elif 'LICENCIATURA' in curso %}
-                                        <img src="{{ url_for('static', filename='img/logo_licenciatura.png') }}" alt="Logo Licenciatura" class="exam-logo-img">
-                                    {% else %}
-                                        <span>LOGO<br>EXAMEN</span>
-                                    {% endif %}
-                                </div>
-
-                                <div class="exam-details-list">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Estatus:</span>
-                                        <span id="exam-status-pill" class="detail-pill pill-green">Disponible</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <span class="detail-label">Fecha:</span>
-                                        <span id="exam-date-pill" class="detail-pill pill-green">---</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <span class="detail-label">Horario:</span>
-                                        <span id="exam-time-pill" class="detail-pill pill-green">---</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         
-                        <div class="exam-actions-footer">
-                            <button id="start-exam-btn" class="btn-large-action btn-start">
-                                Comenzar Examen
-                            </button>
-                            <button id="view-results-btn" class="btn-large-action btn-results" style="display: none;">
-                                Ver resultados
-                            </button>
-                            <button id="not-presented-btn" class="btn-large-action disabled" style="display: none; background-color: #7f8c8d; cursor: not-allowed;">
-                                Sin Presentar
-                            </button>
+                        <div id="reference-logo-box" style="display: none;">
+                            {% if 'ECOEMS' in curso %}
+                                <img src="{{ url_for('static', filename='img/logo_ecoems.png') }}" alt="Logo ECOEMS" class="exam-logo-img">
+                            {% elif 'LICENCIATURA' in curso %}
+                                <img src="{{ url_for('static', filename='img/logo_licenciatura.png') }}" alt="Logo Licenciatura" class="exam-logo-img">
+                            {% else %}
+                                <span>LOGO<br>EXAMEN</span>
+                            {% endif %}
+                        </div>
+
+                        <div id="exam-cards-container" class="exam-cards-grid">
                         </div>
                     </div>
                 </div>

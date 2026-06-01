@@ -1,26 +1,7 @@
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
-    // --- REFERENCIAS A ELEMENTOS ---
-    const examSelector = document.getElementById('exam-selector');
     const examCardsContainer = document.getElementById('exam-cards-container');
-    const examInfoContainer = document.getElementById('exam-info-container');
-    
-    // Elementos de la tarjeta estilo "Captura"
-    const examNameTitle = document.getElementById('exam-name-title'); 
-    const examStatusPill = document.getElementById('exam-status-pill'); 
-    const examDatePill = document.getElementById('exam-date-pill');     
-    const examTimePill = document.getElementById('exam-time-pill');     
-    
-    // Botones y Selectores
-    const headerExamSelect = document.getElementById('header-exam-select');
-    const closeExamCardBtn = document.getElementById('close-exam-card');
-    const startExamBtn = document.getElementById('start-exam-btn');
-    const viewResultsBtn = document.getElementById('view-results-btn');
-    const notPresentedBtn = document.getElementById('not-presented-btn');
-    
-    // Almacenamiento de datos
     let examData = {}; 
-    window.selectedExamKey = null;
 
     // --- FETCH DE DATOS ---
     fetch('/api/courses')
@@ -39,40 +20,81 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             examData = data;
-            
-            // Poblar selector de la cabecera
-            if(headerExamSelect) {
-                headerExamSelect.innerHTML = '<option value="">-- Cambiar examen --</option>'; 
-                if (Object.keys(examData).length > 0) {
-                    for (const examKey in examData) {
-                        const exam = examData[examKey];
-                        const option = document.createElement('option');
-                        option.value = examKey; 
-                        const code = exam.code || examKey;
-                        option.textContent = `${code} - ${exam.name}`;
-                        headerExamSelect.appendChild(option);
-                    }
-                }
-            }
-            
-            // Generar las tarjetas de la pantalla principal
             renderExamCards();
-            
-            if(examSelector) examSelector.style.display = 'block';
             setInterval(updateExamStatuses, 1000);
         })
         .catch(error => {
             console.error('Error fetching exams:', error);
             showMessage('Error al cargar exámenes. Intenta recargar la página.', 'error');
             if(examCardsContainer) examCardsContainer.innerHTML = '<p>Error al cargar los exámenes.</p>';
-            if(examSelector) examSelector.style.display = 'block'; 
         });
 
-    // --- FUNCIÓN PARA DETERMINAR COLOR DE TARJETA SEGÚN ESTADO ---
-    function getCardStatusClass(exam, statusText) {
-        if (exam.taken || statusText === 'Finalizado') return 'status-card-finished';
-        if (statusText === 'Disponible') return 'status-card-available';
-        return 'status-card-pending'; // Aún no empieza
+    // --- FUNCIONES DE REDIRECCIÓN DIRECTA ---
+    window.executeExamAction = function(actionType, examKey, examName) {
+        if (actionType === 'start') {
+            const examUrl = `/examen?materia=${encodeURIComponent(examKey)}`;
+            const testUrl = `/test?next=${encodeURIComponent(examUrl)}`;
+            window.location.href = testUrl;
+        } else if (actionType === 'results') {
+            window.location.href = `/resultados?materia=${encodeURIComponent(examName)}`;
+        }
+    };
+
+    // --- CONFIGURACIÓN DINÁMICA DE LA TARJETA Y PIE ---
+    function getCardConfig(exam, statusText, examKey) {
+        let config = {
+            text: "SELECCIONAR",
+            footerClass: "footer-pending",
+            actionOnClick: "",
+            isClickable: false,
+            borderStateClass: "state-pending"
+        };
+
+        if (exam.taken) {
+            let resultsAvailable = false;
+            let resultDateText = "";
+            
+            if (exam.results_date && exam.results_time) {
+                try {
+                    const resStr = `${exam.results_date.trim()}T${exam.results_time.trim()}`;
+                    const resDateTime = new Date(resStr);
+                    if (!isNaN(resDateTime.getTime()) && new Date() >= resDateTime) {
+                        resultsAvailable = true;
+                    } else {
+                        const compactDate = formatDatePretty(exam.results_date).replace(/\s-\s/g, '-');
+                        resultDateText = `${compactDate} ${exam.results_time.substring(0, 5)}`;
+                    }
+                } catch(e) {}
+            }
+
+            if (resultsAvailable) {
+                config.text = "VER RESULTADOS";
+                config.footerClass = "footer-results";
+                config.borderStateClass = "state-results"; 
+                config.actionOnClick = `executeExamAction('results', '${examKey}', '${exam.name || exam.code || ''}')`;
+                config.isClickable = true;
+            } else {
+                config.text = resultDateText ? resultDateText : "PRÓX. RESULTADOS";
+                config.footerClass = "footer-scheduled";
+                config.borderStateClass = "state-scheduled"; 
+            }
+        } else if (statusText === 'Disponible') {
+            config.text = "EMPEZAR EXAMEN";
+            config.footerClass = "footer-start";
+            config.borderStateClass = "state-available"; 
+            config.actionOnClick = `executeExamAction('start', '${examKey}', '')`;
+            config.isClickable = true;
+        } else if (statusText === 'Finalizado') {
+            config.text = "NO PRESENTÓ";
+            config.footerClass = "footer-finished"; 
+            config.borderStateClass = "state-finished"; 
+        } else {
+            config.text = "PRÓXIMAMENTE";
+            config.footerClass = "footer-pending"; 
+            config.borderStateClass = "state-pending"; 
+        }
+
+        return config;
     }
 
     // --- RENDERIZAR TARJETAS ORDENADAS ---
@@ -86,17 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Extracción limpia del HTML del logo para usarlo en las tarjetas
         const logoRef = document.getElementById('reference-logo-box');
         const logoHTML = logoRef ? logoRef.innerHTML.trim() : '<span>LOGO</span>';
 
-        // Convertir el objeto a Array para poder ordenarlo
-        const examsArray = examKeys.map(key => ({
-            key: key,
-            ...examData[key]
-        }));
-
-        // Ordenar el Array de fechas (del más antiguo al más reciente)
+        const examsArray = examKeys.map(key => ({ key: key, ...examData[key] }));
         examsArray.sort((a, b) => {
             const getTimestamp = (exam) => {
                 if (!exam.raw_date) return Number.MAX_SAFE_INTEGER; 
@@ -108,106 +123,44 @@ document.addEventListener('DOMContentLoaded', function() {
             return getTimestamp(a) - getTimestamp(b);
         });
 
-        // Dibujar las tarjetas ya ordenadas
         examsArray.forEach(exam => {
             const examKey = exam.key;
             const newStatusInfo = calculateExamStatus(exam);
             const statusText = exam.taken ? 'Finalizado' : newStatusInfo.status;
             
-            const statusClass = getCardStatusClass(exam, statusText);
+            const config = getCardConfig(exam, statusText, examKey);
+            const clickableClass = config.isClickable ? 'is-clickable' : '';
             
             let pillClass = 'status-not-started';
             if (exam.taken || statusText === 'Finalizado') pillClass = 'status-finished';
             else if (statusText === 'Disponible') pillClass = 'pill-green';
             
             const card = document.createElement('div');
-            card.className = `exam-preview-card ${statusClass}`;
+            card.className = `exam-preview-card ${config.borderStateClass} ${clickableClass}`;
             card.setAttribute('data-key', examKey);
+            if (config.isClickable) {
+                card.setAttribute('onclick', config.actionOnClick);
+            }
             
             card.innerHTML = `
-                <div class="card-logo-container">
-                    ${logoHTML}
-                </div>
-                <div class="card-details">
-                    <div class="card-title-row">
-                        <h4 class="card-title">${exam.name || examKey}</h4>
-                        <span class="card-status-badge ${pillClass}">${statusText}</span>
+                <div class="card-body-content">
+                    <div class="card-logo-container">
+                        ${logoHTML}
                     </div>
-                    <p class="card-detail-text">${formatDatePretty(exam.raw_date)}</p>
-                    <p class="card-detail-text">${formatTime(exam.raw_start)} - ${formatTime(exam.raw_end)}</p>
+                    <div class="card-details">
+                        <div class="card-title-row">
+                            <h4 class="card-title">${exam.name || examKey}</h4>
+                            <span class="card-status-badge ${pillClass}">${statusText}</span>
+                        </div>
+                        <p class="card-detail-text">${formatDatePretty(exam.raw_date)}</p>
+                        <p class="card-detail-text">${formatTime(exam.raw_start)} - ${formatTime(exam.raw_end)}</p>
+                    </div>
                 </div>
-                <div class="card-actions">
-                    <button class="btn-select-card" onclick="selectExam('${examKey}')">Seleccionar Examen</button>
+                <div class="card-action-footer ${config.footerClass}">
+                    ${config.text}
                 </div>
             `;
             examCardsContainer.appendChild(card);
-        });
-    }
-
-    // --- FUNCIÓN GLOBAL PARA SELECCIONAR UN EXAMEN ---
-    window.selectExam = function(examKey) {
-        const exam = examData[examKey];
-        if (!exam) return;
-        
-        window.selectedExamKey = examKey;
-
-        if(examNameTitle) examNameTitle.textContent = exam.name || examKey;
-        updateStatusUI(exam);
-        if(examDatePill) examDatePill.textContent = formatDatePretty(exam.raw_date);
-        if(examTimePill) examTimePill.textContent = `${formatTime(exam.raw_start)} - ${formatTime(exam.raw_end)}`;
-        
-        if(examSelector) examSelector.style.display = 'none';
-        if(examInfoContainer) examInfoContainer.style.display = 'block';
-
-        showMessage(`Examen seleccionado: ${exam.name}`, 'success');
-        examInfoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
-    // --- MANEJO DEL DESPLEGABLE EN LA CABECERA ---
-    if(headerExamSelect) {
-        headerExamSelect.addEventListener('change', function() {
-            if (this.value) {
-                selectExam(this.value);
-                this.value = ''; 
-            }
-        });
-    }
-
-    // --- FUNCIÓN REUTILIZABLE PARA COLAPSAR LA TARJETA ---
-    function collapseExamCard() {
-        if(examInfoContainer) examInfoContainer.style.display = 'none';
-        if(examSelector) examSelector.style.display = 'block'; 
-        window.selectedExamKey = null;
-    }
-
-    if(closeExamCardBtn) {
-        closeExamCardBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            collapseExamCard();
-            showMessage('Puedes seleccionar otro examen', 'info'); 
-        });
-    }
-
-    document.addEventListener('click', function(e) {
-        if (examInfoContainer && examInfoContainer.style.display === 'block') {
-            if (!examInfoContainer.contains(e.target)) {
-                if (!e.target.closest('.btn-select-card')) {
-                    collapseExamCard();
-                }
-            }
-        }
-    });
-
-    if (startExamBtn) {
-        startExamBtn.addEventListener('click', function() {
-            if (!this.disabled && this.style.display !== 'none') {
-                const examKey = window.selectedExamKey;
-                if (!examKey) return;
-
-                const examUrl = `/examen?materia=${encodeURIComponent(examKey)}`;
-                const testUrl = `/test?next=${encodeURIComponent(examUrl)}`;
-                window.location.href = testUrl;
-            }
         });
     }
 
@@ -261,93 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function updateStatusUI(exam) {
-        if(startExamBtn) { startExamBtn.style.display = 'none'; startExamBtn.disabled = true; }
-        if(viewResultsBtn) { viewResultsBtn.style.display = 'none'; viewResultsBtn.textContent = 'Ver resultados'; viewResultsBtn.onclick = null; viewResultsBtn.classList.remove('disabled'); viewResultsBtn.style.cursor = 'pointer'; viewResultsBtn.style.backgroundColor = ''; }
-        if(notPresentedBtn) { notPresentedBtn.style.display = 'none'; }
-
-        let statusText = exam.status;
-        let colorClass = 'status-not-started'; 
-
-        const isAdmin = document.body.getAttribute('data-is-admin') === 'true';
-
-        if (exam.taken) {
-            statusText = "Finalizado";
-            colorClass = "status-finished";
-
-            const today = new Date();
-            let resultsAvailable = false;
-            let resultDateText = "Próximamente";
-
-            if (exam.results_date && exam.results_time) {
-                try {
-                    const resStr = `${exam.results_date.trim()}T${exam.results_time.trim()}`;
-                    const resDateTime = new Date(resStr);
-                    const dateFormatted = formatDatePretty(exam.results_date);
-                    const timeFormatted = exam.results_time.substring(0, 5); 
-                    resultDateText = `${dateFormatted} - ${timeFormatted}`;
-
-                    if (!isNaN(resDateTime.getTime()) && today >= resDateTime) {
-                        resultsAvailable = true;
-                    }
-                } catch(e) { console.error("Error parsing result date", e); }
-            }
-
-            if(viewResultsBtn) {
-                viewResultsBtn.style.display = 'flex';
-                if (resultsAvailable || isAdmin) {
-                    viewResultsBtn.textContent = (isAdmin && !resultsAvailable) ? "Ver Resultados (Admin)" : "Ver Resultados";
-                    viewResultsBtn.classList.remove('disabled');
-                    viewResultsBtn.onclick = () => { 
-                        window.location.href = `/resultados?materia=${encodeURIComponent(exam.name || exam.code)}`; 
-                    };
-                } else {
-                    viewResultsBtn.textContent = `Fecha de resultados: ${resultDateText}`;
-                    viewResultsBtn.classList.add('disabled');
-                    viewResultsBtn.style.cursor = 'default';
-                    viewResultsBtn.style.backgroundColor = '#f39c12';
-                    viewResultsBtn.onclick = (e) => { e.preventDefault(); };
-                }
-            }
-
-        } else {
-            if (exam.status === 'Disponible') {
-                statusText = "Disponible";
-                colorClass = "pill-green";
-                if(startExamBtn) {
-                    startExamBtn.style.display = 'flex';
-                    startExamBtn.disabled = false;
-                    startExamBtn.classList.remove('disabled');
-                }
-            } else if (exam.status === 'Finalizado') {
-                statusText = "Finalizado";
-                colorClass = "status-finished";
-                if(notPresentedBtn) { notPresentedBtn.style.display = 'flex'; }
-            } else {
-                statusText = "Aún no empieza";
-                colorClass = "status-not-started";
-            }
-            
-            if (isAdmin && viewResultsBtn) {
-                viewResultsBtn.style.display = 'flex';
-                viewResultsBtn.textContent = "Ver Resultados (Admin)";
-                viewResultsBtn.classList.remove('disabled');
-                viewResultsBtn.style.cursor = 'pointer';
-                viewResultsBtn.style.backgroundColor = ''; 
-                viewResultsBtn.onclick = () => { 
-                    window.location.href = `/resultados?materia=${encodeURIComponent(exam.name || exam.code)}`; 
-                };
-            }
-        }
-
-        if (examStatusPill) {
-            examStatusPill.textContent = statusText;
-            examStatusPill.className = 'detail-pill ' + colorClass;
-        }
-        if(examDatePill) examDatePill.className = 'detail-pill ' + colorClass;
-        if(examTimePill) examTimePill.className = 'detail-pill ' + colorClass;
-    }
-
+    // --- ACTUALIZACIÓN DINÁMICA DE ESTADOS POR SEGUNDO ---
     function updateExamStatuses() {
         if (!examData) return;
 
@@ -360,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const previewCard = document.querySelector(`.exam-preview-card[data-key="${examKey}"]`);
             if (previewCard) {
                 const statusText = exam.taken ? "Finalizado" : exam.status;
-                const statusBadge = previewCard.querySelector('.card-status-badge');
                 
+                const statusBadge = previewCard.querySelector('.card-status-badge');
                 if (statusBadge) {
                     statusBadge.textContent = statusText;
                     let newPillClass = 'status-not-started';
@@ -371,15 +238,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     statusBadge.className = `card-status-badge ${newPillClass}`;
                 }
                 
-                const newClass = `exam-preview-card ${getCardStatusClass(exam, statusText)}`;
-                if (previewCard.className !== newClass) {
-                    previewCard.className = newClass;
+                const config = getCardConfig(exam, statusText, examKey);
+                
+                if (config.isClickable) {
+                    previewCard.className = `exam-preview-card ${config.borderStateClass} is-clickable`;
+                    previewCard.setAttribute('onclick', config.actionOnClick);
+                } else {
+                    previewCard.className = `exam-preview-card ${config.borderStateClass}`;
+                    previewCard.removeAttribute('onclick');
+                }
+
+                const footer = previewCard.querySelector('.card-action-footer');
+                if (footer) {
+                    footer.textContent = config.text;
+                    footer.className = `card-action-footer ${config.footerClass}`;
                 }
             }
-        }
-
-        if (window.selectedExamKey && examData[window.selectedExamKey]) {
-            updateStatusUI(examData[window.selectedExamKey]);
         }
     }
 
