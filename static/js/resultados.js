@@ -66,19 +66,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.resultsConfig.isAdmin && window.resultsConfig.adminData) {
         const adminData = window.resultsConfig.adminData;
         
-        // Elementos de Curso
         const btnCurso = document.getElementById('btn-admin-curso');
         const textCurso = document.getElementById('text-admin-curso');
         const dropCurso = document.getElementById('dropdown-admin-curso');
         
-        // Elementos de Usuario
         const btnUser = document.getElementById('btn-admin-user');
         const textUser = document.getElementById('text-admin-user');
         const dropUser = document.getElementById('dropdown-admin-user');
         
         const userFolioInput = document.getElementById('admin-user-select');
 
-        // CLICK EN BOTÓN CURSO
         if (btnCurso && dropCurso) {
             btnCurso.addEventListener('click', function(e) {
                 dropCurso.innerHTML = ''; 
@@ -93,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         textCurso.textContent = curso;
                         dropCurso.style.display = 'none';
 
-                        // Limpiar y Habilitar Usuario
                         userFolioInput.value = '';
                         textUser.textContent = 'Usuario';
                         btnUser.disabled = false;
@@ -104,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // CLICK EN BOTÓN USUARIO
         if (btnUser && dropUser) {
             btnUser.addEventListener('click', function(e) {
                 if (!selectedAdminCurso) return;
@@ -122,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         textUser.textContent = u.nombre_completo;
                         dropUser.style.display = 'none';
 
-                        // Como ya no hay materia específica que escoger, forzamos la vista de Reporte Global
                         const btnAllResults = document.getElementById('btn-all-results');
                         if (btnAllResults) {
                             btnAllResults.click(); 
@@ -164,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // REPORTE GLOBAL Y RENDERIZADO
+    // REPORTE GLOBAL Y RENDERIZADO CON NUEVOS ESTADOS
     // ==========================================
     const btnAllResults = document.getElementById('btn-all-results');
     if (btnAllResults) {
@@ -176,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 : masterExamCache;
 
             if (!targetData || Object.keys(targetData).length === 0) {
-                alert("No hay suficientes resultados registrados para mostrar un reporte global.");
+                alert("Este usuario aún no tiene ningún dato registrado o programado.");
                 return;
             }
 
@@ -192,24 +186,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
             Object.keys(targetData).forEach(materiaKey => {
                 const matData = targetData[materiaKey];
-                if (matData && matData.details) {
-                    globalSummary.total += matData.summary.total;
-                    globalSummary.correctas += matData.summary.correctas;
-                    globalSummary.incorrectas += matData.summary.incorrectas;
-                    globalSummary.sin_responder += matData.summary.sin_responder;
+                if (matData && matData.summary) {
+                    const estado = matData.summary.estado_examen;
                     
-                    if (matData.summary.posicion_global) {
+                    // Solo suma al global lo que YA es público/definitivo
+                    if (estado === 'presentado' || estado === 'no_presentado') {
+                        globalSummary.total += matData.summary.total;
+                        globalSummary.correctas += matData.summary.correctas;
+                        globalSummary.incorrectas += matData.summary.incorrectas;
+                        globalSummary.sin_responder += matData.summary.sin_responder;
+                    }
+                    
+                    // Tomar la posición global general solo si está disponible
+                    if (matData.summary.posicion_global && matData.summary.posicion_global !== '-') {
                         globalSummary.posicion_global = matData.summary.posicion_global;
                     }
 
-                    let cardColor = matData.summary.calificacion >= 6 ? '#27ae60' : '#e74c3c';
+                    // Diseñar las Tarjetas según el Estado
+                    let cardContent = '';
+                    let cardStyle = '';
+                    let cursorStyle = 'cursor: pointer;';
                     
-                    breakdownHtml += `
-                        <div class="global-subject-card" data-materia="${materiaKey}" style="cursor: pointer; flex: 1; min-width: 130px; background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;">
-                            <div style="font-size: 11px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; margin-bottom: 5px;">${materiaKey}</div>
+                    if (estado === 'presentado') {
+                        let cardColor = matData.summary.calificacion >= 6 ? '#27ae60' : '#e74c3c';
+                        cardContent = `
                             <div style="font-size: 18px; font-weight: 800; color: #2c3e50;">${matData.summary.correctas} <span style="font-size: 12px; color: #bdc3c7; font-weight: 600;">/ ${matData.summary.total}</span></div>
                             <div style="font-size: 11px; font-weight: 600; color: ${cardColor}; margin-top: 4px;">Calf: ${matData.summary.calificacion}</div>
                             <div style="margin-top: 8px; font-size: 10px; color: #4a90e2; font-weight: 700;"><i class="fas fa-search"></i> Explorar</div>
+                        `;
+                    } else if (estado === 'resultados_pendientes') {
+                        cursorStyle = 'cursor: not-allowed; opacity: 0.9;';
+                        cardStyle = 'background-color: #f1f8ff; border-color: #8bb9fe;';
+                        cardContent = `
+                            <div style="font-size: 18px; font-weight: 800; color: #4a90e2;">- <span style="font-size: 12px; color: #bdc3c7; font-weight: 600;">/ ${matData.summary.total}</span></div>
+                            <div style="font-size: 11px; font-weight: 600; color: #4a90e2; margin-top: 4px;">EN ESPERA</div>
+                            <div style="margin-top: 8px; font-size: 10px; color: #4a90e2; font-weight: 700;"><i class="fas fa-lock"></i> Resultados pronto</div>
+                        `;
+                    } else if (estado === 'no_presentado') {
+                        cursorStyle = 'cursor: not-allowed; opacity: 0.8;';
+                        cardStyle = 'background-color: #fdf2f2; border-color: #f5c6cb;';
+                        cardContent = `
+                            <div style="font-size: 18px; font-weight: 800; color: #e74c3c;">0 <span style="font-size: 12px; color: #bdc3c7; font-weight: 600;">/ ${matData.summary.total}</span></div>
+                            <div style="font-size: 11px; font-weight: 600; color: #e74c3c; margin-top: 4px;">NO PRESENTADO</div>
+                            <div style="margin-top: 8px; font-size: 10px; color: #95a5a6; font-weight: 700;"><i class="fas fa-lock"></i> Sin detalles</div>
+                        `;
+                    } else { 
+                        // proximo
+                        cursorStyle = 'cursor: not-allowed; opacity: 0.6;';
+                        cardStyle = 'background-color: #f8f9fa; border-style: dashed;';
+                        cardContent = `
+                            <div style="font-size: 18px; font-weight: 800; color: #95a5a6;">- <span style="font-size: 12px; color: #bdc3c7; font-weight: 600;">/ ${matData.summary.total}</span></div>
+                            <div style="font-size: 11px; font-weight: 600; color: #f39c12; margin-top: 4px;">PRÓXIMO</div>
+                            <div style="margin-top: 8px; font-size: 10px; color: #95a5a6; font-weight: 700;"><i class="fas fa-clock"></i> Pendiente</div>
+                        `;
+                    }
+                    
+                    breakdownHtml += `
+                        <div class="global-subject-card" data-materia="${materiaKey}" data-estado="${estado}" style="${cursorStyle} flex: 1; min-width: 130px; background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s; ${cardStyle}">
+                            <div style="font-size: 11px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; margin-bottom: 5px;">${materiaKey}</div>
+                            ${cardContent}
                         </div>
                     `;
                 }
@@ -222,20 +257,29 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownContainer.style.display = 'block';
 
             document.querySelectorAll('.global-subject-card').forEach(card => {
-                card.addEventListener('mouseover', function() {
-                    this.style.transform = 'translateY(-3px)';
-                    this.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
-                    this.style.borderColor = '#4a90e2';
-                });
-                card.addEventListener('mouseout', function() {
-                    this.style.transform = 'none';
-                    this.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)';
-                    this.style.borderColor = '#e9ecef';
-                });
-                card.addEventListener('click', function() {
-                    const matKey = this.getAttribute('data-materia');
-                    loadGlobalSubjectDetails(matKey);
-                });
+                const est = card.getAttribute('data-estado');
+                if(est === 'presentado'){
+                    card.addEventListener('mouseover', function() {
+                        this.style.transform = 'translateY(-3px)';
+                        this.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
+                        this.style.borderColor = '#4a90e2';
+                    });
+                    card.addEventListener('mouseout', function() {
+                        this.style.transform = 'none';
+                        this.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)';
+                        this.style.borderColor = '#e9ecef';
+                    });
+                    card.addEventListener('click', function() {
+                        const matKey = this.getAttribute('data-materia');
+                        loadGlobalSubjectDetails(matKey);
+                    });
+                } else {
+                    card.addEventListener('click', function() {
+                        if (est === 'resultados_pendientes') alert("Los resultados de este examen estarán disponibles en la fecha programada. ¡Paciencia!");
+                        if (est === 'no_presentado') alert("Examen omitido o finalizado. No hay registro de tus respuestas para revisar.");
+                        if (est === 'proximo') alert("Este examen aún no está habilitado para ser resuelto.");
+                    });
+                }
             });
 
             globalSummary.calificacion = globalSummary.total > 0 
@@ -267,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             : masterExamCache;
 
         let subjectData = targetData[matKey];
-        if(!subjectData) return;
+        if(!subjectData || subjectData.summary.estado_examen !== 'presentado') return;
 
         const breakdownContainer = document.getElementById('top-breakdown-container');
         if (breakdownContainer) {
@@ -319,19 +363,29 @@ document.addEventListener('DOMContentLoaded', function() {
         if (positionTitle) positionTitle.textContent = "Posición";
 
         let dataToRender = null;
+        let matchedKey = matToFetch; 
+
+        const searchMateria = matToFetch.toUpperCase().trim();
 
         if (window.resultsConfig.isAdmin) {
-            if (masterExamCache[folio] && masterExamCache[folio][matToFetch]) {
-                dataToRender = masterExamCache[folio][matToFetch];
+            if (masterExamCache[folio]) {
+                matchedKey = Object.keys(masterExamCache[folio]).find(k => k.toUpperCase().trim() === searchMateria) || matToFetch;
+                dataToRender = masterExamCache[folio][matchedKey];
             }
         } else {
-            if (masterExamCache[matToFetch]) {
-                dataToRender = masterExamCache[matToFetch];
-            }
+            matchedKey = Object.keys(masterExamCache).find(k => k.toUpperCase().trim() === searchMateria) || matToFetch;
+            dataToRender = masterExamCache[matchedKey];
         }
 
-        if (dataToRender && dataToRender.details) {
-            globalQuestions = dataToRender.details.map((q, idx) => ({ ...q, materia_origen: matToFetch, originalIndex: idx }));
+        const titleEl = document.getElementById('materia-title');
+        const titleElMob = document.getElementById('materia-title-mobile');
+        if (titleEl) titleEl.textContent = matchedKey;
+        if (titleElMob) titleElMob.textContent = matchedKey;
+        materiaActual = matchedKey;
+
+        // Validación de Estados Extendida
+        if (dataToRender && dataToRender.summary.estado_examen === 'presentado') {
+            globalQuestions = dataToRender.details.map((q, idx) => ({ ...q, materia_origen: matchedKey, originalIndex: idx }));
             renderSummary(dataToRender.summary);
             setupFilters();
             renderNavigation(); 
@@ -341,12 +395,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(detailsPanel) detailsPanel.style.display = 'none';
                 btnShowDetails.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada';
             }
+        } else if (dataToRender && dataToRender.summary.estado_examen === 'resultados_pendientes') {
+            document.getElementById('questions-nav').innerHTML = '';
+            document.getElementById('single-question-container').innerHTML = `
+                <div style="text-align:center; color:#4a90e2; padding:30px; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-lock" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> 
+                    Los resultados de este examen estarán disponibles en la fecha programada.
+                </div>`;
+            renderSummary(dataToRender.summary);
+            if(btnShowDetails) btnShowDetails.disabled = true;
+        } else if (dataToRender && dataToRender.summary.estado_examen === 'no_presentado') {
+            document.getElementById('questions-nav').innerHTML = '';
+            document.getElementById('single-question-container').innerHTML = `
+                <div style="text-align:center; color:#e74c3c; padding:30px; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-lock" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> 
+                    Examen omitido o finalizado. No hay registro de respuestas.
+                </div>`;
+            renderSummary(dataToRender.summary);
+            if(btnShowDetails) btnShowDetails.disabled = true;
+        } else if (dataToRender && dataToRender.summary.estado_examen === 'proximo') {
+            document.getElementById('questions-nav').innerHTML = '';
+            document.getElementById('single-question-container').innerHTML = `
+                <div style="text-align:center; color:#f39c12; padding:30px; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-clock" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> 
+                    Este examen está próximo a presentarse.
+                </div>`;
+            renderSummary(dataToRender.summary);
+            if(btnShowDetails) btnShowDetails.disabled = true;
         } else {
             document.getElementById('questions-nav').innerHTML = '';
             document.getElementById('single-question-container').innerHTML = `
                 <div style="text-align:center; color:#e74c3c; padding:30px; font-weight: bold; font-size: 16px;">
                     <i class="fas fa-exclamation-triangle" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> 
-                    No hay resultados registrados para este examen.
+                    Sin datos en la base para esta materia.
                 </div>`;
             renderSummary({calificacion: 0, total: 0, correctas: 0, incorrectas: 0, sin_responder: 0, posicion_materia: '-', posicion_global: '-'});
             if(btnShowDetails) btnShowDetails.disabled = true;
@@ -371,7 +452,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const analisisTextEl = document.getElementById('analysis-text');
-        if (summary.total > 0) {
+        
+        // Bloqueo visual del análisis si no está presentado o está bloqueado
+        if (summary.estado_examen === 'resultados_pendientes') {
+            analisisTextEl.innerHTML = "<strong>Resultados Pendientes.</strong> La calificación y revisión estarán disponibles en la fecha programada.";
+            analisisTextEl.parentElement.style.backgroundColor = "#f1f8ff";
+            analisisTextEl.parentElement.style.borderColor = "#8bb9fe";
+            analisisTextEl.style.color = "#4a90e2";
+        } else if (summary.estado_examen === 'no_presentado') {
+            analisisTextEl.innerHTML = "<strong>Examen NO presentado.</strong> Impacto negativo en promedio global por preguntas omitidas.";
+            analisisTextEl.parentElement.style.backgroundColor = "#fdf2f2";
+            analisisTextEl.parentElement.style.borderColor = "#f5c6cb";
+            analisisTextEl.style.color = "#c62828";
+        } else if (summary.estado_examen === 'proximo') {
+            analisisTextEl.innerHTML = "<strong>Examen Pendiente.</strong> Aún no forma parte del cálculo global.";
+            analisisTextEl.parentElement.style.backgroundColor = "#f8f9fa";
+            analisisTextEl.parentElement.style.borderColor = "#eee";
+            analisisTextEl.style.color = "#7f8c8d";
+        } else if (summary.total > 0) {
+            // Estilo por defecto normal
+            analisisTextEl.parentElement.style.backgroundColor = "#e8f4f8";
+            analisisTextEl.parentElement.style.borderColor = "#b3e5fc";
+            analisisTextEl.style.color = "#0277bd";
+            
             const porcentaje = (summary.correctas / summary.total) * 100;
             if (porcentaje >= 85) {
                 analisisTextEl.innerHTML = "<strong>¡Excelente trabajo!</strong> Has demostrado un sólido dominio de los temas.";

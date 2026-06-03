@@ -30,10 +30,6 @@ app.secret_key = 'clave_secreta_caep_simulador'
 MEXICO_TZ = pytz.timezone('America/Mexico_City')
 
 def get_now_mexico():
-    """
-    Obtiene la hora actual exacta de México y le quita el tzinfo.
-    Esto evita el error: "can't compare offset-naive and offset-aware datetimes"
-    """
     return datetime.now(MEXICO_TZ).replace(tzinfo=None)
 
 # --- CONSTANTES Y ARCHIVOS ---
@@ -92,7 +88,6 @@ SELECCION_DIR_MAP = {
 
 def is_user_logged_in(email): 
     try:
-        # Bloquea el archivo hasta 5 segundos si otro worker lo está usando
         with FileLock(LOCK_FILE, timeout=5):
             if not os.path.exists(SESSIONS_FILE): return False
             with open(SESSIONS_FILE, 'r') as f:
@@ -146,7 +141,6 @@ def remove_active_session(email):
         print(f"Error removiendo sesión: {e}")
 
 def init_csv():
-    """Inicializa archivos CSV y carpetas necesarias."""
     if not os.path.exists(USERS_CSV):
         with open(USERS_CSV, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
@@ -207,21 +201,15 @@ def init_csv():
 # --- FUNCIONES DE UTILIDAD ---
 
 def convert_docx_to_pdf(docx_path, pdf_path):
-    """
-    Convierte un archivo DOCX a PDF usando LibreOffice en modo headless.
-    Se utiliza un perfil de usuario temporal para evitar colisiones en servidores.
-    """
     try:
-        # Asegurar que las rutas sean absolutas
         docx_abs = os.path.abspath(docx_path)
         pdf_abs = os.path.abspath(pdf_path)
         out_dir = os.path.dirname(pdf_abs)
 
-        # Crear un directorio temporal ÚNICO para el perfil de esta ejecución
         with tempfile.TemporaryDirectory() as tmp_profile:
             cmd = [
                 'libreoffice',
-                f'-env:UserInstallation=file://{tmp_profile}',  # ¡La clave para que no se trabe en el servidor!
+                f'-env:UserInstallation=file://{tmp_profile}', 
                 '--headless',
                 '--nologo',
                 '--nodefault',
@@ -230,26 +218,18 @@ def convert_docx_to_pdf(docx_path, pdf_path):
                 '--outdir', out_dir,
                 docx_abs
             ]
-
-            # Ejecutar el comando
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             
-        # Verificar si realmente se creó el archivo físico
         if os.path.exists(pdf_abs):
-            print(f"Conversión exitosa: {docx_path} -> {pdf_path}")
             return True
         else:
-            print(f"Error: LibreOffice terminó pero no generó el PDF. Log: {result.stdout}")
             return False
 
     except subprocess.CalledProcessError as e:
-        print(f"Error en la conversión con LibreOffice: {e.stderr}")
         return False
     except FileNotFoundError:
-        print("LibreOffice no está instalado o no está en el PATH.")
         return False
     except Exception as e:
-        print(f"Error inesperado al convertir PDF: {e}")
         return False
 
 def generate_random_password(length=10):
@@ -362,16 +342,13 @@ def get_exam_status(fecha_str, inicio_str, final_str):
         elif start <= now <= end: return "Disponible", True
         else: return "Finalizado", False
     except Exception as e: 
-        print(f"Error status examen: {e}")
         return "Error Datos", False
 
 def check_exam_taken(folio, curso, materia):
-    """Verifica si el usuario ya realizó el examen en resultados.csv"""
     if not os.path.exists(RESULTADOS_CSV):
         return False
     try:
         df_res = pd.read_csv(RESULTADOS_CSV, encoding='utf-8')
-        
         taken = df_res[
             (df_res['folio'].astype(str) == str(folio)) & 
             (df_res['curso'] == curso) & 
@@ -379,7 +356,6 @@ def check_exam_taken(folio, curso, materia):
         ].shape[0] > 0
         return taken
     except Exception as e:
-        print(f"Error checking exam taken: {e}")
         try:
             with open(RESULTADOS_CSV, 'r', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
@@ -402,7 +378,6 @@ def get_all_users():
                 user['nombre_completo'] = f"{user['nombre']} {user['apellido_paterno']} {user['apellido_materno']}".upper()
             return users
     except Exception as e:
-        print(f"Error al leer usuarios: {e}")
         return []
 
 def get_user_stats():
@@ -433,7 +408,6 @@ def get_user_stats():
             
             return stats
     except Exception as e:
-        print(f"Error al obtener estadísticas: {e}")
         return {'total': 0, 'por_curso': {}, 'con_opciones': 0, 'sin_opciones': 0}
 
 def get_admin_user():
@@ -444,8 +418,7 @@ def get_admin_user():
             if rows:
                 return rows[0]
     except Exception as e:
-        print(f"Error al obtener usuario admin: {e}")
-    return None
+        return None
 
 def is_admin_user():
     if not session.get('logged_in'): return False
@@ -460,7 +433,6 @@ def get_courses_list():
         df = pd.read_csv(COURSES_CSV, encoding='utf-8-sig')
         return df['curso'].dropna().unique().tolist()
     except Exception as e:
-        print(f"Error al obtener cursos: {e}")
         return []
 
 def update_user_in_csv(user_data):
@@ -488,7 +460,6 @@ def update_user_in_csv(user_data):
             writer.writerows(rows)
         return True, "Usuario actualizado correctamente"
     except Exception as e:
-        print(f"Error al actualizar usuario: {e}")
         return False, str(e)
 
 # --- FUNCIÓN PARA GUARDAR RESULTADOS ---
@@ -496,29 +467,21 @@ def update_user_in_csv(user_data):
 def save_exam_results(folio, curso, materia, respuestas):
     try:
         df_preguntas = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
-        
         preguntas_examen = df_preguntas[(df_preguntas['Curso'] == curso) & (df_preguntas['Materia'] == materia)]
-        
         resultados = []
         
         for _, row in preguntas_examen.iterrows():
             pregunta_num = row['Pregunta_número']
-            
             letra_seleccionada = respuestas.get(str(pregunta_num), '').strip()
             
             valor_a_guardar = ""
             letra_lower = letra_seleccionada.lower()
             
-            if letra_lower == 'a':
-                valor_a_guardar = "Respuesta_a"
-            elif letra_lower == 'b':
-                valor_a_guardar = "Respuesta_b"
-            elif letra_lower == 'c':
-                valor_a_guardar = "Respuesta_c"
-            elif letra_lower == 'd':
-                valor_a_guardar = "Respuesta_d"
-            else:
-                valor_a_guardar = "" 
+            if letra_lower == 'a': valor_a_guardar = "Respuesta_a"
+            elif letra_lower == 'b': valor_a_guardar = "Respuesta_b"
+            elif letra_lower == 'c': valor_a_guardar = "Respuesta_c"
+            elif letra_lower == 'd': valor_a_guardar = "Respuesta_d"
+            else: valor_a_guardar = "" 
 
             resultado = {
                 'folio': folio,
@@ -548,7 +511,6 @@ def save_exam_results(folio, curso, materia, respuestas):
         
         return True, "Resultados guardados correctamente"
     except Exception as e:
-        print(f"Error al guardar resultados: {e}")
         return False, str(e)
 
 # --- LÓGICA DE ESCUELAS ---
@@ -802,7 +764,6 @@ def register():
                     pdf_path = os.path.join(target_dir, pdf_registro_name)
                     
                     doc.save(doc_path)
-                    # Conversión con LibreOffice
                     convert_docx_to_pdf(doc_path, pdf_path)
                     
                     with open(pdf_path, "rb") as f:
@@ -828,7 +789,6 @@ def register():
                     pdf_path = os.path.join(target_dir, pdf_comprobante_name)
                     
                     doc.save(doc_path)
-                    # Conversión con LibreOffice
                     convert_docx_to_pdf(doc_path, pdf_path)
                     
                     with open(pdf_path, "rb") as f:
@@ -928,7 +888,6 @@ def api_courses():
             return jsonify({})
             
     except Exception as e:
-        print(f"Error api_courses: {e}")
         return jsonify({})
 
 @app.route('/launcher')
@@ -945,7 +904,6 @@ def perfil():
     admin_user = get_admin_user()
     is_admin = user_data.get('folio') == admin_user.get('folio') if admin_user else False
     
-    # Foto de perfil
     curso_clean = user_data['curso'].strip().replace(' ', '_')
     filename = f"{user_data['folio']}_{curso_clean}.png"
     full_path_img = os.path.join(IMG_PERFIL_DIR, filename)
@@ -956,7 +914,6 @@ def perfil():
     else:
         foto_url = url_for('static', filename='img/foto_perfil.png')
 
-    # --- MATERIAL DE TRABAJO ---
     materiales = []
     mapa_materias = {
         'Español': 'espanol', 'Matemáticas': 'matematicas', 'Física': 'fisica',
@@ -984,38 +941,16 @@ def perfil():
                             'materia_key': nombre_carpeta, 'materia_name': nombre_display
                         })
 
-    # --- DOCUMENTACIÓN DINÁMICA ---
     tipo_curso = 'ecoems' if 'ECOEMS' in curso_str else 'licenciatura'
-    
     username = user_data.get('username', '')
     folio = user_data.get('folio', '')
 
     docs_to_search = [
-        {
-            'label': 'Registro',
-            'folder': f'registros_{tipo_curso}', 
-            'pattern': f'registro_*_{username}.pdf' 
-        },
-        {
-            'label': 'Comprobante de Registro',
-            'folder': f'comprobantes_{tipo_curso}',
-            'pattern': f'comprobante_*_{username}.pdf'
-        },
-        {
-            'label': 'Documento A',
-            'folder': f'{tipo_curso}_documento_a',
-            'pattern': f'{folio}_*_documento_a.pdf'
-        },
-        {
-            'label': 'Documento B',
-            'folder': f'{tipo_curso}_documento_b',
-            'pattern': f'{folio}_*_documento_b.pdf'
-        },
-        {
-            'label': 'Documento C',
-            'folder': f'{tipo_curso}_documento_c',
-            'pattern': f'{folio}_*_documento_c.pdf'
-        }
+        {'label': 'Registro', 'folder': f'registros_{tipo_curso}', 'pattern': f'registro_*_{username}.pdf'},
+        {'label': 'Comprobante de Registro', 'folder': f'comprobantes_{tipo_curso}', 'pattern': f'comprobante_*_{username}.pdf'},
+        {'label': 'Documento A', 'folder': f'{tipo_curso}_documento_a', 'pattern': f'{folio}_*_documento_a.pdf'},
+        {'label': 'Documento B', 'folder': f'{tipo_curso}_documento_b', 'pattern': f'{folio}_*_documento_b.pdf'},
+        {'label': 'Documento C', 'folder': f'{tipo_curso}_documento_c', 'pattern': f'{folio}_*_documento_c.pdf'}
     ]
 
     documentos_personales = []
@@ -1034,8 +969,6 @@ def perfil():
         if found_files:
             full_path_found = found_files[0]
             filename_only = os.path.basename(full_path_found)
-            
-            # Construir ruta relativa y normalizar separadores
             rel_path = os.path.join(REGISTROS_DIR, doc['folder'], filename_only).replace('\\', '/')
             
             doc_info['found'] = True
@@ -1064,19 +997,15 @@ def descargar_material():
         return "Falta el parámetro archivo", 400
 
     try:
-        # Limpiar ruta: eliminar posibles barras iniciales y normalizar
         ruta_relativa = ruta_relativa.lstrip('/').replace('\\', '/')
-        
-        # Determinar directorio base
         if ruta_relativa.startswith(REGISTROS_DIR) or ruta_relativa.startswith('registros'):
-            directorio_base = app.root_path  # Raíz del proyecto
+            directorio_base = app.root_path  
         else:
             directorio_base = app.static_folder
 
         ruta_completa = os.path.join(directorio_base, ruta_relativa)
         
         if not os.path.exists(ruta_completa):
-            print(f"ERROR: Archivo no encontrado en: {ruta_completa}")
             return "Archivo no encontrado en el servidor", 404
 
         directorio = os.path.dirname(ruta_completa)
@@ -1093,7 +1022,6 @@ def descargar_material():
         )
         
     except Exception as e:
-        print(f"ERROR DESCARGA: {e}")
         return f"Error interno: {str(e)}", 500
 
 @app.route('/admin')
@@ -1108,13 +1036,12 @@ def admin():
     users = get_all_users()
     stats = get_user_stats()
     
-    # --- NUEVA LÓGICA: Obtener información de los archivos ---
     ALLOWED_CSVS = ['users.csv', 'cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
     files_info = []
     
     for f in ALLOWED_CSVS:
         if os.path.exists(f):
-            size = os.path.getsize(f) / 1024 # Convertir a KB
+            size = os.path.getsize(f) / 1024 
             mtime = os.path.getmtime(f)
             mod_time = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M:%S')
             files_info.append({'name': f, 'size': f"{size:.2f} KB", 'modified': mod_time, 'exists': True})
@@ -1126,9 +1053,8 @@ def admin():
                          users=users,
                          stats=stats,
                          total_users=stats['total'],
-                         files_info=files_info) # <--- Enviamos la variable a la vista
+                         files_info=files_info)
 
-# --- NUEVA RUTA PARA PREVISUALIZAR ARCHIVOS ---
 @app.route('/api/admin/preview-file/<filename>')
 def preview_file(filename):
     if not session.get('logged_in') or not is_admin_user():
@@ -1142,7 +1068,6 @@ def preview_file(filename):
         return jsonify({'success': False, 'message': 'El archivo no existe'})
         
     try:
-        # ¡LÍMITE ELIMINADO! Ya no usamos nrows=10, leemos todo el archivo
         df = pd.read_csv(filename, encoding='utf-8')
     except:
         try:
@@ -1150,10 +1075,8 @@ def preview_file(filename):
         except Exception as e:
             return jsonify({'success': False, 'message': f'Error leyendo archivo: {str(e)}'})
             
-    # Limpiamos campos vacíos (NaN) para que la tabla se vea estética
     df = df.fillna('')
             
-    # Forzamos a Pandas a renderizar TODAS las filas y columnas en el HTML
     with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.max_colwidth', None):
         html_table = df.to_html(classes='preview-table', index=False, border=0)
         
@@ -1174,7 +1097,6 @@ def get_user_details(folio):
                     return jsonify({'success': True, 'user': row})
         return jsonify({'success': False, 'message': 'Usuario no encontrado'}), 404
     except Exception as e:
-        print(f"Error al obtener detalles del usuario: {e}")
         return jsonify({'success': False, 'message': 'Error del servidor'}), 500
 
 @app.route('/api/admin/courses')
@@ -1189,7 +1111,6 @@ def get_admin_courses():
         courses = get_courses_list()
         return jsonify({'success': True, 'courses': courses})
     except Exception as e:
-        print(f"Error al obtener cursos: {e}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/api/admin/update-user/<folio>', methods=['POST'])
@@ -1245,12 +1166,8 @@ def update_user(folio):
             return jsonify({'success': False, 'message': message}), 500
             
     except Exception as e:
-        print(f"Error al actualizar usuario: {e}")
         return jsonify({'success': False, 'message': 'Error del servidor'}), 500
 
-# --- RUTAS DE GESTIÓN DE ARCHIVOS CSV ---
-
-# Lista de archivos permitidos por seguridad (para evitar que descarguen app.py o certificados)
 ALLOWED_CSVS = ['users.csv', 'cursos.csv', 'preguntas.csv', 'puntajes.csv', 'resultados.csv']
 
 @app.route('/api/admin/export-file/<filename>')
@@ -1268,10 +1185,8 @@ def export_specific_file(filename):
         return jsonify({'success': False, 'message': 'El archivo no existe en el servidor'}), 404
         
     try:
-        # download_name asegura que se descargue con el mismo nombre original
         return send_file(filename, as_attachment=True, download_name=filename)
     except Exception as e:
-        print(f"Error al exportar {filename}: {e}")
         return jsonify({'success': False, 'message': 'Error al exportar el archivo'}), 500
 
 @app.route('/api/admin/import-file/<filename>', methods=['POST'])
@@ -1296,19 +1211,15 @@ def import_specific_file(filename):
         if not file.filename.endswith('.csv'):
             return jsonify({'success': False, 'message': 'El archivo debe ser un formato CSV'}), 400
             
-        # Opcional pero recomendado: Crear un respaldo del archivo anterior
         if os.path.exists(filename):
             import shutil
             backup_path = f"{filename}.backup_{get_now_mexico().strftime('%Y%m%d_%H%M%S')}"
             shutil.copy2(filename, backup_path)
             
-        # Sobrescribir el archivo en la carpeta raíz
         file.save(filename)
-        
         return jsonify({'success': True, 'message': f'Archivo {filename} actualizado exitosamente.'})
         
     except Exception as e:
-        print(f"Error al importar {filename}: {e}")
         return jsonify({'success': False, 'message': f'Error al importar: {str(e)}'}), 500
 
 @app.route('/api/admin/export-users')
@@ -1320,14 +1231,8 @@ def export_users():
         return jsonify({'success': False, 'message': 'Acceso denegado'}), 403
     
     try:
-        return send_file(
-            USERS_CSV,
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name='users.csv'
-        )
+        return send_file(USERS_CSV, mimetype='text/csv', as_attachment=True, download_name='users.csv')
     except Exception as e:
-        print(f"Error al exportar usuarios: {e}")
         return jsonify({'success': False, 'message': 'Error al exportar usuarios'}), 500
 
 @app.route('/api/admin/import-users', methods=['POST'])
@@ -1398,7 +1303,6 @@ def import_users():
         return jsonify({'success': True, 'message': f'Importados {len(users)} usuarios exitosamente'})
         
     except Exception as e:
-        print(f"Error al importar usuarios: {e}")
         return jsonify({'success': False, 'message': f'Error al importar: {str(e)}'}), 500
 
 @app.route('/api/admin/save-photo', methods=['POST'])
@@ -1433,7 +1337,6 @@ def save_photo():
         return jsonify({'success': True, 'message': 'Foto guardada correctamente'})
         
     except Exception as e:
-        print(f"Error al guardar foto: {e}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/escuelas', methods=['GET', 'POST'])
@@ -1458,7 +1361,6 @@ def escuelas():
     is_ecoems = 'ECOEMS' in curso.upper()
     
     mensaje = None
-
     pdf_b64 = None
     pdf_name = None
 
@@ -1521,7 +1423,6 @@ def escuelas():
                     pdf_path = os.path.join(target_dir, pdf_filename)
                     
                     doc.save(docx_path)
-                    # Conversión con LibreOffice
                     convert_docx_to_pdf(docx_path, pdf_path)
                     
                     with open(pdf_path, "rb") as f:
@@ -1602,7 +1503,6 @@ def examen():
         df_filtrado = df_c[mask]
         
         if df_filtrado.empty:
-            print(f"Examen no encontrado: curso={curso}, materia={materia}")
             return redirect(url_for('launcher'))
             
         row = df_filtrado.iloc[0]
@@ -1637,25 +1537,19 @@ def examen():
         }
 
         df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
-        
         df_p.columns = df_p.columns.str.strip()
         q_df = df_p[
             (df_p['Curso'].astype(str).str.strip().str.upper() == curso_norm) & 
             (df_p['Materia'].astype(str).str.strip().str.upper() == materia_norm)
         ].sort_values(by='Pregunta_número')
         
-        # Filtramos los NaNs para evitar errores de renderizado en el navegador
         q_df = q_df.fillna('')
-        
         questions = q_df.to_dict('records')
         is_admin = is_admin_user()
 
         return render_template('examen.html', fullname=session.get('fullname'), questions=questions, exam_details=details, is_admin=is_admin)
         
     except Exception as e:
-        print(f"Error cargando examen: {e}")
-        import traceback
-        traceback.print_exc()
         return redirect(url_for('launcher'))
 
 @app.route('/api/save-exam-results', methods=['POST'])
@@ -1684,7 +1578,6 @@ def save_exam_results_api():
             return jsonify({'success': False, 'message': message}), 500
             
     except Exception as e:
-        print(f"Error al guardar resultados del examen: {e}")
         return jsonify({'success': False, 'message': 'Error del servidor'}), 500
     
 @app.route('/resultados')
@@ -1740,146 +1633,9 @@ def resultados():
                          is_admin=is_admin,
                          admin_data=admin_data)
 
-@app.route('/api/get-exam-results')
-def get_exam_results_api():
-    if not session.get('logged_in'):
-        return jsonify({'success': False, 'message': 'No autorizado'}), 401
-    
-    materia_solicitada = request.args.get('materia')
-    
-    folio_admin_req = request.args.get('folio')
-    curso_admin_req = request.args.get('curso')
-
-    if is_admin_user() and folio_admin_req:
-        folio_usuario = str(folio_admin_req)
-        curso_usuario = curso_admin_req if curso_admin_req else session.get('curso')
-    else:
-        folio_usuario = str(session.get('folio'))
-        curso_usuario = session.get('curso')
-    
-    if not materia_solicitada:
-        return jsonify({'success': False, 'message': 'Falta especificar la materia'}), 400
-
-    try:
-        if not os.path.exists(RESULTADOS_CSV):
-            return jsonify({'success': False, 'message': 'Aún no hay resultados registrados en el sistema.'}), 404
-
-        df = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
-        df = df.fillna('')
-        
-        df['folio'] = df['folio'].astype(str).str.strip()
-        df['curso'] = df['curso'].astype(str).str.strip()
-        df['materia'] = df['materia'].astype(str).str.strip()
-        
-        mask = (
-            (df['folio'] == folio_usuario) & 
-            (df['curso'] == curso_usuario) & 
-            (df['materia'] == materia_solicitada)
-        )
-        df_res = df[mask].copy()
-        
-        if df_res.empty:
-            return jsonify({'success': False, 'message': 'No se encontraron resultados para este alumno en esta materia.'}), 404
-            
-        # --- NUEVO: Extraer datos enriquecidos de preguntas.csv para no afectar resultados.csv ---
-        preguntas_extra = {}
-        try:
-            df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
-            df_p.columns = df_p.columns.str.strip()
-            df_p = df_p.fillna('')
-            df_p_filt = df_p[
-                (df_p['Curso'].astype(str).str.strip().str.upper() == curso_usuario.upper()) & 
-                (df_p['Materia'].astype(str).str.strip().str.upper() == materia_solicitada.upper())
-            ]
-            for _, p_row in df_p_filt.iterrows():
-                p_num = str(p_row.get('Pregunta_número', '')).strip()
-                preguntas_extra[p_num] = p_row.to_dict()
-        except Exception as e:
-            print(f"Aviso: No se pudieron cargar datos extra de preguntas: {e}")
-        
-        details = []
-        correctas = 0
-        incorrectas = 0
-        sin_responder = 0
-        
-        for _, row in df_res.iterrows():
-            pregunta_num = str(row.get('Pregunta_número')).strip()
-            
-            # Buscar si hay info extra en el CSV maestro de preguntas
-            extra = preguntas_extra.get(pregunta_num, {})
-            
-            # El texto base primero busca en resultados, si no, en extra
-            pregunta_txt = str(row.get('Pregunta', '')).strip()
-            if not pregunta_txt:
-                pregunta_txt = str(extra.get('Pregunta', 'Pregunta sin texto'))
-            
-            seleccion_raw = str(row.get('Respuesta_seleccionada', '')).strip()
-            correcta_raw = str(row.get('Respuesta_correcta', '')).strip()
-            
-            def normalizar_opcion(texto):
-                texto = texto.lower()
-                if 'respuesta_a' in texto or texto == 'a': return 'A'
-                if 'respuesta_b' in texto or texto == 'b': return 'B'
-                if 'respuesta_c' in texto or texto == 'c': return 'C'
-                if 'respuesta_d' in texto or texto == 'd': return 'D'
-                return ''
-
-            sel_letra = normalizar_opcion(seleccion_raw)
-            corr_letra = normalizar_opcion(correcta_raw)
-            
-            status = 'incorrecta'
-            if not sel_letra:
-                status = 'sin_responder'
-                sin_responder += 1
-            elif sel_letra == corr_letra:
-                status = 'correcta'
-                correctas += 1
-            else:
-                status = 'incorrecta'
-                incorrectas += 1
-            
-            details.append({
-                'numero': pregunta_num,
-                'pregunta': pregunta_txt,
-                'opciones': {
-                    'A': str(row.get('Respuesta_a', extra.get('Respuesta_a', ''))),
-                    'B': str(row.get('Respuesta_b', extra.get('Respuesta_b', ''))),
-                    'C': str(row.get('Respuesta_c', extra.get('Respuesta_c', ''))),
-                    'D': str(row.get('Respuesta_d', extra.get('Respuesta_d', '')))
-                },
-                'Parrfafo': str(extra.get('Parrfafo', '')),
-                'Img_Parrafo': str(extra.get('Img_Parrafo', '')),
-                'Pregunta_Parrafo': str(extra.get('Pregunta_Parrafo', '')),
-                'Img_Respuesta_a': str(extra.get('Img_Respuesta_a', '')),
-                'Img_Respuesta_b': str(extra.get('Img_Respuesta_b', '')),
-                'Img_Respuesta_c': str(extra.get('Img_Respuesta_c', '')),
-                'Img_Respuesta_d': str(extra.get('Img_Respuesta_d', '')),
-                'seleccionada': sel_letra,
-                'correcta': corr_letra,
-                'status': status
-            })
-            
-        try:
-            details.sort(key=lambda x: int(x['numero']))
-        except:
-            pass
-
-        total_preguntas = len(details)
-        calificacion = (correctas / total_preguntas * 10) if total_preguntas > 0 else 0
-
-        summary = {
-            'total': total_preguntas,
-            'correctas': correctas,
-            'incorrectas': incorrectas,
-            'sin_responder': sin_responder,
-            'calificacion': round(calificacion, 1)
-        }
-
-        return jsonify({'success': True, 'summary': summary, 'details': details})
-
-    except Exception as e:
-        print(f"Error procesando resultados: {e}")
-        return jsonify({'success': False, 'message': f'Error interno: {str(e)}'}), 500
+# =======================================================
+# NUEVA LÓGICA DE DESCARGA MASIVA Y RANKINGS
+# =======================================================
 
 @app.route('/api/get-all-results-bulk')
 def get_all_results_bulk():
@@ -1890,60 +1646,70 @@ def get_all_results_bulk():
     user_folio = str(session.get('folio'))
 
     try:
-        if not os.path.exists(RESULTADOS_CSV):
-            return jsonify({'success': True, 'data': {}})
+        # 1. Leer TODOS los usuarios
+        df_users = pd.read_csv(USERS_CSV, encoding='utf-8', dtype={'folio': str})
+        df_users['folio'] = df_users['folio'].astype(str).str.strip()
+        df_users['curso'] = df_users['curso'].astype(str).str.strip()
+        user_courses = df_users.set_index('folio')['curso'].to_dict()
 
-        df_full = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
-        df_full = df_full.fillna('')
-        df_full['folio'] = df_full['folio'].astype(str).str.strip()
-        df_full['curso'] = df_full['curso'].astype(str).str.strip()
-        df_full['materia'] = df_full['materia'].astype(str).str.strip()
+        # 2. Leer Cursos y Tiempos
+        try:
+            df_c = pd.read_csv(COURSES_CSV, encoding='utf-8-sig', engine='python')
+        except:
+            df_c = pd.read_csv(COURSES_CSV, encoding='latin-1', engine='python')
+        df_c.columns = df_c.columns.str.strip().str.lower()
+        
+        now = get_now_mexico()
+        course_status = {}
+        results_available = {} # NUEVO: Control de disponibilidad de resultados
+        materia_original_names = {} 
+        
+        if 'curso' in df_c.columns and 'materia' in df_c.columns:
+            for _, row in df_c.iterrows():
+                c_orig = str(row.get('curso', '')).strip()
+                m_orig = str(row.get('materia', '')).strip()
+                if not c_orig or not m_orig: continue
+                
+                c_up = c_orig.upper()
+                m_up = m_orig.upper()
+                materia_original_names[m_up] = m_orig
+                
+                # Tiempo del examen
+                fecha_str = str(row.get('fecha_disponible', '')).strip()
+                final_str = str(row.get('horario_final', '')).strip()
+                
+                try:
+                    try: exam_date = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+                    except: exam_date = datetime.strptime(fecha_str, '%d/%m/%Y').date()
+                    
+                    end_time_obj = datetime.strptime(final_str, '%H:%M:%S').time()
+                    exam_end_datetime = datetime.combine(exam_date, end_time_obj)
+                    
+                    status_tiempo = 'pasado' if now > exam_end_datetime else 'proximo'
+                except:
+                    status_tiempo = 'proximo'
+                    
+                course_status[(c_up, m_up)] = status_tiempo
 
-        if df_full.empty:
-            return jsonify({'success': True, 'data': {}})
+                # --- NUEVO: Validar tiempo de los resultados ---
+                fecha_res_str = str(row.get('fecha_resultado', '')).strip()
+                hora_res_str = str(row.get('horario_resultado', '')).strip()
+                try:
+                    try: res_date = datetime.strptime(fecha_res_str, '%Y-%m-%d').date()
+                    except: res_date = datetime.strptime(fecha_res_str, '%d/%m/%Y').date()
+                    
+                    res_time_obj = datetime.strptime(hora_res_str, '%H:%M:%S').time() if hora_res_str else time(0,0)
+                    res_datetime = datetime.combine(res_date, res_time_obj)
+                    
+                    res_disp = (now >= res_datetime)
+                except:
+                    res_disp = True  # Si no hay fecha programada, por defecto están disponibles
+                    
+                results_available[(c_up, m_up)] = res_disp
 
-        # =========================================================
-        # NUEVO: CÁLCULO DE RANKING (MATERIA Y GLOBAL)
-        # =========================================================
-        def normalizar_opcion_df(texto):
-            t = str(texto).lower().strip()
-            if 'respuesta_a' in t or t == 'a': return 'A'
-            if 'respuesta_b' in t or t == 'b': return 'B'
-            if 'respuesta_c' in t or t == 'c': return 'C'
-            if 'respuesta_d' in t or t == 'd': return 'D'
-            return ''
-
-        # Crear columnas temporales para evaluar respuestas correctas masivamente
-        df_full['sel_norm'] = df_full['Respuesta_seleccionada'].apply(normalizar_opcion_df)
-        df_full['cor_norm'] = df_full['Respuesta_correcta'].apply(normalizar_opcion_df)
-        df_full['is_correct'] = ((df_full['sel_norm'] == df_full['cor_norm']) & (df_full['sel_norm'] != '')).astype(int)
-
-        # 1. Ranking por Materia
-        scores_mat = df_full.groupby(['curso', 'materia', 'folio'])['is_correct'].sum().reset_index()
-        scores_mat['rank'] = scores_mat.groupby(['curso', 'materia'])['is_correct'].rank(method='min', ascending=False).astype(int)
-        total_mat = scores_mat.groupby(['curso', 'materia'])['folio'].nunique().reset_index(name='total_users')
-        scores_mat = pd.merge(scores_mat, total_mat, on=['curso', 'materia'])
-        dict_ranks_mat = scores_mat.set_index(['curso', 'materia', 'folio']).to_dict('index')
-
-        # 2. Ranking Global
-        scores_glob = df_full.groupby(['curso', 'folio'])['is_correct'].sum().reset_index()
-        scores_glob['rank_global'] = scores_glob.groupby('curso')['is_correct'].rank(method='min', ascending=False).astype(int)
-        total_glob = scores_glob.groupby('curso')['folio'].nunique().reset_index(name='total_users_glob')
-        scores_glob = pd.merge(scores_glob, total_glob, on='curso')
-        dict_ranks_glob = scores_glob.set_index(['curso', 'folio']).to_dict('index')
-        # =========================================================
-
-        # Si no es admin, filtramos solo la información de este usuario (Pero los rankings ya fueron calculados contra todos)
-        if not is_admin:
-            df_res = df_full[df_full['folio'] == user_folio].copy()
-        else:
-            df_res = df_full.copy()
-
-        if df_res.empty:
-            return jsonify({'success': True, 'data': {}})
-
-        # Extraer datos enriquecidos de preguntas.csv para los detalles visuales
+        # 3. Leer Preguntas
         preguntas_extra = {}
+        materia_totals = {}
         try:
             df_p = pd.read_csv(QUESTIONS_CSV, encoding='utf-8', engine='python')
             df_p.columns = df_p.columns.str.strip()
@@ -1952,102 +1718,216 @@ def get_all_results_bulk():
                 c = str(p_row.get('Curso', '')).strip().upper()
                 m = str(p_row.get('Materia', '')).strip().upper()
                 num = str(p_row.get('Pregunta_número', '')).strip()
+                
                 key = f"{c}_{m}_{num}"
                 preguntas_extra[key] = p_row.to_dict()
+                
+                mat_key = (c, m)
+                materia_totals[mat_key] = materia_totals.get(mat_key, 0) + 1
         except Exception as e:
-            print(f"Aviso: No se pudieron cargar datos extra de preguntas: {e}")
+            pass
 
-        bulk_data = {}
-        grouped = df_res.groupby(['folio', 'curso', 'materia'])
-
-        for (f_val, c_val, m_val), group in grouped:
-            details = []
-            correctas = 0
-            incorrectas = 0
-            sin_responder = 0
-
-            for _, row in group.iterrows():
-                pregunta_num = str(row.get('Pregunta_número')).strip()
-                q_key = f"{c_val.upper()}_{m_val.upper()}_{pregunta_num}"
-                extra = preguntas_extra.get(q_key, {})
-
-                def get_val(r, e, key):
-                    v = str(r.get(key, '')).strip()
-                    return v if v else str(e.get(key, '')).strip()
-
-                pregunta_txt = get_val(row, extra, 'Pregunta')
-                if not pregunta_txt: pregunta_txt = "Pregunta sin texto"
-                
-                sel_letra = str(row.get('sel_norm', '')).strip()
-                corr_letra = str(row.get('cor_norm', '')).strip()
-                
-                status = 'incorrecta'
-                if not sel_letra:
-                    status = 'sin_responder'
-                    sin_responder += 1
-                elif sel_letra == corr_letra:
-                    status = 'correcta'
-                    correctas += 1
-                else:
-                    status = 'incorrecta'
-                    incorrectas += 1
-
-                details.append({
-                    'numero': pregunta_num,
-                    'pregunta': pregunta_txt,
-                    'opciones': {
-                        'A': get_val(row, extra, 'Respuesta_a'),
-                        'B': get_val(row, extra, 'Respuesta_b'),
-                        'C': get_val(row, extra, 'Respuesta_c'),
-                        'D': get_val(row, extra, 'Respuesta_d')
-                    },
-                    'Parrfafo': str(extra.get('Parrfafo', '')),
-                    'Img_Parrafo': str(extra.get('Img_Parrafo', '')),
-                    'Pregunta_Parrafo': str(extra.get('Pregunta_Parrafo', '')),
-                    'Img_Respuesta_a': str(extra.get('Img_Respuesta_a', '')),
-                    'Img_Respuesta_b': str(extra.get('Img_Respuesta_b', '')),
-                    'Img_Respuesta_c': str(extra.get('Img_Respuesta_c', '')),
-                    'Img_Respuesta_d': str(extra.get('Img_Respuesta_d', '')),
-                    'seleccionada': sel_letra,
-                    'correcta': corr_letra,
-                    'status': status
-                })
+        # 4. Leer Resultados reales
+        if os.path.exists(RESULTADOS_CSV):
+            df_full = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
+            df_full = df_full.fillna('')
+            df_full['folio'] = df_full['folio'].astype(str).str.strip()
             
-            try:
-                details.sort(key=lambda x: int(x['numero']) if str(x['numero']).isdigit() else 0)
-            except: pass
+            df_full['curso_norm'] = df_full['curso'].astype(str).str.strip().str.upper()
+            df_full['materia_norm'] = df_full['materia'].astype(str).str.strip().str.upper()
+            
+            def normalizar_opcion_df(texto):
+                t = str(texto).lower().strip()
+                if 'respuesta_a' in t or t == 'a': return 'A'
+                if 'respuesta_b' in t or t == 'b': return 'B'
+                if 'respuesta_c' in t or t == 'c': return 'C'
+                if 'respuesta_d' in t or t == 'd': return 'D'
+                return ''
 
-            total_preguntas = len(details)
-            calificacion = (correctas / total_preguntas * 10) if total_preguntas > 0 else 0
+            df_full['sel_norm'] = df_full['Respuesta_seleccionada'].apply(normalizar_opcion_df)
+            df_full['cor_norm'] = df_full['Respuesta_correcta'].apply(normalizar_opcion_df)
+            df_full['is_correct'] = ((df_full['sel_norm'] == df_full['cor_norm']) & (df_full['sel_norm'] != '')).astype(int)
+        else:
+            df_full = pd.DataFrame(columns=['folio', 'curso_norm', 'materia_norm', 'is_correct'])
 
-            # --- OBTENER LAS POSICIONES DESDE LOS DICCIONARIOS ---
-            rank_info = dict_ranks_mat.get((c_val, m_val, f_val), {'rank': 0, 'total_users': 0})
-            pos_mat = f"{rank_info['rank']} / {rank_info['total_users']}"
+        # --- RANKINGS ---
+        if not df_full.empty:
+            scores_mat = df_full.groupby(['curso_norm', 'materia_norm', 'folio'])['is_correct'].sum().reset_index()
+            scores_mat['rank'] = scores_mat.groupby(['curso_norm', 'materia_norm'])['is_correct'].rank(method='min', ascending=False).astype(int)
+            total_mat = scores_mat.groupby(['curso_norm', 'materia_norm'])['folio'].nunique().reset_index(name='total_users')
+            scores_mat = pd.merge(scores_mat, total_mat, on=['curso_norm', 'materia_norm'])
+            dict_ranks_mat = scores_mat.set_index(['curso_norm', 'materia_norm', 'folio']).to_dict('index')
+        else:
+            dict_ranks_mat = {}
 
-            rank_glob_info = dict_ranks_glob.get((c_val, f_val), {'rank_global': 0, 'total_users_glob': 0})
-            pos_glob = f"{rank_glob_info['rank_global']} / {rank_glob_info['total_users_glob']}"
+        df_glob_scores = df_users[['folio']].copy()
+        df_glob_scores['curso_norm'] = df_users['curso'].astype(str).str.strip().str.upper()
+        if not df_full.empty:
+            user_sums = df_full.groupby('folio')['is_correct'].sum().reset_index()
+            df_glob_scores = pd.merge(df_glob_scores, user_sums, on='folio', how='left')
+            df_glob_scores['is_correct'] = df_glob_scores['is_correct'].fillna(0)
+        else:
+            df_glob_scores['is_correct'] = 0
 
-            summary = {
-                'total': total_preguntas,
-                'correctas': correctas,
-                'incorrectas': incorrectas,
-                'sin_responder': sin_responder,
-                'calificacion': round(calificacion, 1),
-                'posicion_materia': pos_mat,  # Añadido al paquete
-                'posicion_global': pos_glob   # Añadido al paquete
-            }
+        df_glob_scores['rank_global'] = df_glob_scores.groupby('curso_norm')['is_correct'].rank(method='min', ascending=False).astype(int)
+        total_glob = df_glob_scores.groupby('curso_norm')['folio'].nunique().reset_index(name='total_users_glob')
+        df_glob_scores = pd.merge(df_glob_scores, total_glob, on='curso_norm')
+        dict_ranks_glob = df_glob_scores.set_index(['curso_norm', 'folio']).to_dict('index')
+        # -----------------
+
+        folios_to_process = list(df_users['folio']) if is_admin else [user_folio]
+        bulk_data = {}
+
+        for f_val in folios_to_process:
+            c_val_orig = user_courses.get(f_val, '')
+            if not c_val_orig: continue
+            
+            c_val_upper = c_val_orig.upper()
+            materias_del_curso_up = [m for (c, m) in course_status.keys() if c == c_val_upper]
+            
+            if not materias_del_curso_up and not df_full.empty:
+                materias_del_curso_up = df_full[df_full['curso_norm'] == c_val_upper]['materia_norm'].unique().tolist()
+
+            user_data_out = {}
+            
+            for m_val_upper in materias_del_curso_up:
+                m_orig = materia_original_names.get(m_val_upper, m_val_upper.title())
+                
+                if not df_full.empty:
+                    df_user_mat = df_full[(df_full['folio'] == f_val) & (df_full['curso_norm'] == c_val_upper) & (df_full['materia_norm'] == m_val_upper)]
+                else:
+                    df_user_mat = pd.DataFrame()
+
+                tot_q = materia_totals.get((c_val_upper, m_val_upper), 0)
+                status_tiempo = course_status.get((c_val_upper, m_val_upper), 'proximo')
+                res_disp = results_available.get((c_val_upper, m_val_upper), True)
+
+                # Si es administrador, siempre puede ver los resultados sin importar la fecha
+                if is_admin:
+                    res_disp = True
+
+                details = []
+                correctas = 0
+                incorrectas = 0
+                sin_responder = 0
+                
+                # === ASIGNAR ESTADO EXACTO DEL EXAMEN ===
+                if not df_user_mat.empty:
+                    if res_disp:
+                        estado_examen = 'presentado'
+                    else:
+                        estado_examen = 'resultados_pendientes' # Presentó, pero oculto
+                else:
+                    if status_tiempo == 'pasado':
+                        if res_disp:
+                            estado_examen = 'no_presentado'
+                        else:
+                            estado_examen = 'resultados_pendientes' # Oculto hasta fecha
+                    else:
+                        estado_examen = 'proximo'
+
+                # Llenar datos solo si es presentado y la fecha de publicación ya llegó
+                if estado_examen == 'presentado':
+                    for _, row in df_user_mat.iterrows():
+                        pregunta_num = str(row.get('Pregunta_número')).strip()
+                        q_key = f"{c_val_upper}_{m_val_upper}_{pregunta_num}"
+                        extra = preguntas_extra.get(q_key, {})
+
+                        def get_val(r, e, key):
+                            v = str(r.get(key, '')).strip()
+                            return v if v else str(e.get(key, '')).strip()
+
+                        pregunta_txt = get_val(row, extra, 'Pregunta')
+                        if not pregunta_txt: pregunta_txt = "Pregunta sin texto"
+                        
+                        sel_letra = str(row.get('sel_norm', '')).strip()
+                        corr_letra = str(row.get('cor_norm', '')).strip()
+                        
+                        status = 'incorrecta'
+                        if not sel_letra:
+                            status = 'sin_responder'
+                            sin_responder += 1
+                        elif sel_letra == corr_letra:
+                            status = 'correcta'
+                            correctas += 1
+                        else:
+                            status = 'incorrecta'
+                            incorrectas += 1
+
+                        details.append({
+                            'numero': pregunta_num,
+                            'pregunta': pregunta_txt,
+                            'opciones': {
+                                'A': get_val(row, extra, 'Respuesta_a'),
+                                'B': get_val(row, extra, 'Respuesta_b'),
+                                'C': get_val(row, extra, 'Respuesta_c'),
+                                'D': get_val(row, extra, 'Respuesta_d')
+                            },
+                            'Parrfafo': str(extra.get('Parrfafo', '')),
+                            'Img_Parrafo': str(extra.get('Img_Parrafo', '')),
+                            'Pregunta_Parrafo': str(extra.get('Pregunta_Parrafo', '')),
+                            'Img_Respuesta_a': str(extra.get('Img_Respuesta_a', '')),
+                            'Img_Respuesta_b': str(extra.get('Img_Respuesta_b', '')),
+                            'Img_Respuesta_c': str(extra.get('Img_Respuesta_c', '')),
+                            'Img_Respuesta_d': str(extra.get('Img_Respuesta_d', '')),
+                            'seleccionada': sel_letra,
+                            'correcta': corr_letra,
+                            'status': status
+                        })
+                        
+                    try: details.sort(key=lambda x: int(x['numero']) if str(x['numero']).isdigit() else 0)
+                    except: pass
+                    
+                    total_preguntas = len(details)
+                    tot_q = total_preguntas
+
+                elif estado_examen == 'resultados_pendientes':
+                    total_preguntas = tot_q
+                elif estado_examen == 'no_presentado':
+                    total_preguntas = tot_q
+                    sin_responder = tot_q 
+                else: # proximo
+                    total_preguntas = tot_q
+                        
+                calificacion = (correctas / total_preguntas * 10) if total_preguntas > 0 else 0
+
+                # === CÁLCULO DE POSICIONES ===
+                rank_info = dict_ranks_mat.get((c_val_upper, m_val_upper, f_val), {'rank': '-', 'total_users': '-'})
+                if estado_examen != 'presentado':
+                    pos_mat = "-"
+                else:
+                    pos_mat = f"{rank_info['rank']} / {rank_info['total_users']}"
+
+                rank_glob_info = dict_ranks_glob.get((c_val_upper, f_val), {'rank_global': '-', 'total_users_glob': '-'})
+                if not res_disp:
+                    pos_glob = "-"
+                else:
+                    pos_glob = f"{rank_glob_info['rank_global']} / {rank_glob_info['total_users_glob']}"
+
+                summary = {
+                    'total': total_preguntas,
+                    'correctas': correctas,
+                    'incorrectas': incorrectas,
+                    'sin_responder': sin_responder,
+                    'calificacion': round(calificacion, 1),
+                    'posicion_materia': pos_mat,
+                    'posicion_global': pos_glob,
+                    'estado_examen': estado_examen 
+                }
+
+                user_data_out[m_orig] = {'summary': summary, 'details': details}
 
             if is_admin:
-                if f_val not in bulk_data:
-                    bulk_data[f_val] = {}
-                bulk_data[f_val][m_val] = {'summary': summary, 'details': details}
+                bulk_data[f_val] = user_data_out
             else:
-                bulk_data[m_val] = {'summary': summary, 'details': details}
+                bulk_data = user_data_out 
 
         return jsonify({'success': True, 'data': bulk_data})
 
     except Exception as e:
         print(f"Error procesando bulk load: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'success': False, 'message': f'Error interno: {str(e)}'}), 500
 
 @app.route('/logout')
@@ -2056,7 +1936,6 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# --- CONFIGURACIÓN DE GUNICORN INTEGRADA ---
 class StandaloneApplication(BaseApplication):
     def __init__(self, app, options=None):
         self.options = options or {}
@@ -2073,36 +1952,21 @@ class StandaloneApplication(BaseApplication):
         return self.application
 
 if __name__ == '__main__':
-    import sys
-    import os
-    
-    # 1. Generamos los certificados
     ssl_config = generate_self_signed_cert()
     ctx = (ssl_config[0], ssl_config[1]) if ssl_config != 'adhoc' else 'adhoc'
     
-    # ==========================================
-    # MODO DESARROLLO (Para programar)
-    # Ejecutar con: python3 app.py --dev
-    # ==========================================
     if '--dev' in sys.argv:
         print("--- MODO DEVELOPER (FLASK) ---")
-        print("Recarga en tiempo real ACTIVADA. Solo para programar.")
         app.run(host='0.0.0.0', port=8000, debug=True, ssl_context=ctx)
-        
-# ==========================================
-    # MODO EXAMEN (Para los usuarios)
-    # Ejecutar con: python3 app.py
-    # ==========================================
     else:
         print("--- MODO DEPLOY (GUNICORN) ---")
-        print("Workers ACTIVADOS. Recarga desactivada para máximo rendimiento.")
         cmd = [
             sys.executable, '-m', 'gunicorn',
-            '-w', '3',                # ¡REDUCIDO DE 20 A 3 PARA NO SATURAR LA RAM!
+            '-w', '3',                
             '-b', '0.0.0.0:8000',     
             '--timeout', '120',       
-            '--access-logfile', '-',  # Nos permite ver las peticiones
-            '--error-logfile', '-',   # Nos permite leer los errores de LibreOffice
+            '--access-logfile', '-',  
+            '--error-logfile', '-',   
             'app:app'                 
         ]
         
