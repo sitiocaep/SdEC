@@ -41,71 +41,106 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAllData(); 
 
     // ==========================================
+    // FUNCIÓN GLOBAL PARA MENÚS DESPLEGABLES
+    // ==========================================
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+    });
+
+    function toggleDropdown(targetMenu, e) {
+        e.stopPropagation(); 
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== targetMenu) menu.style.display = 'none';
+        });
+        targetMenu.style.display = (targetMenu.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+
+    // ==========================================
     // 3. LÓGICA DE MENÚ EN CASCADA (ADMIN)
     // ==========================================
+    let selectedAdminCurso = '';
+    
     if (window.resultsConfig.isAdmin && window.resultsConfig.adminData) {
         const adminData = window.resultsConfig.adminData;
-        const cursoSel = document.getElementById('admin-curso-select');
-        const materiaSel = document.getElementById('admin-materia-select');
-        const userSel = document.getElementById('admin-user-select');
+        
+        // Elementos de Curso
+        const btnCurso = document.getElementById('btn-admin-curso');
+        const textCurso = document.getElementById('text-admin-curso');
+        const dropCurso = document.getElementById('dropdown-admin-curso');
+        
+        // Elementos de Usuario
+        const btnUser = document.getElementById('btn-admin-user');
+        const textUser = document.getElementById('text-admin-user');
+        const dropUser = document.getElementById('dropdown-admin-user');
+        
+        const userFolioInput = document.getElementById('admin-user-select');
 
-        Object.keys(adminData).forEach(curso => {
-            cursoSel.add(new Option(curso, curso));
-        });
+        // CLICK EN BOTÓN CURSO
+        if (btnCurso && dropCurso) {
+            btnCurso.addEventListener('click', function(e) {
+                dropCurso.innerHTML = ''; 
+                
+                Object.keys(adminData).forEach(curso => {
+                    const opt = document.createElement('div');
+                    opt.className = 'dropdown-item';
+                    opt.textContent = curso;
+                    opt.onclick = function(ev) {
+                        ev.stopPropagation();
+                        selectedAdminCurso = curso;
+                        textCurso.textContent = curso;
+                        dropCurso.style.display = 'none';
 
-        cursoSel.addEventListener('change', function() {
-            materiaSel.innerHTML = '<option value="">-- Selecciona Materia --</option>';
-            userSel.innerHTML = '<option value="">-- Selecciona Usuario --</option>';
-            materiaSel.disabled = true;
-            userSel.disabled = true;
-
-            const selectedCurso = this.value;
-            if (selectedCurso && adminData[selectedCurso]) {
-                adminData[selectedCurso].materias.forEach(m => {
-                    materiaSel.add(new Option(m, m));
+                        // Limpiar y Habilitar Usuario
+                        userFolioInput.value = '';
+                        textUser.textContent = 'Usuario';
+                        btnUser.disabled = false;
+                    };
+                    dropCurso.appendChild(opt);
                 });
-                materiaSel.disabled = false;
-            }
-        });
+                toggleDropdown(dropCurso, e);
+            });
+        }
 
-        materiaSel.addEventListener('change', function() {
-            userSel.innerHTML = '<option value="">-- Selecciona Usuario --</option>';
-            userSel.disabled = true;
+        // CLICK EN BOTÓN USUARIO
+        if (btnUser && dropUser) {
+            btnUser.addEventListener('click', function(e) {
+                if (!selectedAdminCurso) return;
+                
+                dropUser.innerHTML = ''; 
+                
+                adminData[selectedAdminCurso].usuarios.forEach(u => {
+                    const opt = document.createElement('div');
+                    opt.className = 'dropdown-item';
+                    opt.textContent = u.nombre_completo;
+                    opt.onclick = function(ev) {
+                        ev.stopPropagation();
+                        
+                        userFolioInput.value = u.folio; 
+                        textUser.textContent = u.nombre_completo;
+                        dropUser.style.display = 'none';
 
-            const selectedCurso = cursoSel.value;
-            if (this.value && selectedCurso) {
-                adminData[selectedCurso].usuarios.forEach(u => {
-                    userSel.add(new Option(u.nombre_completo, u.folio));
+                        // Como ya no hay materia específica que escoger, forzamos la vista de Reporte Global
+                        const btnAllResults = document.getElementById('btn-all-results');
+                        if (btnAllResults) {
+                            btnAllResults.click(); 
+                        }
+                    };
+                    dropUser.appendChild(opt);
                 });
-                userSel.disabled = false;
-            }
-        });
-
-        userSel.addEventListener('change', function() {
-            const folio = this.value;
-            if (!folio) return; 
-
-            const curso = cursoSel.value;
-            materiaActual = materiaSel.value; 
-
-            const titleEl = document.getElementById('materia-title');
-            if (titleEl) titleEl.textContent = materiaActual;
-            
-            currentFilter = 'all';
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
-            document.querySelector('.filter-btn.total').classList.add('active-filter');
-
-            renderFromCache(folio, curso, materiaActual);
-        });
+                toggleDropdown(dropUser, e);
+            });
+        }
     }
 
     // ==========================================
-    // 4. LÓGICA DE LOS BOTONES DE ACCIÓN
+    // 4. LÓGICA DE LOS BOTONES DE ACCIÓN (GENERAL)
     // ==========================================
     const btnShowDetails = document.getElementById('btn-show-details');
     const detailsPanel = document.getElementById('details-panel-container');
 
-    // Funcionalidad de Interruptor (Abrir / Cerrar) para Revisión Detallada
     if (btnShowDetails && detailsPanel) {
         btnShowDetails.addEventListener('click', function() {
             if (detailsPanel.style.display === 'none') {
@@ -121,13 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    const btnChangeExam = document.getElementById('btn-change-exam');
-    if (btnChangeExam) {
-        btnChangeExam.addEventListener('click', function() {
-            window.location.href = '/launcher';
-        });
-    }
-
     const btnRetry = document.getElementById('btn-retry');
     if (btnRetry) {
         btnRetry.addEventListener('click', function() {
@@ -135,7 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // BOTÓN: VER TODOS LOS RESULTADOS (GLOBAL)
+    // ==========================================
+    // REPORTE GLOBAL Y RENDERIZADO
+    // ==========================================
     const btnAllResults = document.getElementById('btn-all-results');
     if (btnAllResults) {
         btnAllResults.addEventListener('click', function() {
@@ -150,9 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            let globalSummary = { total: 0, correctas: 0, incorrectas: 0, sin_responder: 0, calificacion: 0 };
+            let globalSummary = { total: 0, correctas: 0, incorrectas: 0, sin_responder: 0, calificacion: 0, posicion_global: '-' };
             
-            // Construir Desglose en el contenedor superior (Tarjetas clickeables)
             let breakdownHtml = `
                 <div style="border-top: 2px dashed #e2e8f0; padding-top: 15px; margin-top: 15px; border-bottom: 2px solid #f1f3f5; padding-bottom: 20px;">
                     <h4 style="color: #7f8c8d; font-size: 13px; text-transform: uppercase; text-align: center; margin-bottom: 12px; letter-spacing: 1px;">
@@ -164,15 +193,17 @@ document.addEventListener('DOMContentLoaded', function() {
             Object.keys(targetData).forEach(materiaKey => {
                 const matData = targetData[materiaKey];
                 if (matData && matData.details) {
-                    
                     globalSummary.total += matData.summary.total;
                     globalSummary.correctas += matData.summary.correctas;
                     globalSummary.incorrectas += matData.summary.incorrectas;
                     globalSummary.sin_responder += matData.summary.sin_responder;
+                    
+                    if (matData.summary.posicion_global) {
+                        globalSummary.posicion_global = matData.summary.posicion_global;
+                    }
 
                     let cardColor = matData.summary.calificacion >= 6 ? '#27ae60' : '#e74c3c';
                     
-                    // Tarjeta interactiva de la materia
                     breakdownHtml += `
                         <div class="global-subject-card" data-materia="${materiaKey}" style="cursor: pointer; flex: 1; min-width: 130px; background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;">
                             <div style="font-size: 11px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; margin-bottom: 5px;">${materiaKey}</div>
@@ -190,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownContainer.innerHTML = breakdownHtml;
             breakdownContainer.style.display = 'block';
 
-            // Agregar eventos Hover y Click a las tarjetas
             document.querySelectorAll('.global-subject-card').forEach(card => {
                 card.addEventListener('mouseover', function() {
                     this.style.transform = 'translateY(-3px)';
@@ -213,16 +243,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 : 0.0;
 
             const titleEl = document.getElementById('materia-title');
+            const titleElMob = document.getElementById('materia-title-mobile');
             if (titleEl) titleEl.textContent = "RENDIMIENTO GLOBAL";
+            if (titleElMob) titleElMob.textContent = "RENDIMIENTO GLOBAL";
             materiaActual = "GLOBAL"; 
 
-            // Actualizar etiqueta de posición a GLOBAL
             const positionTitle = document.getElementById('position-title');
             if (positionTitle) positionTitle.textContent = "Posición Global";
 
             renderSummary(globalSummary);
             
-            // Ocultar y deshabilitar el botón de revisión hasta que toquen una tarjeta
             if (detailsPanel) detailsPanel.style.display = 'none';
             if (btnShowDetails) {
                 btnShowDetails.disabled = true;
@@ -231,9 +261,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ==========================================
-    // FUNCIÓN: CARGAR DETALLES AL TOCAR TARJETA DE MATERIA
-    // ==========================================
     function loadGlobalSubjectDetails(matKey) {
         let targetData = window.resultsConfig.isAdmin 
             ? masterExamCache[document.getElementById('admin-user-select').value] 
@@ -242,30 +269,25 @@ document.addEventListener('DOMContentLoaded', function() {
         let subjectData = targetData[matKey];
         if(!subjectData) return;
 
-        // 1. Ocultar el desglose de tarjetas para enfocarnos en la materia elegida
         const breakdownContainer = document.getElementById('top-breakdown-container');
         if (breakdownContainer) {
             breakdownContainer.style.display = 'none';
         }
 
-        // 2. Actualizar el título principal a la materia
         const titleEl = document.getElementById('materia-title');
+        const titleElMob = document.getElementById('materia-title-mobile');
         if (titleEl) titleEl.textContent = matKey;
+        if (titleElMob) titleElMob.textContent = matKey;
 
-        // Regresar el título de "Posición" a su estado original
         const positionTitle = document.getElementById('position-title');
         if (positionTitle) positionTitle.textContent = "Posición";
 
-        // Registrar el estado actual
         materiaActual = matKey; 
 
-        // 3. Ajustar estadísticas (Aciertos y Score) a la materia seleccionada
         renderSummary(subjectData.summary);
 
-        // 4. Cargar EXCLUSIVAMENTE las preguntas de esta materia
         globalQuestions = subjectData.details.map((q, idx) => ({ ...q, materia_origen: matKey, originalIndex: idx }));
 
-        // 5. Reiniciar Filtros a "Total"
         currentFilter = 'all';
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
         const totalFilterBtn = document.querySelector('.filter-btn.total');
@@ -273,17 +295,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         renderNavigation();
 
-        // 6. Habilitar el botón de revisión PERO NO abrirlo automáticamente
         if (btnShowDetails) {
             btnShowDetails.disabled = false;
-            if (detailsPanel) detailsPanel.style.display = 'none'; // Aseguramos que se mantenga oculto
-            btnShowDetails.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada'; // Texto de abrir
+            if (detailsPanel) detailsPanel.style.display = 'none'; 
+            btnShowDetails.innerHTML = '<i class="fas fa-search-plus"></i> Revisión detallada'; 
         }
     }
 
-    // ==========================================
-    // 5. RENDERIZADO DESDE MEMORIA RAM (Individual Clásico)
-    // ==========================================
     function renderFromCache(folio = '', curso = '', reqMateria = '') {
         const matToFetch = reqMateria || materiaActual;
         
@@ -291,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('single-question-container').innerHTML = '';
         
-        // Limpiar y ocultar el desglose global si se seleccionó individualmente
         const breakdownContainer = document.getElementById('top-breakdown-container');
         if (breakdownContainer) {
             breakdownContainer.innerHTML = '';
@@ -319,7 +336,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setupFilters();
             renderNavigation(); 
             
-            // Estado base de la revisión
             if(btnShowDetails) {
                 btnShowDetails.disabled = false;
                 if(detailsPanel) detailsPanel.style.display = 'none';
@@ -332,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <i class="fas fa-exclamation-triangle" style="font-size: 24px; display: block; margin-bottom: 10px;"></i> 
                     No hay resultados registrados para este examen.
                 </div>`;
-            renderSummary({calificacion: 0, total: 0, correctas: 0, incorrectas: 0, sin_responder: 0});
+            renderSummary({calificacion: 0, total: 0, correctas: 0, incorrectas: 0, sin_responder: 0, posicion_materia: '-', posicion_global: '-'});
             if(btnShowDetails) btnShowDetails.disabled = true;
         }
     }
@@ -344,6 +360,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('count-incorrect').textContent = summary.incorrectas;
         document.getElementById('count-unanswered').textContent = summary.sin_responder;
         document.getElementById('top-aciertos').textContent = `${summary.correctas} / ${summary.total}`;
+
+        const posValueEl = document.getElementById('position-value');
+        if (posValueEl) {
+            if (materiaActual === 'GLOBAL') {
+                posValueEl.textContent = summary.posicion_global || '-';
+            } else {
+                posValueEl.textContent = summary.posicion_materia || '-';
+            }
+        }
 
         const analisisTextEl = document.getElementById('analysis-text');
         if (summary.total > 0) {
@@ -367,7 +392,6 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.parentNode.replaceChild(newBtn, btn);
             
             newBtn.addEventListener('click', function() {
-                // Alerta si toca filtros en modo Global sin haber seleccionado materia
                 if (btnShowDetails.disabled) {
                     alert("Por favor, selecciona primero una materia del desglose superior para ver su revisión.");
                     return;
@@ -463,9 +487,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ==========================================
-    // 7. RENDERIZADO Y FORMATO DE LA PREGUNTA
-    // ==========================================
     function showQuestion(originalIndex) {
         const navButtons = document.querySelectorAll('.nav-item');
         navButtons.forEach(btn => {
@@ -571,9 +592,6 @@ document.addEventListener('DOMContentLoaded', function() {
         formatExamText(container);
     }
 
-    // ==========================================
-    // 8. FUNCIÓN DE REEMPLAZO DE ETIQUETAS
-    // ==========================================
     function formatExamText(containerElement) {
         const textElements = containerElement.querySelectorAll('.format-text');
         textElements.forEach(el => {

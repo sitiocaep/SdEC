@@ -1893,15 +1893,51 @@ def get_all_results_bulk():
         if not os.path.exists(RESULTADOS_CSV):
             return jsonify({'success': True, 'data': {}})
 
-        df_res = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
-        df_res = df_res.fillna('')
-        df_res['folio'] = df_res['folio'].astype(str).str.strip()
-        df_res['curso'] = df_res['curso'].astype(str).str.strip()
-        df_res['materia'] = df_res['materia'].astype(str).str.strip()
+        df_full = pd.read_csv(RESULTADOS_CSV, encoding='utf-8', dtype={'folio': str})
+        df_full = df_full.fillna('')
+        df_full['folio'] = df_full['folio'].astype(str).str.strip()
+        df_full['curso'] = df_full['curso'].astype(str).str.strip()
+        df_full['materia'] = df_full['materia'].astype(str).str.strip()
 
-        # Si no es admin, filtramos solo la información de este usuario
+        if df_full.empty:
+            return jsonify({'success': True, 'data': {}})
+
+        # =========================================================
+        # NUEVO: CÁLCULO DE RANKING (MATERIA Y GLOBAL)
+        # =========================================================
+        def normalizar_opcion_df(texto):
+            t = str(texto).lower().strip()
+            if 'respuesta_a' in t or t == 'a': return 'A'
+            if 'respuesta_b' in t or t == 'b': return 'B'
+            if 'respuesta_c' in t or t == 'c': return 'C'
+            if 'respuesta_d' in t or t == 'd': return 'D'
+            return ''
+
+        # Crear columnas temporales para evaluar respuestas correctas masivamente
+        df_full['sel_norm'] = df_full['Respuesta_seleccionada'].apply(normalizar_opcion_df)
+        df_full['cor_norm'] = df_full['Respuesta_correcta'].apply(normalizar_opcion_df)
+        df_full['is_correct'] = ((df_full['sel_norm'] == df_full['cor_norm']) & (df_full['sel_norm'] != '')).astype(int)
+
+        # 1. Ranking por Materia
+        scores_mat = df_full.groupby(['curso', 'materia', 'folio'])['is_correct'].sum().reset_index()
+        scores_mat['rank'] = scores_mat.groupby(['curso', 'materia'])['is_correct'].rank(method='min', ascending=False).astype(int)
+        total_mat = scores_mat.groupby(['curso', 'materia'])['folio'].nunique().reset_index(name='total_users')
+        scores_mat = pd.merge(scores_mat, total_mat, on=['curso', 'materia'])
+        dict_ranks_mat = scores_mat.set_index(['curso', 'materia', 'folio']).to_dict('index')
+
+        # 2. Ranking Global
+        scores_glob = df_full.groupby(['curso', 'folio'])['is_correct'].sum().reset_index()
+        scores_glob['rank_global'] = scores_glob.groupby('curso')['is_correct'].rank(method='min', ascending=False).astype(int)
+        total_glob = scores_glob.groupby('curso')['folio'].nunique().reset_index(name='total_users_glob')
+        scores_glob = pd.merge(scores_glob, total_glob, on='curso')
+        dict_ranks_glob = scores_glob.set_index(['curso', 'folio']).to_dict('index')
+        # =========================================================
+
+        # Si no es admin, filtramos solo la información de este usuario (Pero los rankings ya fueron calculados contra todos)
         if not is_admin:
-            df_res = df_res[df_res['folio'] == user_folio]
+            df_res = df_full[df_full['folio'] == user_folio].copy()
+        else:
+            df_res = df_full.copy()
 
         if df_res.empty:
             return jsonify({'success': True, 'data': {}})
@@ -1922,8 +1958,6 @@ def get_all_results_bulk():
             print(f"Aviso: No se pudieron cargar datos extra de preguntas: {e}")
 
         bulk_data = {}
-        
-        # Agrupamos por usuario, curso y materia
         grouped = df_res.groupby(['folio', 'curso', 'materia'])
 
         for (f_val, c_val, m_val), group in grouped:
@@ -1937,7 +1971,6 @@ def get_all_results_bulk():
                 q_key = f"{c_val.upper()}_{m_val.upper()}_{pregunta_num}"
                 extra = preguntas_extra.get(q_key, {})
 
-                # Función auxiliar para priorizar datos de resultados.csv o hacer fallback a preguntas.csv
                 def get_val(r, e, key):
                     v = str(r.get(key, '')).strip()
                     return v if v else str(e.get(key, '')).strip()
@@ -1945,19 +1978,8 @@ def get_all_results_bulk():
                 pregunta_txt = get_val(row, extra, 'Pregunta')
                 if not pregunta_txt: pregunta_txt = "Pregunta sin texto"
                 
-                seleccion_raw = str(row.get('Respuesta_seleccionada', '')).strip()
-                correcta_raw = str(row.get('Respuesta_correcta', '')).strip()
-
-                def normalizar_opcion(texto):
-                    texto = texto.lower()
-                    if 'respuesta_a' in texto or texto == 'a': return 'A'
-                    if 'respuesta_b' in texto or texto == 'b': return 'B'
-                    if 'respuesta_c' in texto or texto == 'c': return 'C'
-                    if 'respuesta_d' in texto or texto == 'd': return 'D'
-                    return ''
-
-                sel_letra = normalizar_opcion(seleccion_raw)
-                corr_letra = normalizar_opcion(correcta_raw)
+                sel_letra = str(row.get('sel_norm', '')).strip()
+                corr_letra = str(row.get('cor_norm', '')).strip()
                 
                 status = 'incorrecta'
                 if not sel_letra:
@@ -1998,15 +2020,23 @@ def get_all_results_bulk():
             total_preguntas = len(details)
             calificacion = (correctas / total_preguntas * 10) if total_preguntas > 0 else 0
 
+            # --- OBTENER LAS POSICIONES DESDE LOS DICCIONARIOS ---
+            rank_info = dict_ranks_mat.get((c_val, m_val, f_val), {'rank': 0, 'total_users': 0})
+            pos_mat = f"{rank_info['rank']} / {rank_info['total_users']}"
+
+            rank_glob_info = dict_ranks_glob.get((c_val, f_val), {'rank_global': 0, 'total_users_glob': 0})
+            pos_glob = f"{rank_glob_info['rank_global']} / {rank_glob_info['total_users_glob']}"
+
             summary = {
                 'total': total_preguntas,
                 'correctas': correctas,
                 'incorrectas': incorrectas,
                 'sin_responder': sin_responder,
-                'calificacion': round(calificacion, 1)
+                'calificacion': round(calificacion, 1),
+                'posicion_materia': pos_mat,  # Añadido al paquete
+                'posicion_global': pos_glob   # Añadido al paquete
             }
 
-            # Si es admin, agrupa por folio. Si es usuario, asigna directo a la materia.
             if is_admin:
                 if f_val not in bulk_data:
                     bulk_data[f_val] = {}

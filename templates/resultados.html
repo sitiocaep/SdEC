@@ -22,6 +22,8 @@
 </head>
 <body>
     <div class="exam-container">
+        
+        <!-- BARRA SUPERIOR CON EL TÍTULO INTEGRADO -->
         <div class="top-bar">
             <div class="nav-buttons">
                 <a href="{{ url_for('launcher') }}" class="nav-btn">
@@ -30,129 +32,128 @@
                 <a href="javascript:location.reload()" class="nav-btn">
                     <i class="fas fa-sync-alt"></i> <span class="desktop-only">Actualizar</span>
                 </a>
+                
+                <!-- Título del examen integrado en la barra de navegación -->
+                <div class="navbar-title desktop-only">
+                    RESULTADOS: <span id="materia-title" style="color: #4a90e2; margin-left: 5px;">{{ materia | default('PANEL ADMIN') }}</span>
+                </div>
             </div>
+            
             <div class="action-buttons">
                 <button class="btn-action user-display-btn" style="background-color: #2c3e50; cursor: default;">
                     <i class="fas fa-user"></i> <span class="desktop-only">Perfil ({{ fullname }})</span><span class="mobile-only">Mi Perfil</span>
                 </button>
                 <button class="btn-action logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Salir
+                    <i class="fas fa-sign-out-alt"></i> Salir
                 </button>
             </div>
         </div>
 
-        <div class="content-area">
-            <div class="content-section" style="max-width: 1400px;">
-                
-                <h1>RESULTADOS - <span id="materia-title">{{ materia | default('PANEL ADMIN') }}</span></h1>
+        <!-- Título para móviles -->
+        <div class="mobile-only" style="padding: 10px 20px; background: #e8f4f8; text-align: center; font-weight: bold; border-bottom: 1px solid #ddd; color: #2c3e50;">
+            RESULTADOS: <span id="materia-title-mobile" style="color: #4a90e2;">{{ materia | default('PANEL ADMIN') }}</span>
+        </div>
 
-                <div class="selection-container">
+        <!-- DASHBOARD SUMMARY DIRECTAMENTE EN EL BODY -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-container">
+                <div class="dashboard-summary option-card" id="dashboard-summary">
                     
-                    {% if is_admin %}
-                    <div class="option-card" style="margin-bottom: 25px; padding: 20px; background-color: #e8f4f8; border-color: #4a90e2; border-width: 2px;">
-                        <div style="font-weight: 700; color: #2c3e50; margin-bottom: 15px; font-size: 16px;">
-                            <i class="fas fa-users-cog" style="color: #4a90e2;"></i> BÚSQUEDA DE RESULTADOS (ADMIN)
+                    <!-- BOTONES DE ACCIÓN (Admin y Usuarios) -->
+                    <div class="dashboard-actions" style="margin-top: 0; margin-bottom: 5px;">
+                        
+                        {% if is_admin %}
+                        <!-- Campo oculto para guardar la selección del usuario -->
+                        <input type="hidden" id="admin-user-select" value="">
+                        
+                        <div style="position: relative; display: inline-block;">
+                            <button id="btn-admin-curso" class="btn-dashboard outline" style="width: 100%; margin: 0;">
+                                <i class="fas fa-folder-open"></i> <span id="text-admin-curso" class="truncate-text">Seleccionar Curso</span>
+                            </button>
+                            <div id="dropdown-admin-curso" class="dropdown-menu" style="display: none;"></div>
                         </div>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
-                            
-                            <div style="flex: 1; min-width: 200px;">
-                                <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">1. CURSO</label>
-                                <select id="admin-curso-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; outline: none; cursor: pointer;">
-                                    <option value="">-- Selecciona Curso --</option>
-                                </select>
-                            </div>
-                            
-                            <div style="flex: 1; min-width: 200px;">
-                                <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">2. MATERIA</label>
-                                <select id="admin-materia-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; outline: none; cursor: pointer;" disabled>
-                                    <option value="">-- Selecciona Materia --</option>
-                                </select>
-                            </div>
-                            
-                            <div style="flex: 1; min-width: 250px;">
-                                <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">3. USUARIO</label>
-                                <select id="admin-user-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; outline: none; cursor: pointer;" disabled>
-                                    <option value="">-- Selecciona Usuario --</option>
-                                </select>
-                            </div>
 
+                        <div style="position: relative; display: inline-block;">
+                            <button id="btn-admin-user" class="btn-dashboard outline" style="width: 100%; margin: 0;" disabled>
+                                <i class="fas fa-user-graduate"></i> <span id="text-admin-user" class="truncate-text">Usuario</span>
+                            </button>
+                            <div id="dropdown-admin-user" class="dropdown-menu" style="display: none;"></div>
+                        </div>
+                        {% endif %}
+
+                        <button id="btn-all-results" class="btn-dashboard outline"><i class="fas fa-globe"></i> Ver todos los resultados</button>
+                        <button id="btn-retry" class="btn-dashboard outline"><i class="fas fa-redo"></i> Intentar nuevamente</button>
+                        <a href="{{ url_for('launcher') }}" class="btn-dashboard outline"><i class="fas fa-edit"></i> Realizar otro examen</a>
+                        <button id="btn-show-details" class="btn-dashboard outline"><i class="fas fa-search-plus"></i> Revisión detallada</button>
+                    </div>
+
+                    <hr style="border: 0; border-top: 2px solid #f1f3f5; margin: 5px 0 20px 0;">
+                    
+                    <!-- ESTADÍSTICAS -->
+                    <div class="top-stats-row" style="padding-bottom: 10px;">
+                        <div class="top-stat">
+                            <span class="stat-title">Aciertos</span>
+                            <span class="stat-value" id="top-aciertos">0/0</span>
+                        </div>
+                        <div class="top-stat">
+                            <span class="stat-title">Tiempo</span>
+                            <span class="stat-value">{{ tiempo | default('0h 0m 0s') }}</span>
+                        </div>
+                        <div class="top-stat">
+                            <span class="stat-title" id="position-title">Posición</span>
+                            <span class="stat-value" id="position-value">{{ posicion | default('-') }}</span>
                         </div>
                     </div>
-                    {% endif %}
 
-                    <div class="results-layout-vertical" style="display: flex; flex-direction: column; gap: 20px;">
-                        
-                        <div class="dashboard-summary option-card" id="dashboard-summary">
-                            
-                            <div class="top-stats-row" style="padding-bottom: 10px;">
-                                <div class="top-stat">
-                                    <span class="stat-title">Aciertos</span>
-                                    <span class="stat-value" id="top-aciertos">0/0</span>
-                                </div>
-                                <div class="top-stat">
-                                    <span class="stat-title">Tiempo</span>
-                                    <span class="stat-value">{{ tiempo | default('0h 0m 0s') }}</span>
-                                </div>
-                                <div class="top-stat">
-                                    <span class="stat-title" id="position-title">Posición</span>
-                                    <span class="stat-value" id="position-value">{{ posicion | default('-') }}</span>
-                                </div>
-                            </div>
+                    <div id="top-breakdown-container" style="display: none; width: 100%; margin-bottom: 10px;"></div>
 
-                            <div id="top-breakdown-container" style="display: none; width: 100%; margin-bottom: 10px;"></div>
-
-                            <div class="analysis-bar">
-                                <i class="fas fa-chart-line" style="margin-right: 8px;"></i> 
-                                <span id="analysis-text">Calculando el rendimiento de tu examen...</span>
-                            </div>
-
-                            <div class="stats-cards-row">
-                                <div class="stat-card filter-btn correct" data-filter="correcta">
-                                    <span class="card-title">Correctas</span>
-                                    <span class="card-value" id="count-correct">0</span>
-                                </div>
-                                <div class="stat-card filter-btn incorrect" data-filter="incorrecta">
-                                    <span class="card-title">Incorrectas</span>
-                                    <span class="card-value" id="count-incorrect">0</span>
-                                </div>
-                                <div class="stat-card filter-btn unanswered" data-filter="sin_responder">
-                                    <span class="card-title">Sin Contestar</span>
-                                    <span class="card-value" id="count-unanswered">0</span>
-                                </div>
-                                <div class="stat-card filter-btn total active-filter" data-filter="all">
-                                    <span class="card-title">Respuestas</span>
-                                    <span class="card-value" id="count-total">0</span> 
-                                </div>
-                                <div class="stat-card score-card">
-                                    <span class="card-title">TOTAL (Calif)</span>
-                                    <span class="card-value" id="score-number">0.0</span>
-                                </div>
-                            </div>
-
-                            <div class="dashboard-actions">
-                                <button id="btn-all-results" class="btn-dashboard outline"><i class="fas fa-globe"></i> Ver todos los resultados</button>
-                                <button id="btn-change-exam" class="btn-dashboard outline"><i class="fas fa-exchange-alt"></i> Cambiar examen</button>
-                                <button id="btn-retry" class="btn-dashboard outline"><i class="fas fa-redo"></i> Intentar nuevamente</button>
-                                
-                                <a href="{{ url_for('launcher') }}" class="btn-dashboard outline"><i class="fas fa-edit"></i> Realizar otro examen</a>
-                                <button id="btn-show-details" class="btn-dashboard fill"><i class="fas fa-search-plus"></i> Revisión detallada</button>
-                            </div>
-                        </div>
-
-                        <div class="details-panel option-card" id="details-panel-container" style="display: none; width: 100%;">
-                            <h3 class="panel-title">Revisión de Preguntas</h3>
-                            
-                            <div id="questions-nav" class="questions-nav-bar">
-                                <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Esperando...</div>
-                            </div>
-
-                            <div id="single-question-container" class="question-viewer">
-                            </div>
-                        </div>
-
+                    <div class="analysis-bar">
+                        <i class="fas fa-chart-line" style="margin-right: 8px;"></i> 
+                        <span id="analysis-text">Calculando el rendimiento de tu examen...</span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE REVISIÓN (CONTENEDOR DE DETALLES) -->
+        <div class="content-area">
+            <div class="content-section" style="max-width: 1400px; width: 100%;">
+                
+                <!-- Panel detallado -->
+                <div class="details-panel option-card" id="details-panel-container" style="display: none; width: 100%;">
+                    <h3 class="panel-title">Revisión de Preguntas</h3>
+                    
+                    <div class="stats-cards-row" style="margin-bottom: 25px;">
+                        <div class="stat-card filter-btn correct" data-filter="correcta">
+                            <span class="card-title">Correctas</span>
+                            <span class="card-value" id="count-correct">0</span>
+                        </div>
+                        <div class="stat-card filter-btn incorrect" data-filter="incorrecta">
+                            <span class="card-title">Incorrectas</span>
+                            <span class="card-value" id="count-incorrect">0</span>
+                        </div>
+                        <div class="stat-card filter-btn unanswered" data-filter="sin_responder">
+                            <span class="card-title">Sin Contestar</span>
+                            <span class="card-value" id="count-unanswered">0</span>
+                        </div>
+                        <div class="stat-card filter-btn total active-filter" data-filter="all">
+                            <span class="card-title">Respuestas</span>
+                            <span class="card-value" id="count-total">0</span> 
+                        </div>
+                        <div class="stat-card score-card">
+                            <span class="card-title">TOTAL (Calif)</span>
+                            <span class="card-value" id="score-number">0.0</span>
+                        </div>
+                    </div>
+
+                    <div id="questions-nav" class="questions-nav-bar">
+                        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Esperando...</div>
+                    </div>
+
+                    <div id="single-question-container" class="question-viewer">
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
