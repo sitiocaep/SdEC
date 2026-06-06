@@ -1,6 +1,6 @@
 curso,materia,tiempo_limite,fecha_disponible,horario_inicio,horario_final,fecha_resultado,horario_resultado
 ECOEMS 2026,Diagnóstico,03:30:00,2026-01-03,09:00:00,12:30:00,2026-06-13,13:00:00
-ECOEMS 2026,Habilidad Matemática,03:30:00,2026-01-01,16:30:00,20:00:00,2026-12-31,23:59:59
+ECOEMS 2026,Habilidad Matemática,03:30:00,2026-06-06,00:00:00,23:59:00,2026-06-07,23:59:59
 ECOEMS 2026,Historia de México,12:00:00,2026-05-29,12:00:00,13:00:00,2026-05-30,09:00:00
 ECOEMS 2026,Historia Universal,12:00:00,2026-05-23,11:00:00,23:00:00,2026-05-23,11:00:00
 ECOEMS 2026,Física,04:00:00,2026-06-13,16:00:00,20:00:00,2026-06-14,09:00:00
