@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     const zoomInBtn = document.getElementById('zoom-in');
     const zoomOutBtn = document.getElementById('zoom-out');
-    const toggleViewBtn = document.getElementById('toggle-view-btn'); // MEJORA: Botón de vista admin
+    const toggleViewBtn = document.getElementById('toggle-view-btn'); // Botón de visibilidad
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const reviewBtn = document.getElementById('review-btn');
@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let microphone = null;
     let volumeAnimationId = null;
 
-    // MEJORA: Estado inicial de vista libre (Verdadero por defecto si entra como admin)
-    let freeViewMode = window.examConfig.isAdmin;
+    // Estado inicial de vista libre: Visible por defecto para todos los usuarios
+    let freeViewMode = true;
 
     // ==========================================
     // 3. SISTEMA DE SEGURIDAD Y CONEXIÓN
@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const realContent = opt.querySelector('.real-answer-content');
                     const lockedPlaceholder = opt.querySelector('.locked-answer-placeholder');
                     
-                    // MEJORA: Renderizado inteligente basado en la variable de vista libre (Toggle Admin)
+                    // Renderizado inteligente basado en la variable de vista libre
                     if (freeViewMode) {
                         if (realContent) realContent.style.display = 'block';
                         if (lockedPlaceholder) lockedPlaceholder.style.display = 'none';
@@ -1017,38 +1017,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // 10. EJECUCIÓN Y EVENTOS GLOBALES
     // ==========================================
+    
+    // El botón Toggle ahora está disponible para todos los usuarios
+    if (toggleViewBtn) {
+        toggleViewBtn.style.display = 'flex'; 
+        
+        if (freeViewMode) {
+            toggleViewBtn.classList.add('active');
+        }
+        
+        toggleViewBtn.addEventListener('click', () => {
+            freeViewMode = !freeViewMode; // Invertir el estado
+            
+            if (freeViewMode) {
+                toggleViewBtn.classList.add('active');
+                toggleViewBtn.innerHTML = '<i class="fas fa-eye"></i>';
+                showNotification('Vista libre activada (Preguntas visibles).', 'alert-success', 3000);
+            } else {
+                toggleViewBtn.classList.remove('active');
+                toggleViewBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                showNotification('Vista oculta activada (Con candados).', 'alert-info', 3000);
+            }
+            
+            // Forzar refresco visual inmediato de la pregunta en pantalla con el modo seleccionado
+            showQuestion(currentQuestion);
+        });
+    }
+
     if (window.examConfig.isAdmin) {
         if (securityOverlay) securityOverlay.style.display = 'none';
         if (blackoutCurtain) blackoutCurtain.style.display = 'none';
         if (mainContainer) mainContainer.classList.remove('content-blur');
         
         console.log("Modo Admin detectado: Seguridad y bloqueos desactivados.");
-
-        // MEJORA: Inicialización y lógica de escucha para el Botón Toggle de vistas del Admin
-        if (toggleViewBtn) {
-            toggleViewBtn.style.display = 'flex'; // Hacer visible el botón únicamente para administradores
-            
-            if (freeViewMode) {
-                toggleViewBtn.classList.add('active');
-            }
-            
-            toggleViewBtn.addEventListener('click', () => {
-                freeViewMode = !freeViewMode; // Invertir el estado
-                
-                if (freeViewMode) {
-                    toggleViewBtn.classList.add('active');
-                    toggleViewBtn.innerHTML = '<i class="fas fa-eye"></i>';
-                    showNotification('Vista libre activada (Sin restricciones).', 'alert-success', 3000);
-                } else {
-                    toggleViewBtn.classList.remove('active');
-                    toggleViewBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
-                    showNotification('Vista de estudiante activada (Con candados).', 'alert-info', 3000);
-                }
-                
-                // Forzar refresco visual inmediato de la pregunta en pantalla con el modo seleccionado
-                showQuestion(currentQuestion);
-            });
-        }
         
         initExam(); 
         
