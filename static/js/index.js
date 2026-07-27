@@ -208,7 +208,7 @@ function handleCourseChange() {
     }
     // --- FIN Lógica de etiquetas ---
 
-    isEcoems = (selectedCourseClean === 'ecoems 2026' || selectedCourseClean === 'licenciatura 2026');
+    isEcoems = (selectedCourseClean === 'ecoems 2027' || selectedCourseClean === 'licenciatura 2027');
     if (isEcoems) {
         const introText = document.getElementById('pdf-form-intro');
         if (introText) introText.textContent = `Completa los siguientes datos para tu ficha de inscripción (${selectedCourseValue.trim()}).`;

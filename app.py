@@ -50,38 +50,38 @@ IMG_PERFIL_DIR = os.path.join('static', 'img', 'perfil')
 
 # --- MAPA DE PLANTILLAS DOCX ---
 TEMPLATE_MAP = {
-    'ECOEMS 2026': 'ecoems_registro.docx',
-    'LICENCIATURA 2026': 'licenciatura_registro.docx'
+    'ECOEMS 2027': 'ecoems_registro.docx',
+    'LICENCIATURA 2027': 'licenciatura_registro.docx'
 }
 
 # --- MAPA DE PLANTILLAS DOCX (COMPROBANTE) ---
 COMPROBANTE_TEMPLATE_MAP = {
-    'ECOEMS 2026': 'ecoems_comprobante_registro.docx',
-    'LICENCIATURA 2026': 'licenciatura_comprobante_registro.docx'
+    'ECOEMS 2027': 'ecoems_comprobante_registro.docx',
+    'LICENCIATURA 2027': 'licenciatura_comprobante_registro.docx'
 }
 
 # --- MAPA DE CARPETAS DE REGISTRO ANIDADAS ---
 REGISTROS_MAP = {
-    'ECOEMS 2026': 'registros_ecoems',
-    'LICENCIATURA 2026': 'registros_licenciatura'
+    'ECOEMS 2027': 'registros_ecoems',
+    'LICENCIATURA 2027': 'registros_licenciatura'
 }
 
 # --- MAPA DE CARPETAS DE COMPROBANTE ANIDADAS ---
 COMPROBANTES_MAP = {
-    'ECOEMS 2026': 'comprobantes_ecoems',
-    'LICENCIATURA 2026': 'comprobantes_licenciatura'
+    'ECOEMS 2027': 'comprobantes_ecoems',
+    'LICENCIATURA 2027': 'comprobantes_licenciatura'
 }
 
 # --- MAPA DE PLANTILLAS SELECCIÓN (DOCUMENTO A) ---
 SELECCION_TEMPLATE_MAP = {
-    'ECOEMS 2026': 'ecoems_documento_a.docx',
-    'LICENCIATURA 2026': 'licenciatura_documento_a.docx'
+    'ECOEMS 2027': 'ecoems_documento_a.docx',
+    'LICENCIATURA 2027': 'licenciatura_documento_a.docx'
 }
 
 # --- MAPA DE CARPETAS DE SALIDA SELECCIÓN ---
 SELECCION_DIR_MAP = {
-    'ECOEMS 2026': 'ecoems_documento_a',
-    'LICENCIATURA 2026': 'licenciatura_documento_a'
+    'ECOEMS 2027': 'ecoems_documento_a',
+    'LICENCIATURA 2027': 'licenciatura_documento_a'
 }
 
 # --- MANEJO DE SESIONES MULTI-WORKER SEGURO ---
