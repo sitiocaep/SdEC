@@ -302,3 +302,25 @@ body {
     */
     animation: pulse-red-highlight 1.2s ease-in-out 2;
 }
+
+/* Estilos para el botón de editar en la revisión */
+.review-value-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+    gap: 12px;
+}
+
+.edit-field-btn {
+    color: #7f8c8d;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.edit-field-btn:hover {
+    color: #4a90e2;
+    transform: scale(1.1);
+}

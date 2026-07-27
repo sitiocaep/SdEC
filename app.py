@@ -681,10 +681,23 @@ def force_login():
             return jsonify({'success': True, 'redirect': '/launcher'})
     return jsonify({'success': False})
 
+@app.route('/api/verify-admin-key', methods=['POST'])
+def verify_admin_key():
+    admin_key_input = request.form.get('admin_key')
+    admin_user = get_admin_user()
+    
+    if not admin_user:
+        return jsonify({'success': False, 'message': 'No hay administrador configurado.'})
+        
+    if admin_key_input == admin_user.get('password'):
+        return jsonify({'success': True})
+        
+    return jsonify({'success': False, 'message': 'Clave de inscripción incorrecta.'})
+
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        # --- NUEVA VALIDACIÓN DE ADMINISTRADOR ---
+        # --- VALIDACIÓN FINAL DE ADMINISTRADOR ---
         admin_key_input = request.form.get('admin_key')
         admin_user = get_admin_user()
         

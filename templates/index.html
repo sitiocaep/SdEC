@@ -60,14 +60,8 @@
                 <div class="setup-panel setup-panel-right">
                      <div id="login-prompt-register" class="register-info top-prompt">¿Ya tienes una cuenta? <a href="#" class="register-link" id="show-login">Inicia sesión aquí</a></div>
                     <form id="register-form">
+                        <input type="hidden" id="hidden_admin_key" name="admin_key">
                         <div class="form-step active" data-step-content="1">
-                             
-                             <!-- NUEVO CAMPO: Clave de administrador -->
-                             <div class="form-group">
-                                 <label for="admin_key"><i class="fas fa-lock"></i> Clave de Administrador</label>
-                                 <input type="password" id="admin_key" name="admin_key" class="form-control" placeholder="Clave para autorizar inscripción">
-                             </div>
-
                              <div class="form-group"> <label for="curso">Curso</label> <select id="curso" name="curso" class="form-control"> <option value="" disabled selected>Cargando cursos...</option> </select> </div>
                              <div class="form-group"><label for="nombre">Nombre(s)</label><input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa tu(s) nombre(s)"></div>
                              <div class="form-group"><label for="apellido_paterno">Apellido Paterno</label><input type="text" id="apellido_paterno" name="apellido_paterno" class="form-control" placeholder="Ingresa tu apellido paterno"></div>
@@ -282,7 +276,7 @@
                         <div class="form-navigation">
                             <button type="button" class="btn-action btn-secondary btn-step-prev" style="display: none;"><i class="fas fa-arrow-left"></i> Atrás</button>
                             <button type="button" class="btn-action btn-step-next" style="display: none;">Continuar <i class="fas fa-arrow-right"></i></button>
-                            <button type="submit" class="btn-login btn-submit-form" style="display: none;">Finalizar Inscripción</button>
+                            <button type="submit" class="btn-action btn-submit-form" style="background-color: #27ae60; display: none;">Finalizar Inscripción <i class="fas fa-check-circle"></i></button>
                         </div>
 
                         <div id="password-result" style="display: none; margin-top: 20px;">
@@ -301,6 +295,19 @@
         
         <div id="about-modal" class="modal-overlay" style="display: none;"> <div class="modal-content"> <button id="modal-close-btn" class="modal-close">&times;</button> <img src="{{ url_for('static', filename='img/logo_caep.png') }}" alt="Logo C.A.E.P." class="modal-logo"> <h2>C.A.E.P.</h2> <h2>Centro de Asesoría Educativa Profesional</h2> <p class="modal-description"> Bienvenido a la Plataforma C.A.E.P. Una plataforma diseñada para ayudarte a prepararte, practicar y alcanzar tus objetivos académicos. </p> <p  class="modal-version">Versión 1.0.0</p> <p class="modal-version">®2026.</p> </div> </div>
         <div id="help-modal" class="modal-overlay" style="display: none;"> <div class="modal-content"> <button id="help-modal-close-btn" class="modal-close">&times;</button> <h2><i class="fas fa-question-circle"></i> Centro de Ayuda</h2> <div class="help-content-scroll"> <h3><i class="fas fa-sign-in-alt" style="color: #27ae60;"></i> Cómo Iniciar Sesión</h3> <p> Para acceder a la plataforma, utiliza el formulario en la barra superior. <br><strong>1. Usuario:</strong> Ingresa el nombre de usuario (ej. S20773E1) que se te generó al inscribirte. <br><strong>2. Contraseña:</strong> Ingresa la contraseña que se te proporcionó. <br><strong>3. Entrar:</strong> Haz clic en el botón verde "Entrar". </p> <h3><i class="fas fa-user-plus" style="color: #f39c12;"></i> Cómo Inscribirse</h3> <p> Si eres un usuario nuevo: <br><strong>1. Haz clic</strong> en el botón amarillo "Inscribirse" en la barra superior. <br><strong>2. Completa el formulario</strong> con tus datos personales (nombre, correo, fecha de nacimiento) y selecciona tu curso. <br><strong>3. Campos Adicionales:</strong> Si tu curso lo requiere (como ECOEMS), se mostrarán campos adicionales para tu ficha de inscripción. Asegúrate de llenarlos todos. <br><strong>4. Crear Cuenta:</strong> Al finalizar, haz clic en "Crear Cuenta". <br><strong>5. ¡IMPORTANTE!:</strong> El sistema te mostrará tu nuevo <strong>Usuario</strong> y <strong>Contraseña</strong>. Anótalos en un lugar seguro, los necesitarás para entrar. </p> <h3><i class="fas fa-key" style="color: #e74c3c;"></i> Cómo Recuperar tus Credenciales</h3> <p> Si olvidaste tu usuario o contraseña: <br><strong>1. Haz clic</strong> en el botón rojo "Recuperar" en la barra superior. <br><strong>2. Ingresa los datos</strong> con los que te registraste: tu correo electrónico (dos veces para confirmar) y tu fecha de nacimiento. <br><strong>3. Haz clic</strong> en "Recuperar Credenciales". <br><strong>4. Resultado:</strong> Si los datos son correctos, el sistema te mostrará tu <strong>Usuario</strong> y generará una <strong>nueva Contraseña</strong> para que puedas acceder. </p> </div> </div> </div>
+
+        <!-- NUEVO MODAL: Clave de Inscripción -->
+        <div id="admin-auth-modal" class="modal-overlay" style="display: none;"> 
+            <div class="modal-content" style="max-width: 400px; padding: 30px;"> 
+                <button id="admin-auth-close-btn" class="modal-close">&times;</button> 
+                <h2><i class="fas fa-lock" style="color: #2c3e50;"></i> Clave de Inscripción</h2> 
+                <div style="margin-top: 20px; text-align: left;"> 
+                    <p style="margin-bottom: 15px; color: #555; font-size: 15px;">Para continuar con el registro, por favor ingresa la clave:</p> 
+                    <input type="password" id="modal-admin-key" class="form-control" placeholder="Ingresa la clave"> 
+                    <button id="verify-admin-key-btn" class="btn-login" style="margin-top: 15px;">Verificar y Continuar</button> 
+                </div> 
+            </div> 
+        </div>
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

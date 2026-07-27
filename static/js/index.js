@@ -23,9 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
         handleCourseChange(); // Llamada inicial
     }
 
-    // Manejadores Botones Navegación Principal
+    // Manejadores Botones Navegación Principal (NUEVO MODAL)
     const navShowRegister = document.getElementById('nav-show-register');
-    if (navShowRegister) navShowRegister.addEventListener('click', showRegisterForm);
+    if (navShowRegister) navShowRegister.addEventListener('click', () => {
+        const modal = document.getElementById('admin-auth-modal');
+        const input = document.getElementById('modal-admin-key');
+        if(modal) modal.style.display = 'flex';
+        if(input) input.value = ''; // Limpiar input
+    });
+
     const navShowReset = document.getElementById('nav-show-reset');
     if (navShowReset) navShowReset.addEventListener('click', showResetForm);
 
@@ -77,6 +83,57 @@ document.addEventListener('DOMContentLoaded', function() {
      if (recoverPanelRight) {
          recoverPanelRight.addEventListener('input', hideLoginPromptRecover, { once: true });
      }
+
+    // --- NUEVA LÓGICA: Modal de Clave de Administrador ---
+    const adminCloseBtn = document.getElementById('admin-auth-close-btn');
+    const adminModal = document.getElementById('admin-auth-modal');
+    if (adminCloseBtn && adminModal) {
+        adminCloseBtn.addEventListener('click', () => adminModal.style.display = 'none');
+        adminModal.addEventListener('click', (e) => {
+            if (e.target === adminModal) adminModal.style.display = 'none';
+        });
+    }
+
+    const verifyBtn = document.getElementById('verify-admin-key-btn');
+    if (verifyBtn) {
+        verifyBtn.addEventListener('click', function() {
+            const keyInput = document.getElementById('modal-admin-key');
+            const key = keyInput ? keyInput.value.trim() : '';
+            
+            if (!key) {
+                showMessage('Por favor, ingresa la clave.', 'error');
+                return;
+            }
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+            this.disabled = true;
+
+            const formData = new FormData();
+            formData.append('admin_key', key);
+
+            fetch('/api/verify-admin-key', { method: 'POST', body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Ocultar modal y mostrar formulario de registro
+                        adminModal.style.display = 'none';
+                        showRegisterForm();
+                        
+                        // Guardar la clave internamente para que el form se envíe bien
+                        const hiddenInput = document.getElementById('hidden_admin_key');
+                        if (hiddenInput) hiddenInput.value = key;
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                })
+                .catch(err => showMessage('Error de conexión', 'error'))
+                .finally(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                });
+        });
+    }
 });
 
 // --- Funciones Auxiliares ---
@@ -192,9 +249,6 @@ function highlightNavbarLogin() {
         // 1. Añadir la clase para iniciar la animación
         usernameInput.classList.add('highlight-login-field');
         passwordInput.classList.add('highlight-login-field');
-
-        // 2. Poner el foco (cursor) en el campo de usuario - ELIMINADO POR SOLICITUD
-        // usernameInput.focus(); 
 
         // 3. Quitar la clase después de que termine la animación
         //    Esto es importante para que la animación pueda volver a ejecutarse
@@ -395,6 +449,7 @@ let formSteps = [];
 let stepIcons = [];
 let isEcoems = false;
 let totalSteps = 2;
+let hasReachedReview = false;
 
 function setupStepLogic() {
     const regForm = document.getElementById('register-form');
@@ -434,36 +489,37 @@ function checkStepCompleteness(stepNumber) {
     }
 }
 
-
 function handleNext() {
-    if (!validateStep(currentStep)) return; // Validación con mensaje al hacer clic
+    if (!validateStep(currentStep)) return; 
 
     totalSteps = isEcoems ? 6 : 2;
     let nextStep = currentStep;
 
-    if (currentStep === 1) {
-        nextStep = isEcoems ? 2 : 6;
-    } else if (currentStep < 5 && isEcoems) { // Pasos 2, 3, 4 -> Siguiente
-        nextStep++;
-    } else if ((currentStep === 5 && isEcoems) ) { // Paso 5 -> 6 (Revisar)
+    // Si ya completó el form y está editando, salta directo al paso 6
+    if (hasReachedReview && currentStep !== 6) {
         nextStep = 6;
-    }
-    
-    // Si estamos en el paso 1 y NO es Ecoems, el próximo paso es 6
-    if(currentStep === 1 && !isEcoems) {
-        nextStep = 6;
+    } else {
+        if (currentStep === 1) {
+            nextStep = isEcoems ? 2 : 6;
+        } else if (currentStep < 5 && isEcoems) { 
+            nextStep++;
+        } else if ((currentStep === 5 && isEcoems) ) { 
+            nextStep = 6;
+        }
+        
+        if(currentStep === 1 && !isEcoems) {
+            nextStep = 6;
+        }
     }
 
-    // Poblar revisión solo cuando el *próximo* paso sea 6
     if (nextStep === 6) {
         populateReview();
     }
 
-    if (nextStep > 6) nextStep = 6; // Límite superior
+    if (nextStep > 6) nextStep = 6; 
     currentStep = nextStep;
     showStep(currentStep);
 }
-
 
 function handlePrev() {
     let prevStep = currentStep;
@@ -479,7 +535,6 @@ function handlePrev() {
     showStep(currentStep);
 }
 
-
 function showStep(stepNumber) {
     const regForm = document.getElementById('register-form');
     if (!regForm) return;
@@ -490,6 +545,10 @@ function showStep(stepNumber) {
     if (!nextBtn || !prevBtn || !submitBtn) return;
 
     totalSteps = isEcoems ? 6 : 2;
+
+    if (stepNumber === 6) {
+        hasReachedReview = true; // El usuario ya llegó al final
+    }
 
     formSteps.forEach(step => step.classList.remove('active'));
     const currentStepContent = regForm.querySelector(`.form-step[data-step-content="${stepNumber}"]`);
@@ -509,15 +568,15 @@ function showStep(stepNumber) {
         else if (stepData === stepNumber) icon.classList.add('active');
     });
 
-    // Lógica botones
     prevBtn.style.display = (stepNumber === 1) ? 'none' : 'inline-flex';
-    nextBtn.style.display = 'none'; // Ocultar por defecto
-    submitBtn.style.display = 'none'; // Ocultar por defecto
+    nextBtn.style.display = 'none'; 
+    submitBtn.style.display = 'none'; 
 
-    // Establecer texto correcto del botón Next (aunque esté oculto inicialmente)
-    if ((stepNumber === 5 && isEcoems) || (stepNumber === 1 && !isEcoems) ) {
+    // Lógica inteligente para el botón Continuar / Revisar
+    if (hasReachedReview && stepNumber !== 6) {
+         nextBtn.innerHTML = 'Revisar Datos <i class="fas fa-search"></i>';
+    } else if ((stepNumber === 5 && isEcoems) || (stepNumber === 1 && !isEcoems) ) {
          const cursoSelect = document.getElementById('curso');
-         // Solo mostrar "Revisar" si el curso ya está seleccionado
          if (cursoSelect && cursoSelect.value) { 
              nextBtn.innerHTML = 'Revisar Datos <i class="fas fa-search"></i>';
          } else {
@@ -527,9 +586,8 @@ function showStep(stepNumber) {
          nextBtn.innerHTML = 'Continuar <i class="fas fa-arrow-right"></i>';
      }
 
-     checkStepCompleteness(stepNumber); // Comprobar si se deben mostrar
+     checkStepCompleteness(stepNumber); 
 }
-
 
 // ===== FUNCIÓN VALIDATESTEP MODIFICADA (COMPLETA Y ESTRICTA) =====
 /**
@@ -562,8 +620,8 @@ function validateStep(stepNumber, options = {}) {
     );
     
     for (const field of fieldsToValidate) {
-        // 1. Omitir botones
-        if (field.type === 'button' || field.type === 'submit' || field.type === 'reset') {
+        // 1. Omitir botones y campos ocultos explícitos (hidden)
+        if (field.type === 'button' || field.type === 'submit' || field.type === 'reset' || field.type === 'hidden') {
             continue;
         }
 
@@ -650,16 +708,14 @@ function validateStep(stepNumber, options = {}) {
 function populateReview() {
     const reviewContainer = document.getElementById('step-review-content');
     const form = document.getElementById('register-form');
-    
-    // ===== MODIFICACIÓN PARA ETIQUETAS DINÁMICAS =====
     const cursoSelect = document.getElementById('curso'); 
+    
     if (!reviewContainer || !form || !cursoSelect) return; 
 
     const selectedCourseClean = cursoSelect.value.trim().toLowerCase(); 
     const formData = new FormData(form);
     reviewContainer.innerHTML = '';
 
-    // --- Lógica de etiquetas dinámicas para Revisión ---
     let promedio1Label = 'Promedio 1° Secundaria';
     let promedio2Label = 'Promedio 2° Secundaria';
     if (selectedCourseClean.includes('licenciatura')) {
@@ -672,14 +728,12 @@ function populateReview() {
         edad: 'Edad', nombre_tutor: 'Nombre del Tutor', domicilio: 'Domicilio', ocupacion_tutor: 'Ocupación del Tutor', tel_particular: 'Teléfono Particular', tel_celular: 'Teléfono Celular', 
         si_no_trabajar: '¿Trabaja?', trabajar_donde: 'Lugar de trabajo', si_no_estudiar: '¿Estudia actualmente?', estudiar_donde: 'Lugar de estudio', si_no_dejar: '¿Ha dejado de estudiar?', dejar_donde: 'Motivo', si_no_leer: '¿Le gusta leer?', leer_que: 'Tipo de lectura', materias_agrado: 'Materias de agrado', materias_complejas: 'Materias complejas', materias_desagrado: 'Materias de desagrado', materias_por_que: 'Motivo desagrado', motivar_estudiar: 'Motivación para estudiar', horas_tareas: 'Horas dedicadas a tareas', horas_estudiar: 'Horas dedicadas a estudiar', 
         si_no_estudiar_solo: '¿Estudia por sí mismo?', si_no_papas_tarea: '¿Padres indican tarea?', papas_tarea_cuando: 'Cuándo indican tarea', 
-        promedio_primero: promedio1Label, // <--- CAMBIO
-        promedio_segundo: promedio2Label, // <--- CAMBIO
+        promedio_primero: promedio1Label, 
+        promedio_segundo: promedio2Label, 
         promedio_actual: 'Promedio Actual', 
         si_no_deporte: '¿Practica deporte?', deporte_cual: 'Deporte que practica', escuela_objetivo: 'Escuela objetivo', estudiar_objetivo: '¿Qué quiere estudiar?', curso_objetivo: 'Expectativas del curso', comprometer_estudiar: 'Compromiso en el curso', corto_plazo: 'Aspiraciones (Corto Plazo)', mediano_plazo: 'Aspiraciones (Mediano Plazo)', largo_plazo: 'Aspiraciones (Largo Plazo)', 
         si_no_enfermedad: '¿Presenta enfermedad?', enfermedad_cual: 'Enfermedad', si_no_medicamento: '¿Toma medicamento?', medicamento_cual: 'Medicamento', si_no_seguro: '¿Tiene seguro social?', seguro_cual: 'Seguro(s)', 
     };
-    // --- Fin Lógica de etiquetas ---
-    // ===== FIN DE MODIFICACIÓN =====
 
     const sections = { 'Datos Personales': ['curso', 'nombre', 'apellido_paterno', 'apellido_materno', 'email', 'fecha_nacimiento'], 'Datos de Tutor': ['edad', 'nombre_tutor', 'domicilio', 'ocupacion_tutor', 'tel_particular', 'tel_celular'], 'Antecedentes': ['si_no_trabajar', 'trabajar_donde', 'si_no_estudiar', 'estudiar_donde', 'si_no_dejar', 'dejar_donde', 'si_no_leer', 'leer_que', 'materias_agrado', 'materias_complejas', 'materias_desagrado', 'materias_por_que', 'motivar_estudiar', 'horas_tareas', 'horas_estudiar'], 'Seguimiento': ['si_no_estudiar_solo', 'si_no_papas_tarea', 'papas_tarea_cuando', 'promedio_primero', 'promedio_segundo', 'promedio_actual', 'si_no_deporte', 'deporte_cual', 'escuela_objetivo', 'estudiar_objetivo', 'curso_objetivo', 'comprometer_estudiar', 'corto_plazo', 'mediano_plazo', 'largo_plazo'], 'Datos Importantes de Salud': ['si_no_enfermedad', 'enfermedad_cual', 'si_no_medicamento', 'medicamento_cual', 'si_no_seguro', 'seguro_cual'], };
 
@@ -691,7 +745,6 @@ function populateReview() {
             let sectionHasContent = false;
 
             fieldNames.forEach(fieldName => {
-                // (Modificación: Usar form.elements[fieldName] para obtener el campo oculto de promedio)
                 if (form.elements[fieldName]) {
                     const value = formData.get(fieldName);
                     if (value && fieldLabels[fieldName]) {
@@ -699,19 +752,33 @@ function populateReview() {
                         const detailFieldsMap = { 'si_no_trabajar': 'trabajar_donde', 'si_no_estudiar': 'estudiar_donde', 'si_no_dejar': 'dejar_donde', 'si_no_leer': 'leer_que', 'si_no_papas_tarea': 'papas_tarea_cuando', 'si_no_deporte': 'deporte_cual', 'si_no_enfermedad': 'enfermedad_cual', 'si_no_medicamento': 'medicamento_cual', 'si_no_seguro': 'seguro_cual' };
                         
                         if (fieldName.startsWith('si_no_')) {
-                            // No hacer nada, el valor "Sí" o "No" se mostrará
+                            // Mostrar valor normalmente
                         } else if (Object.values(detailFieldsMap).includes(fieldName)) {
-                            // Este es un campo de detalle, verificar si debe mostrarse
                             const correspondingSiNoField = Object.keys(detailFieldsMap).find(key => detailFieldsMap[key] === fieldName);
-                            // Ocultar si el campo "Sí/No" correspondiente no es "Sí"
                             if(!form.elements[correspondingSiNoField] || formData.get(correspondingSiNoField)?.toLowerCase() !== 'sí'){
-                                return; // No añadir este item
+                                return;
                             }
                         }
 
-                        const item = document.createElement('p');
+                        // Calcular a qué paso pertenece este campo dinámicamente
+                        let targetStep = 1;
+                        const fieldEl = form.elements[fieldName];
+                        if (fieldEl) {
+                            const el = (fieldEl instanceof NodeList || fieldEl instanceof HTMLCollection) ? fieldEl[0] : fieldEl;
+                            const stepDiv = el.closest('.form-step');
+                            if (stepDiv) {
+                                targetStep = parseInt(stepDiv.getAttribute('data-step-content'));
+                            }
+                        }
+
+                        const item = document.createElement('div');
                         item.className = 'review-item';
-                        item.innerHTML = `<span class="review-label">${fieldLabels[fieldName]}:</span> <span class="review-value">${displayValue}</span>`;
+                        item.innerHTML = `
+                            <span class="review-label">${fieldLabels[fieldName]}:</span> 
+                            <div class="review-value-container">
+                                <span class="review-value">${displayValue}</span>
+                                <i class="fas fa-pencil-alt edit-field-btn" data-target-step="${targetStep}" data-target-field="${fieldName}" title="Editar este campo"></i>
+                            </div>`;
                         sectionDiv.appendChild(item);
                         sectionHasContent = true;
                     }
@@ -723,6 +790,33 @@ function populateReview() {
             }
         }
     }
+
+    // --- NUEVO: Asignar evento de clic a los lápices de edición ---
+    const editBtns = reviewContainer.querySelectorAll('.edit-field-btn');
+    editBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const targetStep = parseInt(e.currentTarget.getAttribute('data-target-step'));
+            const targetFieldName = e.currentTarget.getAttribute('data-target-field');
+            
+            if (targetStep) {
+                currentStep = targetStep;
+                showStep(currentStep); // Navegamos a la etapa correspondiente
+                
+                // Pequeño timeout para permitir que termine la animación de cambio de paso
+                setTimeout(() => {
+                    let field = document.querySelector(`[name="${targetFieldName}"]`);
+                    // Si el campo es oculto (caso de promedios), enfocamos el select de "entero"
+                    if (field && field.type === 'hidden') {
+                        field = document.querySelector(`[name="${targetFieldName}_entero"]`);
+                    }
+                    if(field) {
+                        field.focus();
+                        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+            }
+        });
+    });
 }
 // --- Fin Lógica del Asistente ---
 
@@ -853,6 +947,7 @@ function clearForms() {
     isEcoems = false;
     totalSteps = 2;
     currentStep = 1;
+    hasReachedReview = false;
     showStep(1); // Esto llamará a checkStepCompleteness(1) y ocultará el botón
 }
 
