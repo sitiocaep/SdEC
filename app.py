@@ -684,6 +684,17 @@ def force_login():
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
+        # --- NUEVA VALIDACIÓN DE ADMINISTRADOR ---
+        admin_key_input = request.form.get('admin_key')
+        admin_user = get_admin_user()
+        
+        if not admin_user:
+            return jsonify({'success': False, 'message': 'Error interno: No hay administrador configurado en users.csv'})
+            
+        if admin_key_input != admin_user.get('password'):
+            return jsonify({'success': False, 'message': 'Clave de administrador incorrecta. Inscripción denegada.'})
+        # -----------------------------------------
+
         nombre = request.form.get('nombre')
         apellido_paterno = request.form.get('apellido_paterno')
         apellido_materno = request.form.get('apellido_materno')

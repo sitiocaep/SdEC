@@ -61,6 +61,13 @@
                      <div id="login-prompt-register" class="register-info top-prompt">¿Ya tienes una cuenta? <a href="#" class="register-link" id="show-login">Inicia sesión aquí</a></div>
                     <form id="register-form">
                         <div class="form-step active" data-step-content="1">
+                             
+                             <!-- NUEVO CAMPO: Clave de administrador -->
+                             <div class="form-group">
+                                 <label for="admin_key"><i class="fas fa-lock"></i> Clave de Administrador</label>
+                                 <input type="password" id="admin_key" name="admin_key" class="form-control" placeholder="Clave para autorizar inscripción">
+                             </div>
+
                              <div class="form-group"> <label for="curso">Curso</label> <select id="curso" name="curso" class="form-control"> <option value="" disabled selected>Cargando cursos...</option> </select> </div>
                              <div class="form-group"><label for="nombre">Nombre(s)</label><input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa tu(s) nombre(s)"></div>
                              <div class="form-group"><label for="apellido_paterno">Apellido Paterno</label><input type="text" id="apellido_paterno" name="apellido_paterno" class="form-control" placeholder="Ingresa tu apellido paterno"></div>
